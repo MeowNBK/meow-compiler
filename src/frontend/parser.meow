@@ -1,0 +1,782 @@
+import { TokenType } from "./token.meow";
+import { Program, LetStatement, FunctionStatement, FunctionLiteral, ClassStatement, IfStatement, WhileStatement, ForStatement, ReturnStatement, BreakStatement, ContinueStatement, BlockStatement, ThrowStatement, TryStatement, ImportStatement, ExportStatement, LogStatement, DoWhileStatement, SwitchStatement, ForInStatement, ExpressionStatement, IntegerLiteral, RealLiteral, StringLiteral, BooleanLiteral, NullLiteral, ArrayLiteral, ObjectLiteral, TemplateLiteral, Identifier, BinaryExpression, UnaryExpression, CallExpression, IndexExpression, AssignmentExpression, TernaryExpression, PropertyAccess, ThisExpression, NewExpression, SuperExpression, PrefixUpdateExpression, PostfixUpdateExpression, SpreadExpression, SwitchCase } from "./ast.meow";
+import { Diagnostic, Precedence, ErrorCodes } from "./diagnostic.meow"; // Đã thêm ErrorCodes
+import * as System from "system";
+export class Parser {
+    fn init(tokens) {
+        this.tokens = tokens;
+        this.current = 0;
+        this.rules = {};
+        this.initRules();
+    }
+
+    fn throwParseErr(code, node) { // Đã thay đổi msg thành code
+        throw (Diagnostic.ParseErr(code, node));
+    }
+
+    fn isAtEnd() {
+        return this.peek().type == TokenType.END_OF_FILE;
+    }
+
+    fn peek() {
+        return this.tokens[this.current];
+    }
+
+    fn previous() {
+        return this.tokens[this.current - 1];
+    }
+
+    fn next() {
+        let nextIndex = this.current + 1;
+        if (nextIndex < this.tokens.size()) {
+            return this.tokens[nextIndex];
+        }
+        return this.peek();
+    }
+
+    fn advance() {
+        if (!this.isAtEnd()) {
+            this.current++;
+        }
+        return this.previous();
+    }
+
+    fn check(type) {
+        if (this.isAtEnd()) {
+            return false;
+        }
+        return this.peek().type == type;
+    }
+
+    fn match(types) {
+        for (let i = 0; i < types.size(); ++i) {
+            if (this.check(types[i])) {
+                this.advance();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    fn consume(type, code) { // Đã thay đổi errMsg thành code
+        if (this.check(type)) {
+            return this.advance();
+        }
+        // Báo lỗi bằng Error Code
+        this.throwParseErr(code, this.peek());
+    }
+
+    fn consumeSemicolon(code) { // Đã thay đổi errMsg thành code
+        if (this.match([TokenType.PUNCT_SEMICOLON])) return true;
+        let prev = this.previous();
+        let next = this.peek();
+
+        if (next && (next.type == TokenType.PUNCT_RBRACE || next.type == TokenType.END_OF_FILE)) {
+            return true;
+        }
+
+        let canEndStatement = {
+            [TokenType.IDENTIFIER]: true,
+            [TokenType.INTEGER]: true,
+            [TokenType.REAL]: true,
+            [TokenType.BOOLEAN]: true,
+            [TokenType.STRING]: true,
+            [TokenType.CHAR]: true,
+            [TokenType.PUNCT_RPAREN]: true,
+            [TokenType.PUNCT_RBRACKET]: true,
+            [TokenType.OP_INCREMENT]: true,
+            [TokenType.OP_DECREMENT]: true
+        };
+        if (prev.line != next.line && canEndStatement[prev.type]) {
+            return true;
+        }
+
+        this.throwParseErr(code, next); // Báo lỗi bằng Error Code
+    }
+
+    fn synchronize() {
+        this.advance();
+        while (!this.isAtEnd()) {
+            if (this.previous().type == TokenType.PUNCT_SEMICOLON) return;
+            switch (this.peek().type) {
+                case TokenType.KEYWORD_IF:
+                case TokenType.KEYWORD_FOR:
+                case TokenType.KEYWORD_WHILE:
+                case TokenType.KEYWORD_RETURN:
+                case TokenType.KEYWORD_LET:
+                case TokenType.KEYWORD_CONST:
+                case TokenType.KEYWORD_FUNCTION:
+                    return;
+                default:
+                    break;
+            }
+            this.advance();
+        }
+    }
+
+    fn initRules() {
+        let rules = this.rules;
+        let defaultRule = {
+            prefix: null,
+            infix: null,
+            precedence: Precedence.NONE
+        };
+        for (let i = 0; i < TokenType._TOTAL_TOKENS; ++i) {
+            rules[i] = defaultRule;
+        }
+
+        rules[TokenType.INTEGER] = { prefix: this.literal, infix: null, precedence: Precedence.PRIMARY };
+        rules[TokenType.REAL] = { prefix: this.literal, infix: null, precedence: Precedence.PRIMARY };
+        rules[TokenType.STRING] = { prefix: this.literal, infix: null, precedence: Precedence.PRIMARY };
+        rules[TokenType.BOOLEAN] = { prefix: this.literal, infix: null, precedence: Precedence.PRIMARY };
+        rules[TokenType.KEYWORD_NULL] = { prefix: this.literal, infix: null, precedence: Precedence.PRIMARY };
+        rules[TokenType.PUNCT_LBRACE] = { prefix: this.objectLiteral, infix: null, precedence: Precedence.PRIMARY };
+        rules[TokenType.PUNCT_BACKTICK] = { prefix: this.templateLiteral, infix: null, precedence: Precedence.PRIMARY };
+        rules[TokenType.IDENTIFIER] = { prefix: this.identifier, infix: null, precedence: Precedence.PRIMARY };
+        rules[TokenType.KEYWORD_FUNCTION] = { prefix: this.functionLiteral, infix: null, precedence: Precedence.PRIMARY };
+        rules[TokenType.PUNCT_LPAREN] = { prefix: this.grouping, infix: this.call, precedence: Precedence.CALL };
+        rules[TokenType.OP_MINUS] = { prefix: this.unary, infix: this.binary, precedence: Precedence.SUM };
+        rules[TokenType.OP_LOGICAL_NOT] = { prefix: this.unary, infix: null, precedence: Precedence.UNARY };
+        rules[TokenType.OP_LOGICAL_OR] = { prefix: null, infix: this.binary, precedence: Precedence.LOGICAL_OR };
+        rules[TokenType.OP_LOGICAL_AND] = { prefix: null, infix: this.binary, precedence: Precedence.LOGICAL_AND };
+        rules[TokenType.OP_PLUS] = { prefix: null, infix: this.binary, precedence: Precedence.SUM };
+        rules[TokenType.OP_MULTIPLY] = { prefix: null, infix: this.binary, precedence: Precedence.PRODUCT };
+        rules[TokenType.OP_DIVIDE] = { prefix: null, infix: this.binary, precedence: Precedence.PRODUCT };
+        rules[TokenType.OP_MODULO] = { prefix: null, infix: this.binary, precedence: Precedence.PRODUCT };
+        rules[TokenType.OP_EXPONENT] = { prefix: null, infix: this.binary, precedence: Precedence.EXPONENT };
+        rules[TokenType.OP_NULLISH] = { prefix: null, infix: this.binary, precedence: Precedence.NULLISH };
+        rules[TokenType.OP_BIT_AND] = { prefix: null, infix: this.binary, precedence: Precedence.BITWISE_AND };
+        rules[TokenType.OP_BIT_OR] = { prefix: null, infix: this.binary, precedence: Precedence.BITWISE_OR };
+        rules[TokenType.OP_BIT_XOR] = { prefix: null, infix: this.binary, precedence: Precedence.BITWISE_XOR };
+        rules[TokenType.OP_LSHIFT] = { prefix: null, infix: this.binary, precedence: Precedence.BITWISE_SHIFT };
+        rules[TokenType.OP_RSHIFT] = { prefix: null, infix: this.binary, precedence: Precedence.BITWISE_SHIFT };
+        rules[TokenType.OP_BIT_NOT] = { prefix: this.unary, infix: null, precedence: Precedence.UNARY };
+        rules[TokenType.OP_PLUS_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
+        rules[TokenType.OP_MINUS_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
+        rules[TokenType.OP_MULTIPLY_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
+        rules[TokenType.OP_DIVIDE_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
+        rules[TokenType.OP_MODULO_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
+        rules[TokenType.OP_EXPONENT_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
+        rules[TokenType.OP_AND_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
+        rules[TokenType.OP_OR_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
+        rules[TokenType.OP_XOR_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
+        rules[TokenType.OP_LSHIFT_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
+        rules[TokenType.OP_RSHIFT_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
+        rules[TokenType.OP_EQ] = { prefix: null, infix: this.binary, precedence: Precedence.COMPARISON };
+        rules[TokenType.OP_NEQ] = { prefix: null, infix: this.binary, precedence: Precedence.COMPARISON };
+        rules[TokenType.OP_LT] = { prefix: null, infix: this.binary, precedence: Precedence.COMPARISON };
+        rules[TokenType.OP_LE] = { prefix: null, infix: this.binary, precedence: Precedence.COMPARISON };
+        rules[TokenType.OP_GT] = { prefix: null, infix: this.binary, precedence: Precedence.COMPARISON };
+        rules[TokenType.OP_GE] = { prefix: null, infix: this.binary, precedence: Precedence.COMPARISON };
+        rules[TokenType.OP_ASSIGN] = { prefix: null, infix: this.assignment, precedence: Precedence.ASSIGN };
+        rules[TokenType.OP_INCREMENT] = { prefix: this.prefixUpdate, infix: this.postfixUpdate, precedence: Precedence.UNARY };
+        rules[TokenType.OP_DECREMENT] = { prefix: this.prefixUpdate, infix: this.postfixUpdate, precedence: Precedence.UNARY };
+        rules[TokenType.PUNCT_LBRACKET] = { prefix: this.arrayLiteral, infix: this.index, precedence: Precedence.INDEX };
+        rules[TokenType.OP_ELLIPSIS] = { prefix: this.spreadExpr, infix: null, precedence: Precedence.PRIMARY };
+        rules[TokenType.PUNCT_DOT] = { prefix: null, infix: this.access, precedence: Precedence.CALL };
+        rules[TokenType.KEYWORD_THIS] = { prefix: this.thisExpr, infix: null, precedence: Precedence.PRIMARY };
+        rules[TokenType.KEYWORD_SUPER] = { prefix: this.superExpr, infix: null, precedence: Precedence.PRIMARY };
+        rules[TokenType.KEYWORD_NEW] = { prefix: this.newExpr, infix: null, precedence: Precedence.PRIMARY };
+        rules[TokenType.PUNCT_QUESTION] = { prefix: null, infix: this.ternary, precedence: Precedence.TERNARY };
+    }
+
+    fn parsePrecedence(precedence) {
+        let prefixToken = this.advance();
+        let prefixRule = this.rules[prefixToken.type].prefix;
+        if (!prefixRule) {
+            this.throwParseErr(ErrorCodes.ERR_UNKNOWN_PREFIX_EXPRESSION, prefixToken);
+        }
+        let left = prefixRule();
+        while (precedence < this.rules[this.peek().type].precedence) {
+            let infixRule = this.rules[this.peek().type].infix;
+            if (!infixRule) {
+                break;
+            }
+            this.advance();
+            left = infixRule(left);
+        }
+        return left;
+    }
+
+    fn expression() {
+        return this.parsePrecedence(Precedence.NONE);
+    }
+
+    fn literal() {
+        let prevToken = this.previous();
+        switch (prevToken.type) {
+            case TokenType.INTEGER:
+                return IntegerLiteral(int(prevToken.lexeme));
+            case TokenType.REAL:
+                return RealLiteral(real(prevToken.lexeme));
+            case TokenType.STRING:
+                return StringLiteral(prevToken.lexeme);
+            case TokenType.BOOLEAN:
+                return BooleanLiteral(prevToken.lexeme == "true");
+            case TokenType.KEYWORD_NULL:
+                return NullLiteral();
+            default:
+                this.throwParseErr(ErrorCodes.ERR_UNKNOWN_LITERAL_TYPE, prevToken);
+        }
+    }
+
+    fn arrayLiteral() {
+        let token = this.previous();
+        let elements = [];
+        if (!this.check(TokenType.PUNCT_RBRACKET) && !this.isAtEnd()) {
+            do {
+                if (this.match([TokenType.OP_ELLIPSIS])) {
+                    let spreadToken = this.previous();
+                    elements.push(SpreadExpression(this.expression()));
+                } else {
+                    elements.push(this.expression());
+                }
+            } while (this.match([TokenType.PUNCT_COMMA]));
+        }
+        this.consume(TokenType.PUNCT_RBRACKET, ErrorCodes.ERR_MISSING_RBRACKET_ARRAY);
+        return ArrayLiteral(elements);
+    }
+
+    fn functionLiteral() {
+        let token = this.previous();
+        return this.parseFunctionTail(token);
+    }
+
+    fn objectLiteral() {
+        let token = this.previous();
+        let properties = [];
+        while (!this.check(TokenType.PUNCT_RBRACE) && !this.isAtEnd()) {
+            let key;
+            if (this.match([TokenType.PUNCT_LBRACKET])) {
+                key = this.expression();
+                this.consume(TokenType.PUNCT_RBRACKET, ErrorCodes.ERR_MISSING_RBRACKET_COMPUTED_KEY);
+            } else {
+                let keyToken = this.peek();
+                if (this.match([TokenType.IDENTIFIER, TokenType.STRING])) {
+                    key = StringLiteral(keyToken.lexeme);
+                } else if (this.match([TokenType.INTEGER])) {
+                    key = IntegerLiteral(keyToken.lexeme);
+                } else if (this.match([TokenType.BOOLEAN])) {
+                    key = BooleanLiteral(keyToken.lexeme == "true");
+                } else {
+                    this.throwParseErr(ErrorCodes.ERR_INVALID_OBJECT_KEY, keyToken);
+                }
+            }
+            this.consume(TokenType.PUNCT_COLON, ErrorCodes.ERR_MISSING_COLON_OBJECT_KEY);
+            let value = this.expression();
+            properties.push({ key: key, value: value });
+            if (!this.match([TokenType.PUNCT_COMMA])) {
+                break;
+            }
+        }
+        this.consume(TokenType.PUNCT_RBRACE, ErrorCodes.ERR_MISSING_RBRACE_OBJECT);
+        return ObjectLiteral(properties);
+    }
+
+    fn templateLiteral() {
+        let token = this.previous();
+        let parts = [];
+        while (!this.check(TokenType.PUNCT_BACKTICK) && !this.isAtEnd()) {
+            if (this.match([TokenType.STRING])) {
+                parts.push(StringLiteral(this.previous().lexeme));
+            } else if (this.match([TokenType.PUNCT_PERCENT_LBRACE])) {
+                parts.push(this.expression());
+                this.consume(TokenType.PUNCT_RBRACE, ErrorCodes.ERR_MISSING_RBRACE_TEMPLATE_EXPR);
+            }
+        }
+        this.consume(TokenType.PUNCT_BACKTICK, ErrorCodes.ERR_MISSING_BACKTICK_TEMPLATE);
+        return TemplateLiteral(parts);
+    }
+
+    fn identifier() {
+        return Identifier(this.previous().lexeme);
+    }
+
+    fn binary(left) {
+        let op = this.previous();
+        let right = this.parsePrecedence(this.rules[op.type].precedence);
+        return BinaryExpression(left, op.type, right);
+    }
+
+    fn unary() {
+        let op = this.previous();
+        let operand = this.parsePrecedence(Precedence.UNARY);
+        return UnaryExpression(op.type, operand);
+    }
+
+    fn grouping() {
+        let expr = this.expression();
+        this.consume(TokenType.PUNCT_RPAREN, ErrorCodes.ERR_MISSING_RPAREN_GROUPING);
+        return expr;
+    }
+
+    fn thisExpr() {
+        return ThisExpression();
+    }
+
+    fn superExpr() {
+        let token = this.previous();
+        if (this.check(TokenType.PUNCT_LPAREN)) {
+            return SuperExpression(true, null);
+        }
+        this.consume(TokenType.PUNCT_DOT, ErrorCodes.ERR_MISSING_PROPERTY_NAME_SUPER);
+        let propertyToken = this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_PROPERTY_NAME_DOT);
+        let property = Identifier(propertyToken.lexeme);
+        return SuperExpression(false, property);
+    }
+
+    fn newExpr() {
+        let token = this.previous();
+        let identToken = this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_CLASS_NAME_NEW);
+        if (!this.check(TokenType.PUNCT_LPAREN)) {
+            let callExpr = CallExpression(Identifier(identToken.lexeme), []);
+            return NewExpression(callExpr);
+        } else {
+            this.consume(TokenType.PUNCT_LPAREN, ErrorCodes.ERR_MISSING_RPAREN_GROUPING);
+            let callExpr = this.call(Identifier(identToken.lexeme));
+            return NewExpression(callExpr);
+        }
+    }
+
+    fn spreadExpr() {
+        let token = this.previous();
+        let expr = this.expression();
+        return SpreadExpression(expr);
+    }
+
+    fn prefixUpdate() {
+        let token = this.previous();
+        let expr = this.expression();
+        return PrefixUpdateExpression(token.type, expr);
+    }
+
+    fn assignment(left) {
+        let op = this.previous();
+        let value = this.parsePrecedence(Precedence.ASSIGN - 1);
+        if (left.type == "Identifier" || left.type == "IndexExpression" || left.type == "PropertyAccess") {
+            return AssignmentExpression(left, value);
+        }
+        this.throwParseErr(ErrorCodes.ERR_INVALID_ASSIGNMENT_TARGET, op);
+    }
+
+    fn compoundAssignment(left) {
+        let op = this.previous();
+        if (left.type != "Identifier" && left.type != "IndexExpression" && left.type != "PropertyAccess") {
+            this.throwParseErr(ErrorCodes.ERR_INVALID_ASSIGNMENT_TARGET, op);
+        }
+        let rightValue = this.parsePrecedence(Precedence.ASSIGN - 1);
+        let opType;
+        switch (op.type) {
+            case TokenType.OP_PLUS_ASSIGN: opType = TokenType.OP_PLUS; break;
+            case TokenType.OP_MINUS_ASSIGN: opType = TokenType.OP_MINUS; break;
+            case TokenType.OP_MULTIPLY_ASSIGN: opType = TokenType.OP_MULTIPLY; break;
+            case TokenType.OP_DIVIDE_ASSIGN: opType = TokenType.OP_DIVIDE; break;
+            case TokenType.OP_MODULO_ASSIGN: opType = TokenType.OP_MODULO; break;
+            case TokenType.OP_EXPONENT_ASSIGN: opType = TokenType.OP_EXPONENT; break;
+            case TokenType.OP_AND_ASSIGN: opType = TokenType.OP_BIT_AND; break;
+            case TokenType.OP_OR_ASSIGN: opType = TokenType.OP_BIT_OR; break;
+            case TokenType.OP_XOR_ASSIGN: opType = TokenType.OP_BIT_XOR; break;
+            case TokenType.OP_LSHIFT_ASSIGN: opType = TokenType.OP_LSHIFT; break;
+            case TokenType.OP_RSHIFT_ASSIGN: opType = TokenType.OP_RSHIFT; break;
+            default:
+                this.throwParseErr(ErrorCodes.ERR_UNKNOWN_COMPOUND_ASSIGN_OP, op);
+        }
+
+        let leftCloned = left;
+        let expr = BinaryExpression(leftCloned, opType, rightValue);
+        return AssignmentExpression(left, expr);
+    }
+
+    fn call(left) {
+        let args = [];
+        if (!this.check(TokenType.PUNCT_RPAREN)) {
+            do {
+                if (this.match([TokenType.OP_ELLIPSIS])) {
+                    let spreadToken = this.previous();
+                    args.push(SpreadExpression(this.expression()));
+                } else {
+                    args.push(this.expression());
+                }
+            } while (this.match([TokenType.PUNCT_COMMA]));
+        }
+        let closingParen = this.consume(TokenType.PUNCT_RPAREN, ErrorCodes.ERR_MISSING_RPAREN_GROUPING);
+        return CallExpression(left, args);
+    }
+
+    fn index(left) {
+        let expr = this.expression();
+        let closingBracket = this.consume(TokenType.PUNCT_RBRACKET, ErrorCodes.ERR_MISSING_RBRACKET_ARRAY);
+        return IndexExpression(left, expr);
+    }
+
+    fn access(left) {
+        let token = this.previous();
+        let propertyToken = this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_PROPERTY_NAME_DOT);
+        let property = Identifier(propertyToken.lexeme);
+        return PropertyAccess(left, property);
+    }
+
+    fn ternary(left) {
+        let token = this.previous();
+        let thenBranch = this.expression();
+        this.consume(TokenType.PUNCT_COLON, ErrorCodes.ERR_MISSING_COLON_OBJECT_KEY);
+        let elseBranch = this.parsePrecedence(Precedence.TERNARY - 1);
+        return TernaryExpression(left, thenBranch, elseBranch);
+    }
+
+    fn postfixUpdate(left) {
+        return PostfixUpdateExpression(this.previous().type, left);
+    }
+
+    fn parseFunctionTail(token) {
+        this.consume(TokenType.PUNCT_LPAREN, ErrorCodes.ERR_MISSING_RPAREN_GROUPING);
+        let params = [];
+        let restParam = null;
+        if (!this.check(TokenType.PUNCT_RPAREN) && !this.isAtEnd()) {
+            do {
+                if (this.match([TokenType.OP_ELLIPSIS])) {
+                    restParam = Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_REST_PARAM_NOT_IDENTIFIER).lexeme);
+                    break;
+                }
+                params.push(Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_INVALID_PARAMETER_NAME).lexeme));
+            } while (this.match([TokenType.PUNCT_COMMA]));
+        }
+        this.consume(TokenType.PUNCT_RPAREN, ErrorCodes.ERR_MISSING_RPAREN_PARAMS);
+        let body = this.declaration();
+        return FunctionLiteral(params, body, restParam);
+    }
+
+
+
+    fn declaration() {
+        let decl = null;
+        if (this.check(TokenType.KEYWORD_LET) || this.check(TokenType.KEYWORD_CONST)) {
+            let isConstant = false;
+            if (this.check(TokenType.KEYWORD_CONST)) {
+                isConstant = true;
+            }
+            decl = this.letDeclaration(this.advance(), isConstant);
+        } else if (this.check(TokenType.KEYWORD_FUNCTION) && this.next().type == TokenType.IDENTIFIER) {
+            decl = this.functionDeclaration(this.advance());
+        } else if (this.check(TokenType.KEYWORD_CLASS)) {
+            decl = this.classDeclaration(this.advance());
+        } else {
+            return this.statement();
+        }
+        return decl;
+    }
+
+    fn statement() {
+        if (this.check(TokenType.KEYWORD_IF)) return this.ifStatement(this.advance());
+        if (this.check(TokenType.KEYWORD_WHILE)) return this.whileStatement(this.advance());
+        if (this.check(TokenType.KEYWORD_FOR)) return this.forStatement(this.advance());
+        if (this.check(TokenType.KEYWORD_RETURN)) return this.returnStatement(this.advance());
+        if (this.check(TokenType.KEYWORD_BREAK)) return this.breakStatement(this.advance());
+        if (this.check(TokenType.KEYWORD_CONTINUE)) return this.continueStatement(this.advance());
+        if (this.check(TokenType.PUNCT_LBRACE)) return this.blockStatement(this.advance());
+        if (this.check(TokenType.KEYWORD_THROW)) return this.throwStatement(this.advance());
+        if (this.check(TokenType.KEYWORD_TRY)) return this.tryStatement(this.advance());
+        if (this.check(TokenType.KEYWORD_IMPORT)) return this.importStatement(this.advance());
+        if (this.check(TokenType.KEYWORD_EXPORT)) return this.exportStatement(this.advance());
+        if (this.check(TokenType.KEYWORD_LOG)) return this.logStatement(this.advance());
+        if (this.check(TokenType.KEYWORD_DO)) return this.doWhileStatement(this.advance());
+        if (this.check(TokenType.KEYWORD_SWITCH)) return this.switchStatement(this.advance());
+        return this.expressionStatement(this.peek());
+    }
+
+    fn letDeclaration(token, isConstant) {
+        let identifier = Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_IDENTIFIER_LET).lexeme);
+        let value = null;
+
+        if (this.match([TokenType.OP_ASSIGN])) {
+
+            value = this.expression();
+        }
+
+        this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
+        return LetStatement(identifier, value, isConstant);
+    }
+
+    // fn functionDeclaration(token) {
+    //     let isConstant = false;
+    //     let identifier = Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_FUNCTION_NAME).lexeme);
+    //     let literal = this.parseFunctionTail(token);
+    //     return LetStatement(identifier, literal, isConstant);
+    // }
+
+    // fn classDeclaration(token) {
+    //     let name = Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_CLASS_NAME_DECL).lexeme);
+    //     let superclass = null;
+    //     if (this.match([TokenType.PUNCT_COLON])) {
+    //         superclass = Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_SUPERCLASS_NAME).lexeme);
+    //     }
+    //     this.consume(TokenType.PUNCT_LBRACE, ErrorCodes.ERR_MISSING_LBRACE_CLASS_BODY);
+    //     let methods = [];
+    //     let static_fields = [];
+    //     while (!this.check(TokenType.PUNCT_RBRACE) && !this.isAtEnd()) {
+    //         if (this.match([TokenType.KEYWORD_STATIC])) {
+    //             if (this.check(TokenType.KEYWORD_LET) || this.check(TokenType.KEYWORD_FUNCTION) || this.check(TokenType.KEYWORD_CLASS)) {
+    //                 static_fields.push(this.declaration());
+    //             } else {
+    //                 this.throwParseErr(ErrorCodes.ERR_INVALID_STATIC_DECLARATION, this.peek());
+    //             }
+    //         } else {
+    //             methods.push(this.functionDeclaration(this.advance()));
+    //         }
+    //     }
+    //     this.consume(TokenType.PUNCT_RBRACE, ErrorCodes.ERR_MISSING_RBRACE_CLASS_BODY);
+    //     return ClassStatement(name, superclass, methods, static_fields);
+    // }
+
+    // THAY ĐỔI HÀM NÀY
+    fn functionDeclaration(token) {
+        let identifier = Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_FUNCTION_NAME).lexeme);
+        let literal = this.parseFunctionTail(token);
+        // Thay vì trả về LetStatement, ta trả về FunctionStatement
+        return FunctionStatement(identifier, literal);
+    }
+
+    // THAY ĐỔI HÀM NÀY
+    fn classDeclaration(token) {
+        let name = Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_CLASS_NAME_DECL).lexeme);
+        let superclass = null;
+        if (this.match([TokenType.PUNCT_COLON])) {
+            superclass = Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_SUPERCLASS_NAME).lexeme);
+        }
+        this.consume(TokenType.PUNCT_LBRACE, ErrorCodes.ERR_MISSING_LBRACE_CLASS_BODY);
+        let methods = [];
+        let static_fields = [];
+        while (!this.check(TokenType.PUNCT_RBRACE) && !this.isAtEnd()) {
+            if (this.match([TokenType.KEYWORD_STATIC])) {
+                if (this.check(TokenType.KEYWORD_LET) || this.check(TokenType.KEYWORD_FUNCTION) || this.check(TokenType.KEYWORD_CLASS)) {
+                    static_fields.push(this.declaration());
+                } else {
+                    this.throwParseErr(ErrorCodes.ERR_INVALID_STATIC_DECLARATION, this.peek());
+                }
+            } else {
+                // Đảm bảo rằng phương thức cũng được parse như một FunctionStatement
+                this.consume(TokenType.KEYWORD_FUNCTION, ErrorCodes.ERR_MISSING_FUNCTION_NAME);
+                methods.push(this.functionDeclaration(this.previous()));
+            }
+        }
+        this.consume(TokenType.PUNCT_RBRACE, ErrorCodes.ERR_MISSING_RBRACE_CLASS_BODY);
+        return ClassStatement(name, superclass, methods, static_fields);
+    }
+
+
+    fn ifStatement(token) {
+        let condition = this.expression();
+        let thenBranch = this.statement();
+        let elseBranch = null;
+        if (this.match([TokenType.KEYWORD_ELSE])) {
+            elseBranch = this.declaration();
+        }
+        return IfStatement(condition, thenBranch, elseBranch);
+    }
+
+    fn whileStatement(token) {
+        let condition = this.expression();
+        let body = this.declaration();
+        return WhileStatement(condition, body);
+    }
+
+    fn forStatement(token) {
+        let hasParen = this.match([TokenType.PUNCT_LPAREN]);
+        let isForIn = (this.peek().type == TokenType.IDENTIFIER && (this.next().type == TokenType.KEYWORD_IN || this.next().type == TokenType.PUNCT_COLON));
+        if (isForIn) {
+            let variable = Identifier(this.advance().lexeme);
+            if (!this.match([TokenType.KEYWORD_IN, TokenType.PUNCT_COLON])) {
+                this.throwParseErr(ErrorCodes.ERR_MISSING_IN_OR_COLON_FORIN, this.peek());
+            }
+            let collection = this.expression();
+            if (hasParen) {
+                this.consume(TokenType.PUNCT_RPAREN, ErrorCodes.ERR_MISSING_RPAREN_FORIN);
+            } else {
+                this.match([TokenType.PUNCT_RPAREN]);
+            }
+            let body = this.declaration();
+            return ForInStatement(variable, collection, body);
+        }
+        let init = null;
+        if (!this.match([TokenType.PUNCT_SEMICOLON])) {
+            init = this.declaration();
+        }
+        let condition = null;
+        if (!this.check(TokenType.PUNCT_SEMICOLON)) {
+            condition = this.expression();
+        }
+        this.consume(TokenType.PUNCT_SEMICOLON, ErrorCodes.ERR_MISSING_SEMICOLON_FOR_CONDITION);
+        let update = null;
+        if (!this.check(TokenType.PUNCT_RPAREN)) {
+            update = this.expression();
+        }
+        if (hasParen) {
+            this.consume(TokenType.PUNCT_RPAREN, ErrorCodes.ERR_MISSING_RPAREN_FOR);
+        } else {
+            this.match([TokenType.PUNCT_RPAREN]);
+        }
+        let body = this.declaration();
+        return ForStatement(init, condition, update, body);
+    }
+
+    fn returnStatement(token) {
+        let value = null;
+        if (!this.check(TokenType.PUNCT_SEMICOLON)) {
+            value = this.expression();
+        }
+        this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
+        return ReturnStatement(value);
+    }
+
+    fn breakStatement(token) {
+        this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
+        return BreakStatement();
+    }
+
+    fn continueStatement(token) {
+        this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
+        return ContinueStatement();
+    }
+
+    fn blockStatement(token) {
+        let block = BlockStatement([]);
+        while (!this.check(TokenType.PUNCT_RBRACE) && !this.isAtEnd()) {
+            let decl = this.declaration();
+            if (decl) {
+                block.statements.push(decl);
+            }
+        }
+        this.consume(TokenType.PUNCT_RBRACE, ErrorCodes.ERR_MISSING_RBRACE_BLOCK);
+        return block;
+    }
+
+    fn throwStatement(token) {
+        let args = null;
+        if (!this.check(TokenType.PUNCT_SEMICOLON)) {
+            args = this.expression();
+        }
+        this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
+        return ThrowStatement(args);
+    }
+
+    fn tryStatement(token) {
+        // this.consume(TokenType.PUNCT_LBRACE, "Thiếu '{' sau từ khóa 'try'"));
+        let tryBlock = this.blockStatement(this.consume(TokenType.PUNCT_LBRACE, ErrorCodes.ERR_MISSING_LBRACE_TRY_BLOCK));
+        
+        this.consume(TokenType.KEYWORD_CATCH, ErrorCodes.ERR_MISSING_CATCH);
+        this.consume(TokenType.PUNCT_LPAREN, ErrorCodes.ERR_MISSING_LPAREN_CATCH);
+        let catchVar = Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_CATCH_VAR).lexeme);
+        this.consume(TokenType.PUNCT_RPAREN, ErrorCodes.ERR_MISSING_RPAREN_CATCH);
+        let catchBlock = this.declaration();
+        return TryStatement(tryBlock, catchVar, catchBlock);
+    }
+
+    fn importStatement(token) {
+        let namedImports = [];
+        let namespaceImport = null;
+        let path = null;
+        let importAll = false;
+        if (this.match([TokenType.PUNCT_LBRACE])) {
+            while (!this.check(TokenType.PUNCT_RBRACE) && !this.isAtEnd()) {
+                do {
+                    namedImports.push(Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_INVALID_IMPORT_IDENTIFIER).lexeme));
+                } while (this.match([TokenType.PUNCT_COMMA]));
+            }
+            this.consume(TokenType.PUNCT_RBRACE, ErrorCodes.ERR_MISSING_RBRACE_IMPORT_LIST);
+            this.consume(TokenType.KEYWORD_FROM, ErrorCodes.ERR_MISSING_FROM_IMPORT);
+            path = this.expression();
+        } else if (this.match([TokenType.OP_MULTIPLY])) {
+            this.consume(TokenType.KEYWORD_AS, ErrorCodes.ERR_MISSING_AS_IMPORT);
+            namespaceImport = Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_NAMESPACE_IMPORT_NAME).lexeme);
+            this.consume(TokenType.KEYWORD_FROM, ErrorCodes.ERR_MISSING_FROM_IMPORT);
+            path = this.expression();
+        } else {
+            path = this.expression();
+            importAll = true;
+        }
+        this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
+        return ImportStatement(path, namedImports, namespaceImport, importAll);
+    }
+
+    fn exportStatement(token) {
+        let decl;
+        if (this.check(TokenType.KEYWORD_LET) || this.check(TokenType.KEYWORD_CONST) || this.check(TokenType.KEYWORD_FUNCTION) || this.check(TokenType.KEYWORD_CLASS)) {
+            decl = this.declaration();
+            return ExportStatement(decl, []);
+        } else if (this.match([TokenType.PUNCT_LBRACE])) {
+            let specifiers = [];
+            while (!this.check(TokenType.PUNCT_RBRACE) && !this.isAtEnd()) {
+                do {
+                    specifiers.push(Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_INVALID_EXPORT_IDENTIFIER).lexeme));
+                } while (this.match([TokenType.PUNCT_COMMA]));
+            }
+            this.consume(TokenType.PUNCT_RBRACE, ErrorCodes.ERR_MISSING_RBRACE_IMPORT_LIST);
+            this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
+            return ExportStatement(null, specifiers);
+        }
+        this.throwParseErr(ErrorCodes.ERR_INVALID_EXPORT_SYNTAX, this.peek());
+    }
+
+    fn expressionStatement(token) {
+        let expr = this.expression();
+        this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
+        return ExpressionStatement(expr);
+    }
+
+    fn logStatement(token) {
+        let expr = this.expression();
+        this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
+        return LogStatement(expr);
+    }
+
+    fn switchStatement(token) {
+        let valueToSwitch = this.expression();
+        this.consume(TokenType.PUNCT_LBRACE, ErrorCodes.ERR_MISSING_LBRACE_SWITCH);
+        let cases = [];
+        while (!this.check(TokenType.PUNCT_RBRACE) && !this.isAtEnd()) {
+            let caseValue = null;
+            let caseToken = this.peek();
+            if (this.match([TokenType.KEYWORD_CASE])) {
+                caseValue = this.expression();
+            } else if (this.match([TokenType.KEYWORD_DEFAULT])) {
+            } else {
+                this.throwParseErr(ErrorCodes.ERR_EXPECTED_CASE_OR_DEFAULT, this.peek());
+            }
+            this.consume(TokenType.PUNCT_COLON, ErrorCodes.ERR_MISSING_COLON_CASE);
+            let statements = [];
+            while (!this.check(TokenType.PUNCT_RBRACE) && !this.check(TokenType.KEYWORD_CASE) && !this.check(TokenType.KEYWORD_DEFAULT) && !this.isAtEnd()) {
+                statements.push(this.statement());
+            }
+            cases.push(SwitchCase(caseValue, statements));
+        }
+        this.consume(TokenType.PUNCT_RBRACE, ErrorCodes.ERR_MISSING_RBRACE_SWITCH);
+        return SwitchStatement(valueToSwitch, cases);
+    }
+
+    fn doWhileStatement(token) {
+        let body = this.statement();
+        this.consume(TokenType.KEYWORD_WHILE, ErrorCodes.ERR_MISSING_WHILE_DOWHILE);
+        let condition = this.expression();
+        this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
+        return DoWhileStatement(body, condition);
+    }
+
+    fn parseProgram() {
+        let program = Program([]);
+        while (!this.isAtEnd()) {
+            try {
+                let decl = this.declaration();
+                if (decl) {
+
+                    program.body.push(decl);
+                }
+            } catch (e) {
+                print(e);
+                System.exit(42);
+                // print(this.synchronize);
+                // this.synchronize();
+            }
+        }
+        return program;
+    }
+}
