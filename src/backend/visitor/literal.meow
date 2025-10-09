@@ -123,14 +123,11 @@ export let visitObjectLiteral = fn(cg, node) {
 
 export let visitFunctionLiteral = fn(cg, node) {
     let descriptiveName;
-    // Kiểm tra xem hàm có tên được truyền từ FunctionStatement không
     if (node.name) { 
-        // Dùng tên thật của hàm, nhưng thay thế các ký tự không an toàn để tránh lỗi
         let safeName = String.replace(node.name, "@", "_");
         safeName = String.replace(safeName, " ", "_");
         descriptiveName = safeName;
     } else { 
-        // Nếu là hàm ẩn danh, tạo tên như cũ
         descriptiveName = Emitter.createAnonymousFunctionName();
     }
     

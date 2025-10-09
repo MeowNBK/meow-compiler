@@ -1,6 +1,6 @@
 import * as String from "string";
 import * as Io from "io";
-import { tokenTypeToString } from "./token.meow"; // Thêm import này
+import { tokenTypeToString } from "./token.meow";
 
 export let ErrorCodes = {
     ERR_UNEXPECTED_TOKEN: 1001,
@@ -50,8 +50,23 @@ export let ErrorCodes = {
     ERR_UNKNOWN_COMPOUND_ASSIGN_OP: 1045,
     ERR_MISSING_PROPERTY_NAME_DOT: 1046,
     ERR_MISSING_LBRACE_TRY_BLOCK: 1047,
-    ERR_INVALID_IMPORT_IDENTIFIER: 1048, // Thêm lỗi cho import/export identifier
+    ERR_INVALID_IMPORT_IDENTIFIER: 1048,
     ERR_INVALID_EXPORT_IDENTIFIER: 1049,
+    
+    // NEW CODES for Meow-C Static Types
+    ERR_MISSING_AT_TYPE: 1050, 
+    ERR_MISSING_TYPENAME_AFTER_AT: 1051,
+
+    ERR_INVALID_BASE_TYPE: 2001,
+    ERR_TYPE_MISMATCH_DECLARATION: 2002,
+    ERR_VARIABLE_REDEFINITION: 2003,
+    ERR_ASSIGNMENT_TO_CONST: 2004,
+    ERR_TYPE_MISMATCH_ASSIGNMENT: 2005,
+    ERR_BINARY_OP_TYPE_MISMATCH: 2006,
+    ERR_OP_ON_POINTER: 2007,
+    ERR_DEREFERENCE_NON_POINTER: 2008,
+    ERR_ADDRESSOF_NON_LVALUE: 2009,
+    ERR_UNDECLARED_VARIABLE: 2010,
 };
 
 export let ErrorMessages = {
@@ -104,6 +119,21 @@ export let ErrorMessages = {
     [ErrorCodes.ERR_MISSING_LBRACE_TRY_BLOCK]: "Thiếu '{' sau từ khóa 'try'",
     [ErrorCodes.ERR_INVALID_IMPORT_IDENTIFIER]: "Tên định danh không xác định trong danh sách import",
     [ErrorCodes.ERR_INVALID_EXPORT_IDENTIFIER]: "Cần tên biến trong danh sách export",
+
+    // NEW MESSAGES for Meow-C Static Types
+    [ErrorCodes.ERR_MISSING_AT_TYPE]: "Cần ký tự '@' để khai báo kiểu tĩnh (ví dụ: let @int32 x;)",
+    [ErrorCodes.ERR_MISSING_TYPENAME_AFTER_AT]: "Cần tên kiểu (ví dụ: int32, char) sau ký tự '@'",
+
+    [ErrorCodes.ERR_INVALID_BASE_TYPE]: "Kiểu cơ sở '%{typeName}' không hợp lệ. Chỉ hỗ trợ %{validTypes}.",
+    [ErrorCodes.ERR_TYPE_MISMATCH_DECLARATION]: "Kiểu không khớp: Không thể gán giá trị kiểu '%{valueType}' cho biến kiểu '%{declaredType}'.",
+    [ErrorCodes.ERR_VARIABLE_REDEFINITION]: "Lỗi định nghĩa: Biến '%{variableName}' đã được định nghĩa trong phạm vi này.",
+    [ErrorCodes.ERR_ASSIGNMENT_TO_CONST]: "Lỗi hằng số: Không thể gán giá trị mới cho hằng số '%{variableName}'.",
+    [ErrorCodes.ERR_TYPE_MISMATCH_ASSIGNMENT]: "Kiểu không khớp trong phép gán. Kiểu đích ('%{targetType}') và kiểu nguồn ('%{valueType}') không khớp.",
+    [ErrorCodes.ERR_BINARY_OP_TYPE_MISMATCH]: "Toán tử hai ngôi yêu cầu hai vế có cùng kiểu dữ liệu.",
+    [ErrorCodes.ERR_OP_ON_POINTER]: "Lỗi con trỏ: Không thể thực hiện phép toán số học/logic trên con trỏ.",
+    [ErrorCodes.ERR_DEREFERENCE_NON_POINTER]: "Lỗi dereference: Không thể dereference một giá trị không phải là con trỏ (kiểu: %{typeStr}).",
+    [ErrorCodes.ERR_ADDRESSOF_NON_LVALUE]: "Lỗi '&': Toán tử '&' chỉ có thể lấy địa chỉ của một l-value (biến, *ptr, hoặc array[index]).",
+    [ErrorCodes.ERR_UNDECLARED_VARIABLE]: "Lỗi định danh: Biến '%{variableName}' chưa được khai báo.",
 };
 
 fn _getLineContent(filename, lineNum) {
@@ -119,7 +149,10 @@ fn _getLineContent(filename, lineNum) {
     return null;
 }
 
-export fn getErrorMessage(code, token) {
+export fn getParseErrorMessage(code, token) {
+    print(code);
+    print(token);
+    return;
     let filename = Io.getFileName(token.file);
     let baseMsg = ErrorMessages[code];
     if (!baseMsg) {
@@ -127,35 +160,65 @@ export fn getErrorMessage(code, token) {
     }
 
     let msg = "Lỗi phân tích cú pháp (Code: " + str(code) + "): " + baseMsg;
-
     if (token.type != null) {
         let tokenTypeString = tokenTypeToString(token.type);
         msg = String.replace(msg, "%{tokenType}", tokenTypeString);
     }
     
     let finalMsg = msg + " tại " + filename + ", dòng " + token.line + ", cột " + token.col;
-
     let lineContent = _getLineContent(token.file, token.line);
     if (lineContent) {
         let indicator = "";
-
         for (let i = 1; i < token.col; ++i) {
             indicator += (lineContent[i-1] == "\t") ? "\t" : " ";
         }
         indicator += "^";
-
         finalMsg += "\n\n" + lineContent + "\n" + indicator;
     }
 
     return finalMsg;
 }
 
+fn getSemanticErrorMessage(code, node, replacements) {
+    let token = node.token;
+    let filename = Io.getFileName(token.file);
+    let baseMsg = ErrorMessages[code];
+    if (!baseMsg) {
+        return "Lỗi ngữ nghĩa không xác định (Code: " + str(code) + ") tại " + filename + ", dòng " + token.line + ", cột " + token.col;
+    }
+
+    let msg = "Lỗi Phân Tích Ngữ Nghĩa (Code: " + str(code) + "): " + baseMsg;
+
+    if (replacements) {
+        for (key in replacements.keys()) {
+            msg = String.replace(msg, "%{" + key + "}", str(key));
+        }
+    }
+
+    let finalMsg = msg + " tại " + filename + ", dòng " + token.line + ", cột " + token.col;
+    let lineContent = _getLineContent(token.file, token.line);
+    if (lineContent) {
+        let indicator = "";
+        for (let i = 1; i < token.col; ++i) {
+            indicator += (lineContent[i-1] == "\t") ? "\t" : " ";
+        }
+        indicator += "^";
+        finalMsg += "\n\n" + lineContent + "\n" + indicator;
+    }
+
+    return finalMsg;
+}
 
 export let Diagnostic = {
-    ParseErr: fn(code, token) {
-        return getErrorMessage(code, token);
-    }
+    ParseErr: fn(code, node) {
+        print(node);
+        return getParseErrorMessage(code, node.token);
+    },
+    SemanticErr: fn(code, node, replacements) {
+        return getSemanticErrorMessage(code, node, replacements);
+    },
 };
+
 
 export let Precedence = {
     NONE: 0,

@@ -1,5 +1,6 @@
 import { isalpha, isdigit, isxdigit, isalnum, isspace } from "./checkType.meow";
 import { Token, TokenType } from "./token.meow";
+import { keywords, symbols } from "./tokenTables.meow"
 
 export class Lexer {
     fn init(source, filename) {
@@ -15,108 +16,8 @@ export class Lexer {
         this.Token = Token;
         this.TokenType = TokenType;
 
-        this.keywords = {
-            "let": this.TokenType.KEYWORD_LET,
-            "const": this.TokenType.KEYWORD_CONST,
-            "while": this.TokenType.KEYWORD_WHILE,
-            "for": this.TokenType.KEYWORD_FOR,
-            "if": this.TokenType.KEYWORD_IF,
-            "else": this.TokenType.KEYWORD_ELSE,
-            "return": this.TokenType.KEYWORD_RETURN,
-            "break": this.TokenType.KEYWORD_BREAK,
-            "continue": this.TokenType.KEYWORD_CONTINUE,
-            "function": this.TokenType.KEYWORD_FUNCTION,
-            "fn": this.TokenType.KEYWORD_FUNCTION,
-            "null": this.TokenType.KEYWORD_NULL,
-
-            "class": this.TokenType.KEYWORD_CLASS,
-            "this": this.TokenType.KEYWORD_THIS,
-            "super": this.TokenType.KEYWORD_SUPER,
-            "new": this.TokenType.KEYWORD_NEW,
-            "static": this.TokenType.KEYWORD_STATIC,
-            "throw": this.TokenType.KEYWORD_THROW,
-            "import": this.TokenType.KEYWORD_IMPORT,
-            "export": this.TokenType.KEYWORD_EXPORT,
-            "as": this.TokenType.KEYWORD_AS,
-            "from": this.TokenType.KEYWORD_FROM,
-            "try": this.TokenType.KEYWORD_TRY,
-            "catch": this.TokenType.KEYWORD_CATCH,
-
-            "switch": this.TokenType.KEYWORD_SWITCH,
-            "case": this.TokenType.KEYWORD_CASE,
-            "default": this.TokenType.KEYWORD_DEFAULT,
-            
-            "do": this.TokenType.KEYWORD_DO,
-            "in": this.TokenType.KEYWORD_IN,
-
-            "log": this.TokenType.KEYWORD_LOG,
-
-            "true": this.TokenType.BOOLEAN,
-            "false": this.TokenType.BOOLEAN
-        };
-        this.symbols = {
-            "+": this.TokenType.OP_PLUS,
-            "-": this.TokenType.OP_MINUS,
-            "*": this.TokenType.OP_MULTIPLY,
-            "/": this.TokenType.OP_DIVIDE,
-            "%": this.TokenType.OP_MODULO,
-
-            "&": this.TokenType.OP_BIT_AND,
-            "|": this.TokenType.OP_BIT_OR,
-            "^": this.TokenType.OP_BIT_XOR,
-            "~": this.TokenType.OP_BIT_NOT,
-            "<<": this.TokenType.OP_LSHIFT,
-            ">>": this.TokenType.OP_RSHIFT,
-
-            "==": this.TokenType.OP_EQ,
-            "!=": this.TokenType.OP_NEQ,
-            "<": this.TokenType.OP_LT,
-            ">": this.TokenType.OP_GT,
-            "<=": this.TokenType.OP_LE,
-            ">=": this.TokenType.OP_GE,
-
-            "&&": this.TokenType.OP_LOGICAL_AND,
-            "||": this.TokenType.OP_LOGICAL_OR,
-            "!": this.TokenType.OP_LOGICAL_NOT,
-
-            "=": this.TokenType.OP_ASSIGN,
-
-            "+=": this.TokenType.OP_PLUS_ASSIGN,
-            "-=": this.TokenType.OP_MINUS_ASSIGN,
-            "*=": this.TokenType.OP_MULTIPLY_ASSIGN,
-            "/=": this.TokenType.OP_DIVIDE_ASSIGN,
-            "%=": this.TokenType.OP_MODULO_ASSIGN,
-            "**=": this.TokenType.OP_EXPONENT_ASSIGN,
-
-            "&=": this.TokenType.OP_AND_ASSIGN,
-            "|=": this.TokenType.OP_OR_ASSIGN,
-            "^=": this.TokenType.OP_XOR_ASSIGN,
-            "~=": this.TokenType.OP_NOT_ASSIGN,
-            "<<=": this.TokenType.OP_LSHIFT_ASSIGN,
-            ">>=": this.TokenType.OP_RSHIFT_ASSIGN,
-
-            "++": this.TokenType.OP_INCREMENT,
-            "--": this.TokenType.OP_DECREMENT,
-
-            "...": this.TokenType.OP_ELLIPSIS,
-            "??": this.TokenType.OP_NULLISH,
-            "**": this.TokenType.OP_EXPONENT,
-
-            ";": this.TokenType.PUNCT_SEMICOLON,
-            ":": this.TokenType.PUNCT_COLON,
-            ",": this.TokenType.PUNCT_COMMA,
-            "(": this.TokenType.PUNCT_LPAREN,
-            ")": this.TokenType.PUNCT_RPAREN,
-            "{": this.TokenType.PUNCT_LBRACE,
-            "}": this.TokenType.PUNCT_RBRACE,
-            "[": this.TokenType.PUNCT_LBRACKET,
-            "]": this.TokenType.PUNCT_RBRACKET,
-            ".": this.TokenType.PUNCT_DOT,
-            "?": this.TokenType.PUNCT_QUESTION,
-
-            "`": this.TokenType.PUNCT_BACKTICK,
-            "%{": this.TokenType.PUNCT_PERCENT_LBRACE
-        };
+        this.keywords = keywords;
+        this.symbols = symbols;
     }
 
     fn reset() {
@@ -124,7 +25,6 @@ export class Lexer {
         this.line = 1;
         this.col = 1;
         this.currChar = this.src.size() == 0 ? '\0' : this.src[0];
-        // this.filename = "<unknown>";
         this.isInTemplateMode = false;
         this.isInExpression = false;
     }
@@ -325,6 +225,7 @@ export class Lexer {
         }
 
         this.advance();
+        print("Warning token is...", lex1);
         return this.makeToken(this.TokenType.UNKNOWN, lex1, startLine, startCol);
     }
 
@@ -441,6 +342,7 @@ export class Lexer {
         }
 
         if (token == null) {
+            print("Warning, token is null?");
             token = this.makeToken(this.TokenType.UNKNOWN, "", startLine, startCol);
         }
 

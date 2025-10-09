@@ -1,7 +1,8 @@
 import { TokenType } from "./token.meow";
-import { Program, LetStatement, FunctionStatement, FunctionLiteral, ClassStatement, IfStatement, WhileStatement, ForStatement, ReturnStatement, BreakStatement, ContinueStatement, BlockStatement, ThrowStatement, TryStatement, ImportStatement, ExportStatement, LogStatement, DoWhileStatement, SwitchStatement, ForInStatement, ExpressionStatement, IntegerLiteral, RealLiteral, StringLiteral, BooleanLiteral, NullLiteral, ArrayLiteral, ObjectLiteral, TemplateLiteral, Identifier, BinaryExpression, UnaryExpression, CallExpression, IndexExpression, AssignmentExpression, TernaryExpression, PropertyAccess, ThisExpression, NewExpression, SuperExpression, PrefixUpdateExpression, PostfixUpdateExpression, SpreadExpression, SwitchCase } from "./ast.meow";
-import { Diagnostic, Precedence, ErrorCodes } from "./diagnostic.meow"; // Đã thêm ErrorCodes
+import * as Ast from "./ast.meow";
+import { Diagnostic, Precedence, ErrorCodes } from "./diagnostic.meow";
 import * as System from "system";
+
 export class Parser {
     fn init(tokens) {
         this.tokens = tokens;
@@ -10,7 +11,7 @@ export class Parser {
         this.initRules();
     }
 
-    fn throwParseErr(code, node) { // Đã thay đổi msg thành code
+    fn throwParseErr(code, node) {
         throw (Diagnostic.ParseErr(code, node));
     }
 
@@ -58,15 +59,14 @@ export class Parser {
         return false;
     }
 
-    fn consume(type, code) { // Đã thay đổi errMsg thành code
+    fn consume(type, code) {
         if (this.check(type)) {
             return this.advance();
         }
-        // Báo lỗi bằng Error Code
         this.throwParseErr(code, this.peek());
     }
 
-    fn consumeSemicolon(code) { // Đã thay đổi errMsg thành code
+    fn consumeSemicolon(code) {
         if (this.match([TokenType.PUNCT_SEMICOLON])) return true;
         let prev = this.previous();
         let next = this.peek();
@@ -91,7 +91,7 @@ export class Parser {
             return true;
         }
 
-        this.throwParseErr(code, next); // Báo lỗi bằng Error Code
+        this.throwParseErr(code, next);
     }
 
     fn synchronize() {
@@ -125,53 +125,65 @@ export class Parser {
             rules[i] = defaultRule;
         }
 
+        // --- LITERAL RULES ---
         rules[TokenType.INTEGER] = { prefix: this.literal, infix: null, precedence: Precedence.PRIMARY };
         rules[TokenType.REAL] = { prefix: this.literal, infix: null, precedence: Precedence.PRIMARY };
         rules[TokenType.STRING] = { prefix: this.literal, infix: null, precedence: Precedence.PRIMARY };
         rules[TokenType.BOOLEAN] = { prefix: this.literal, infix: null, precedence: Precedence.PRIMARY };
+        rules[TokenType.CHAR] = { prefix: this.literal, infix: null, precedence: Precedence.PRIMARY };
         rules[TokenType.KEYWORD_NULL] = { prefix: this.literal, infix: null, precedence: Precedence.PRIMARY };
+        // --- STRUCTURE / LITERAL EXPRESSIONS ---
         rules[TokenType.PUNCT_LBRACE] = { prefix: this.objectLiteral, infix: null, precedence: Precedence.PRIMARY };
         rules[TokenType.PUNCT_BACKTICK] = { prefix: this.templateLiteral, infix: null, precedence: Precedence.PRIMARY };
         rules[TokenType.IDENTIFIER] = { prefix: this.identifier, infix: null, precedence: Precedence.PRIMARY };
         rules[TokenType.KEYWORD_FUNCTION] = { prefix: this.functionLiteral, infix: null, precedence: Precedence.PRIMARY };
         rules[TokenType.PUNCT_LPAREN] = { prefix: this.grouping, infix: this.call, precedence: Precedence.CALL };
+        // --- UNARY OPERATORS ---
         rules[TokenType.OP_MINUS] = { prefix: this.unary, infix: this.binary, precedence: Precedence.SUM };
         rules[TokenType.OP_LOGICAL_NOT] = { prefix: this.unary, infix: null, precedence: Precedence.UNARY };
+        rules[TokenType.OP_BIT_NOT] = { prefix: this.unary, infix: null, precedence: Precedence.UNARY };
+        rules[TokenType.OP_MULTIPLY] = { prefix: this.unary, infix: this.binary, precedence: Precedence.PRODUCT };
+        rules[TokenType.OP_BIT_AND] = { prefix: this.unary, infix: this.binary, precedence: Precedence.BITWISE_AND };
+        // --- BINARY / LOGICAL OPERATORS ---
         rules[TokenType.OP_LOGICAL_OR] = { prefix: null, infix: this.binary, precedence: Precedence.LOGICAL_OR };
         rules[TokenType.OP_LOGICAL_AND] = { prefix: null, infix: this.binary, precedence: Precedence.LOGICAL_AND };
         rules[TokenType.OP_PLUS] = { prefix: null, infix: this.binary, precedence: Precedence.SUM };
-        rules[TokenType.OP_MULTIPLY] = { prefix: null, infix: this.binary, precedence: Precedence.PRODUCT };
         rules[TokenType.OP_DIVIDE] = { prefix: null, infix: this.binary, precedence: Precedence.PRODUCT };
         rules[TokenType.OP_MODULO] = { prefix: null, infix: this.binary, precedence: Precedence.PRODUCT };
         rules[TokenType.OP_EXPONENT] = { prefix: null, infix: this.binary, precedence: Precedence.EXPONENT };
         rules[TokenType.OP_NULLISH] = { prefix: null, infix: this.binary, precedence: Precedence.NULLISH };
-        rules[TokenType.OP_BIT_AND] = { prefix: null, infix: this.binary, precedence: Precedence.BITWISE_AND };
         rules[TokenType.OP_BIT_OR] = { prefix: null, infix: this.binary, precedence: Precedence.BITWISE_OR };
         rules[TokenType.OP_BIT_XOR] = { prefix: null, infix: this.binary, precedence: Precedence.BITWISE_XOR };
         rules[TokenType.OP_LSHIFT] = { prefix: null, infix: this.binary, precedence: Precedence.BITWISE_SHIFT };
         rules[TokenType.OP_RSHIFT] = { prefix: null, infix: this.binary, precedence: Precedence.BITWISE_SHIFT };
-        rules[TokenType.OP_BIT_NOT] = { prefix: this.unary, infix: null, precedence: Precedence.UNARY };
-        rules[TokenType.OP_PLUS_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
-        rules[TokenType.OP_MINUS_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
-        rules[TokenType.OP_MULTIPLY_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
-        rules[TokenType.OP_DIVIDE_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
-        rules[TokenType.OP_MODULO_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
-        rules[TokenType.OP_EXPONENT_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
-        rules[TokenType.OP_AND_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
-        rules[TokenType.OP_OR_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
-        rules[TokenType.OP_XOR_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
-        rules[TokenType.OP_LSHIFT_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
-        rules[TokenType.OP_RSHIFT_ASSIGN] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
-        rules[TokenType.OP_EQ] = { prefix: null, infix: this.binary, precedence: Precedence.COMPARISON };
-        rules[TokenType.OP_NEQ] = { prefix: null, infix: this.binary, precedence: Precedence.COMPARISON };
-        rules[TokenType.OP_LT] = { prefix: null, infix: this.binary, precedence: Precedence.COMPARISON };
-        rules[TokenType.OP_LE] = { prefix: null, infix: this.binary, precedence: Precedence.COMPARISON };
-        rules[TokenType.OP_GT] = { prefix: null, infix: this.binary, precedence: Precedence.COMPARISON };
-        rules[TokenType.OP_GE] = { prefix: null, infix: this.binary, precedence: Precedence.COMPARISON };
+        // --- ASSIGNMENTS ---
+        let assignmentOperators = [
+            TokenType.OP_PLUS_ASSIGN, TokenType.OP_MINUS_ASSIGN,
+            TokenType.OP_MULTIPLY_ASSIGN, TokenType.OP_DIVIDE_ASSIGN,
+            TokenType.OP_MODULO_ASSIGN, TokenType.OP_EXPONENT_ASSIGN,
+            TokenType.OP_AND_ASSIGN, TokenType.OP_OR_ASSIGN,
+            TokenType.OP_XOR_ASSIGN, TokenType.OP_LSHIFT_ASSIGN,
+            TokenType.OP_RSHIFT_ASSIGN
+        ];
+        for (op in assignmentOperators) {
+            rules[op] = { prefix: null, infix: this.compoundAssignment, precedence: Precedence.ASSIGN };
+        }
         rules[TokenType.OP_ASSIGN] = { prefix: null, infix: this.assignment, precedence: Precedence.ASSIGN };
+        let comparisonOperators = [
+            TokenType.OP_EQ, TokenType.OP_NEQ,
+            TokenType.OP_LT, TokenType.OP_LE,
+            TokenType.OP_GT, TokenType.OP_GE
+        ];
+        for (op in comparisonOperators) {
+            rules[op] = { prefix: null, infix: this.binary, precedence: Precedence.COMPARISON };
+        }
+
+        // --- UPDATE OPERATORS ---
         rules[TokenType.OP_INCREMENT] = { prefix: this.prefixUpdate, infix: this.postfixUpdate, precedence: Precedence.UNARY };
         rules[TokenType.OP_DECREMENT] = { prefix: this.prefixUpdate, infix: this.postfixUpdate, precedence: Precedence.UNARY };
+        // --- ARRAY / INDEXING ---
         rules[TokenType.PUNCT_LBRACKET] = { prefix: this.arrayLiteral, infix: this.index, precedence: Precedence.INDEX };
+        // --- OTHER ---
         rules[TokenType.OP_ELLIPSIS] = { prefix: this.spreadExpr, infix: null, precedence: Precedence.PRIMARY };
         rules[TokenType.PUNCT_DOT] = { prefix: null, infix: this.access, precedence: Precedence.CALL };
         rules[TokenType.KEYWORD_THIS] = { prefix: this.thisExpr, infix: null, precedence: Precedence.PRIMARY };
@@ -192,7 +204,7 @@ export class Parser {
             if (!infixRule) {
                 break;
             }
-            this.advance();
+            let opToken = this.advance();
             left = infixRule(left);
         }
         return left;
@@ -201,20 +213,51 @@ export class Parser {
     fn expression() {
         return this.parsePrecedence(Precedence.NONE);
     }
+    
+    fn letDeclaration(token, isConstant) {
+        let identToken = this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_IDENTIFIER_LET);
+        let identifier = Ast.Identifier(identToken.lexeme, identToken);
+        let value = null;
 
+        if (this.match([TokenType.OP_ASSIGN])) {
+            value = this.expression();
+        }
+
+        this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
+        return Ast.LetStatement(identifier, value, isConstant, token);
+    }
+
+    fn unary() {
+        let opToken = this.previous();
+        
+        let opMap = { 
+            [TokenType.OP_MINUS]: true, 
+            [TokenType.OP_LOGICAL_NOT]: true, 
+            [TokenType.OP_BIT_NOT]: true 
+        };
+        if (opMap[opToken.type]) {
+             let operand = this.parsePrecedence(Precedence.UNARY);
+            return Ast.UnaryExpression(opToken.type, operand, opToken);
+        }
+        
+        this.throwParseErr(ErrorCodes.ERR_UNKNOWN_PREFIX_EXPRESSION, opToken);
+    }
+    
     fn literal() {
         let prevToken = this.previous();
         switch (prevToken.type) {
             case TokenType.INTEGER:
-                return IntegerLiteral(int(prevToken.lexeme));
+                return Ast.IntegerLiteral(int(prevToken.lexeme), prevToken);
             case TokenType.REAL:
-                return RealLiteral(real(prevToken.lexeme));
+                return Ast.RealLiteral(real(prevToken.lexeme), prevToken);
             case TokenType.STRING:
-                return StringLiteral(prevToken.lexeme);
+                return Ast.StringLiteral(prevToken.lexeme, prevToken);
             case TokenType.BOOLEAN:
-                return BooleanLiteral(prevToken.lexeme == "true");
+                return Ast.BooleanLiteral(prevToken.lexeme == "true", prevToken);
+            case TokenType.CHAR:
+                return Ast.CharLiteral(prevToken.lexeme, prevToken);
             case TokenType.KEYWORD_NULL:
-                return NullLiteral();
+                return Ast.NullLiteral(prevToken);
             default:
                 this.throwParseErr(ErrorCodes.ERR_UNKNOWN_LITERAL_TYPE, prevToken);
         }
@@ -227,14 +270,14 @@ export class Parser {
             do {
                 if (this.match([TokenType.OP_ELLIPSIS])) {
                     let spreadToken = this.previous();
-                    elements.push(SpreadExpression(this.expression()));
+                    elements.push(Ast.SpreadExpression(this.expression(), spreadToken));
                 } else {
                     elements.push(this.expression());
                 }
             } while (this.match([TokenType.PUNCT_COMMA]));
         }
         this.consume(TokenType.PUNCT_RBRACKET, ErrorCodes.ERR_MISSING_RBRACKET_ARRAY);
-        return ArrayLiteral(elements);
+        return Ast.ArrayLiteral(elements, token);
     }
 
     fn functionLiteral() {
@@ -253,11 +296,11 @@ export class Parser {
             } else {
                 let keyToken = this.peek();
                 if (this.match([TokenType.IDENTIFIER, TokenType.STRING])) {
-                    key = StringLiteral(keyToken.lexeme);
+                    key = Ast.StringLiteral(keyToken.lexeme, keyToken);
                 } else if (this.match([TokenType.INTEGER])) {
-                    key = IntegerLiteral(keyToken.lexeme);
+                    key = Ast.IntegerLiteral(keyToken.lexeme, keyToken);
                 } else if (this.match([TokenType.BOOLEAN])) {
-                    key = BooleanLiteral(keyToken.lexeme == "true");
+                    key = Ast.BooleanLiteral(keyToken.lexeme == "true", keyToken);
                 } else {
                     this.throwParseErr(ErrorCodes.ERR_INVALID_OBJECT_KEY, keyToken);
                 }
@@ -270,7 +313,7 @@ export class Parser {
             }
         }
         this.consume(TokenType.PUNCT_RBRACE, ErrorCodes.ERR_MISSING_RBRACE_OBJECT);
-        return ObjectLiteral(properties);
+        return Ast.ObjectLiteral(properties, token);
     }
 
     fn templateLiteral() {
@@ -278,30 +321,26 @@ export class Parser {
         let parts = [];
         while (!this.check(TokenType.PUNCT_BACKTICK) && !this.isAtEnd()) {
             if (this.match([TokenType.STRING])) {
-                parts.push(StringLiteral(this.previous().lexeme));
+                let strToken = this.previous();
+                parts.push(Ast.StringLiteral(strToken.lexeme, strToken));
             } else if (this.match([TokenType.PUNCT_PERCENT_LBRACE])) {
                 parts.push(this.expression());
                 this.consume(TokenType.PUNCT_RBRACE, ErrorCodes.ERR_MISSING_RBRACE_TEMPLATE_EXPR);
             }
         }
         this.consume(TokenType.PUNCT_BACKTICK, ErrorCodes.ERR_MISSING_BACKTICK_TEMPLATE);
-        return TemplateLiteral(parts);
+        return Ast.TemplateLiteral(parts, token);
     }
 
     fn identifier() {
-        return Identifier(this.previous().lexeme);
+        let token = this.previous();
+        return Ast.Identifier(token.lexeme, token);
     }
 
     fn binary(left) {
         let op = this.previous();
         let right = this.parsePrecedence(this.rules[op.type].precedence);
-        return BinaryExpression(left, op.type, right);
-    }
-
-    fn unary() {
-        let op = this.previous();
-        let operand = this.parsePrecedence(Precedence.UNARY);
-        return UnaryExpression(op.type, operand);
+        return Ast.BinaryExpression(left, op.type, right, op);
     }
 
     fn grouping() {
@@ -311,50 +350,53 @@ export class Parser {
     }
 
     fn thisExpr() {
-        return ThisExpression();
+        let token = this.previous();
+        return Ast.ThisExpression(token);
     }
 
     fn superExpr() {
         let token = this.previous();
         if (this.check(TokenType.PUNCT_LPAREN)) {
-            return SuperExpression(true, null);
+            return Ast.SuperExpression(true, null, token);
         }
         this.consume(TokenType.PUNCT_DOT, ErrorCodes.ERR_MISSING_PROPERTY_NAME_SUPER);
         let propertyToken = this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_PROPERTY_NAME_DOT);
-        let property = Identifier(propertyToken.lexeme);
-        return SuperExpression(false, property);
+        let property = Ast.Identifier(propertyToken.lexeme, propertyToken);
+        return Ast.SuperExpression(false, property, token);
     }
 
     fn newExpr() {
         let token = this.previous();
         let identToken = this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_CLASS_NAME_NEW);
         if (!this.check(TokenType.PUNCT_LPAREN)) {
-            let callExpr = CallExpression(Identifier(identToken.lexeme), []);
-            return NewExpression(callExpr);
+            let ident = Ast.Identifier(identToken.lexeme, identToken);
+            let callExpr = Ast.CallExpression(ident, [], ident);
+            return Ast.NewExpression(callExpr, token);
         } else {
             this.consume(TokenType.PUNCT_LPAREN, ErrorCodes.ERR_MISSING_RPAREN_GROUPING);
-            let callExpr = this.call(Identifier(identToken.lexeme));
-            return NewExpression(callExpr);
+            let callExpr = this.call(Ast.Identifier(identToken.lexeme, identToken));
+            return Ast.NewExpression(callExpr, token);
         }
     }
 
     fn spreadExpr() {
         let token = this.previous();
         let expr = this.expression();
-        return SpreadExpression(expr);
+        return Ast.SpreadExpression(expr, token);
     }
 
     fn prefixUpdate() {
         let token = this.previous();
         let expr = this.expression();
-        return PrefixUpdateExpression(token.type, expr);
+        return Ast.PrefixUpdateExpression(token.type, expr, token);
     }
 
     fn assignment(left) {
         let op = this.previous();
         let value = this.parsePrecedence(Precedence.ASSIGN - 1);
+
         if (left.type == "Identifier" || left.type == "IndexExpression" || left.type == "PropertyAccess") {
-            return AssignmentExpression(left, value);
+            return Ast.AssignmentExpression(left, value, op);
         }
         this.throwParseErr(ErrorCodes.ERR_INVALID_ASSIGNMENT_TARGET, op);
     }
@@ -383,37 +425,39 @@ export class Parser {
         }
 
         let leftCloned = left;
-        let expr = BinaryExpression(leftCloned, opType, rightValue);
-        return AssignmentExpression(left, expr);
+        let expr = Ast.BinaryExpression(leftCloned, opType, rightValue, op);
+        return Ast.AssignmentExpression(left, expr, op);
     }
 
     fn call(left) {
+        let token = this.previous();
         let args = [];
         if (!this.check(TokenType.PUNCT_RPAREN)) {
             do {
                 if (this.match([TokenType.OP_ELLIPSIS])) {
                     let spreadToken = this.previous();
-                    args.push(SpreadExpression(this.expression()));
+                    args.push(Ast.SpreadExpression(this.expression(), spreadToken));
                 } else {
                     args.push(this.expression());
                 }
             } while (this.match([TokenType.PUNCT_COMMA]));
         }
         let closingParen = this.consume(TokenType.PUNCT_RPAREN, ErrorCodes.ERR_MISSING_RPAREN_GROUPING);
-        return CallExpression(left, args);
+        return Ast.CallExpression(left, args, token);
     }
 
     fn index(left) {
+        let token = this.previous();
         let expr = this.expression();
         let closingBracket = this.consume(TokenType.PUNCT_RBRACKET, ErrorCodes.ERR_MISSING_RBRACKET_ARRAY);
-        return IndexExpression(left, expr);
+        return Ast.IndexExpression(left, expr, token);
     }
 
     fn access(left) {
         let token = this.previous();
         let propertyToken = this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_PROPERTY_NAME_DOT);
-        let property = Identifier(propertyToken.lexeme);
-        return PropertyAccess(left, property);
+        let property = Ast.Identifier(propertyToken.lexeme, propertyToken);
+        return Ast.PropertyAccess(left, property, token);
     }
 
     fn ternary(left) {
@@ -421,11 +465,12 @@ export class Parser {
         let thenBranch = this.expression();
         this.consume(TokenType.PUNCT_COLON, ErrorCodes.ERR_MISSING_COLON_OBJECT_KEY);
         let elseBranch = this.parsePrecedence(Precedence.TERNARY - 1);
-        return TernaryExpression(left, thenBranch, elseBranch);
+        return Ast.TernaryExpression(left, thenBranch, elseBranch, token);
     }
 
     fn postfixUpdate(left) {
-        return PostfixUpdateExpression(this.previous().type, left);
+        let token = this.previous();
+        return Ast.PostfixUpdateExpression(token.type, left, token);
     }
 
     fn parseFunctionTail(token) {
@@ -435,26 +480,23 @@ export class Parser {
         if (!this.check(TokenType.PUNCT_RPAREN) && !this.isAtEnd()) {
             do {
                 if (this.match([TokenType.OP_ELLIPSIS])) {
-                    restParam = Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_REST_PARAM_NOT_IDENTIFIER).lexeme);
+                    let restToken = this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_REST_PARAM_NOT_IDENTIFIER);
+                    restParam = Ast.Identifier(restToken.lexeme, restToken);
                     break;
                 }
-                params.push(Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_INVALID_PARAMETER_NAME).lexeme));
+                let paramToken = this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_INVALID_PARAMETER_NAME);
+                params.push(Ast.Identifier(paramToken.lexeme, paramToken));
             } while (this.match([TokenType.PUNCT_COMMA]));
         }
         this.consume(TokenType.PUNCT_RPAREN, ErrorCodes.ERR_MISSING_RPAREN_PARAMS);
         let body = this.declaration();
-        return FunctionLiteral(params, body, restParam);
+        return Ast.FunctionLiteral(params, body, restParam, token);
     }
-
-
 
     fn declaration() {
         let decl = null;
         if (this.check(TokenType.KEYWORD_LET) || this.check(TokenType.KEYWORD_CONST)) {
-            let isConstant = false;
-            if (this.check(TokenType.KEYWORD_CONST)) {
-                isConstant = true;
-            }
+            let isConstant = this.peek().type == TokenType.KEYWORD_CONST;
             decl = this.letDeclaration(this.advance(), isConstant);
         } else if (this.check(TokenType.KEYWORD_FUNCTION) && this.next().type == TokenType.IDENTIFIER) {
             decl = this.functionDeclaration(this.advance());
@@ -484,66 +526,22 @@ export class Parser {
         return this.expressionStatement(this.peek());
     }
 
-    fn letDeclaration(token, isConstant) {
-        let identifier = Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_IDENTIFIER_LET).lexeme);
-        let value = null;
-
-        if (this.match([TokenType.OP_ASSIGN])) {
-
-            value = this.expression();
-        }
-
-        this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
-        return LetStatement(identifier, value, isConstant);
-    }
-
-    // fn functionDeclaration(token) {
-    //     let isConstant = false;
-    //     let identifier = Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_FUNCTION_NAME).lexeme);
-    //     let literal = this.parseFunctionTail(token);
-    //     return LetStatement(identifier, literal, isConstant);
-    // }
-
-    // fn classDeclaration(token) {
-    //     let name = Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_CLASS_NAME_DECL).lexeme);
-    //     let superclass = null;
-    //     if (this.match([TokenType.PUNCT_COLON])) {
-    //         superclass = Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_SUPERCLASS_NAME).lexeme);
-    //     }
-    //     this.consume(TokenType.PUNCT_LBRACE, ErrorCodes.ERR_MISSING_LBRACE_CLASS_BODY);
-    //     let methods = [];
-    //     let static_fields = [];
-    //     while (!this.check(TokenType.PUNCT_RBRACE) && !this.isAtEnd()) {
-    //         if (this.match([TokenType.KEYWORD_STATIC])) {
-    //             if (this.check(TokenType.KEYWORD_LET) || this.check(TokenType.KEYWORD_FUNCTION) || this.check(TokenType.KEYWORD_CLASS)) {
-    //                 static_fields.push(this.declaration());
-    //             } else {
-    //                 this.throwParseErr(ErrorCodes.ERR_INVALID_STATIC_DECLARATION, this.peek());
-    //             }
-    //         } else {
-    //             methods.push(this.functionDeclaration(this.advance()));
-    //         }
-    //     }
-    //     this.consume(TokenType.PUNCT_RBRACE, ErrorCodes.ERR_MISSING_RBRACE_CLASS_BODY);
-    //     return ClassStatement(name, superclass, methods, static_fields);
-    // }
-
-    // THAY ĐỔI HÀM NÀY
     fn functionDeclaration(token) {
-        let identifier = Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_FUNCTION_NAME).lexeme);
+        let identToken = this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_FUNCTION_NAME);
+        let identifier = Ast.Identifier(identToken.lexeme, identToken);
         let literal = this.parseFunctionTail(token);
-        // Thay vì trả về LetStatement, ta trả về FunctionStatement
-        return FunctionStatement(identifier, literal);
+        return Ast.FunctionStatement(identifier, literal, token);
     }
 
-    // THAY ĐỔI HÀM NÀY
     fn classDeclaration(token) {
-        let name = Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_CLASS_NAME_DECL).lexeme);
+        let nameToken = this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_CLASS_NAME_DECL);
+        let name = Ast.Identifier(nameToken.lexeme, nameToken);
         let superclass = null;
         if (this.match([TokenType.PUNCT_COLON])) {
-            superclass = Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_SUPERCLASS_NAME).lexeme);
+            let superclassToken = this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_SUPERCLASS_NAME);
+            superclass = Ast.Identifier(superclassToken.lexeme, superclassToken);
         }
-        this.consume(TokenType.PUNCT_LBRACE, ErrorCodes.ERR_MISSING_LBRACE_CLASS_BODY);
+        let lbraceToken = this.consume(TokenType.PUNCT_LBRACE, ErrorCodes.ERR_MISSING_LBRACE_CLASS_BODY);
         let methods = [];
         let static_fields = [];
         while (!this.check(TokenType.PUNCT_RBRACE) && !this.isAtEnd()) {
@@ -554,15 +552,13 @@ export class Parser {
                     this.throwParseErr(ErrorCodes.ERR_INVALID_STATIC_DECLARATION, this.peek());
                 }
             } else {
-                // Đảm bảo rằng phương thức cũng được parse như một FunctionStatement
                 this.consume(TokenType.KEYWORD_FUNCTION, ErrorCodes.ERR_MISSING_FUNCTION_NAME);
                 methods.push(this.functionDeclaration(this.previous()));
             }
         }
         this.consume(TokenType.PUNCT_RBRACE, ErrorCodes.ERR_MISSING_RBRACE_CLASS_BODY);
-        return ClassStatement(name, superclass, methods, static_fields);
+        return Ast.ClassStatement(name, superclass, methods, static_fields, token);
     }
-
 
     fn ifStatement(token) {
         let condition = this.expression();
@@ -571,20 +567,21 @@ export class Parser {
         if (this.match([TokenType.KEYWORD_ELSE])) {
             elseBranch = this.declaration();
         }
-        return IfStatement(condition, thenBranch, elseBranch);
+        return Ast.IfStatement(condition, thenBranch, elseBranch, token);
     }
 
     fn whileStatement(token) {
         let condition = this.expression();
         let body = this.declaration();
-        return WhileStatement(condition, body);
+        return Ast.WhileStatement(condition, body, token);
     }
 
     fn forStatement(token) {
         let hasParen = this.match([TokenType.PUNCT_LPAREN]);
         let isForIn = (this.peek().type == TokenType.IDENTIFIER && (this.next().type == TokenType.KEYWORD_IN || this.next().type == TokenType.PUNCT_COLON));
         if (isForIn) {
-            let variable = Identifier(this.advance().lexeme);
+            let varToken = this.advance();
+            let variable = Ast.Identifier(varToken.lexeme, varToken);
             if (!this.match([TokenType.KEYWORD_IN, TokenType.PUNCT_COLON])) {
                 this.throwParseErr(ErrorCodes.ERR_MISSING_IN_OR_COLON_FORIN, this.peek());
             }
@@ -595,7 +592,7 @@ export class Parser {
                 this.match([TokenType.PUNCT_RPAREN]);
             }
             let body = this.declaration();
-            return ForInStatement(variable, collection, body);
+            return Ast.ForInStatement(variable, collection, body, token);
         }
         let init = null;
         if (!this.match([TokenType.PUNCT_SEMICOLON])) {
@@ -616,7 +613,7 @@ export class Parser {
             this.match([TokenType.PUNCT_RPAREN]);
         }
         let body = this.declaration();
-        return ForStatement(init, condition, update, body);
+        return Ast.ForStatement(init, condition, update, body, token);
     }
 
     fn returnStatement(token) {
@@ -625,21 +622,21 @@ export class Parser {
             value = this.expression();
         }
         this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
-        return ReturnStatement(value);
+        return Ast.ReturnStatement(value, token);
     }
 
     fn breakStatement(token) {
         this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
-        return BreakStatement();
+        return Ast.BreakStatement(token);
     }
 
     fn continueStatement(token) {
         this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
-        return ContinueStatement();
+        return Ast.ContinueStatement(token);
     }
 
     fn blockStatement(token) {
-        let block = BlockStatement([]);
+        let block = Ast.BlockStatement([], token);
         while (!this.check(TokenType.PUNCT_RBRACE) && !this.isAtEnd()) {
             let decl = this.declaration();
             if (decl) {
@@ -656,19 +653,19 @@ export class Parser {
             args = this.expression();
         }
         this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
-        return ThrowStatement(args);
+        return Ast.ThrowStatement(args, token);
     }
 
     fn tryStatement(token) {
-        // this.consume(TokenType.PUNCT_LBRACE, "Thiếu '{' sau từ khóa 'try'"));
-        let tryBlock = this.blockStatement(this.consume(TokenType.PUNCT_LBRACE, ErrorCodes.ERR_MISSING_LBRACE_TRY_BLOCK));
-        
+        let lbraceToken = this.consume(TokenType.PUNCT_LBRACE, ErrorCodes.ERR_MISSING_LBRACE_TRY_BLOCK);
+        let tryBlock = this.blockStatement(lbraceToken);
         this.consume(TokenType.KEYWORD_CATCH, ErrorCodes.ERR_MISSING_CATCH);
         this.consume(TokenType.PUNCT_LPAREN, ErrorCodes.ERR_MISSING_LPAREN_CATCH);
-        let catchVar = Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_CATCH_VAR).lexeme);
+        let catchVarToken = this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_CATCH_VAR);
+        let catchVar = Ast.Identifier(catchVarToken.lexeme, catchVarToken);
         this.consume(TokenType.PUNCT_RPAREN, ErrorCodes.ERR_MISSING_RPAREN_CATCH);
         let catchBlock = this.declaration();
-        return TryStatement(tryBlock, catchVar, catchBlock);
+        return Ast.TryStatement(tryBlock, catchVar, catchBlock, token);
     }
 
     fn importStatement(token) {
@@ -679,7 +676,8 @@ export class Parser {
         if (this.match([TokenType.PUNCT_LBRACE])) {
             while (!this.check(TokenType.PUNCT_RBRACE) && !this.isAtEnd()) {
                 do {
-                    namedImports.push(Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_INVALID_IMPORT_IDENTIFIER).lexeme));
+                    let importToken = this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_INVALID_IMPORT_IDENTIFIER);
+                    namedImports.push(Ast.Identifier(importToken.lexeme, importToken));
                 } while (this.match([TokenType.PUNCT_COMMA]));
             }
             this.consume(TokenType.PUNCT_RBRACE, ErrorCodes.ERR_MISSING_RBRACE_IMPORT_LIST);
@@ -687,7 +685,8 @@ export class Parser {
             path = this.expression();
         } else if (this.match([TokenType.OP_MULTIPLY])) {
             this.consume(TokenType.KEYWORD_AS, ErrorCodes.ERR_MISSING_AS_IMPORT);
-            namespaceImport = Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_NAMESPACE_IMPORT_NAME).lexeme);
+            let nsToken = this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_MISSING_NAMESPACE_IMPORT_NAME);
+            namespaceImport = Ast.Identifier(nsToken.lexeme, nsToken);
             this.consume(TokenType.KEYWORD_FROM, ErrorCodes.ERR_MISSING_FROM_IMPORT);
             path = this.expression();
         } else {
@@ -695,24 +694,25 @@ export class Parser {
             importAll = true;
         }
         this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
-        return ImportStatement(path, namedImports, namespaceImport, importAll);
+        return Ast.ImportStatement(path, namedImports, namespaceImport, importAll, token);
     }
 
     fn exportStatement(token) {
         let decl;
         if (this.check(TokenType.KEYWORD_LET) || this.check(TokenType.KEYWORD_CONST) || this.check(TokenType.KEYWORD_FUNCTION) || this.check(TokenType.KEYWORD_CLASS)) {
             decl = this.declaration();
-            return ExportStatement(decl, []);
+            return Ast.ExportStatement(decl, [], token);
         } else if (this.match([TokenType.PUNCT_LBRACE])) {
             let specifiers = [];
             while (!this.check(TokenType.PUNCT_RBRACE) && !this.isAtEnd()) {
                 do {
-                    specifiers.push(Identifier(this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_INVALID_EXPORT_IDENTIFIER).lexeme));
+                    let exportToken = this.consume(TokenType.IDENTIFIER, ErrorCodes.ERR_INVALID_EXPORT_IDENTIFIER);
+                    specifiers.push(Ast.Identifier(exportToken.lexeme, exportToken));
                 } while (this.match([TokenType.PUNCT_COMMA]));
             }
             this.consume(TokenType.PUNCT_RBRACE, ErrorCodes.ERR_MISSING_RBRACE_IMPORT_LIST);
             this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
-            return ExportStatement(null, specifiers);
+            return Ast.ExportStatement(null, specifiers, token);
         }
         this.throwParseErr(ErrorCodes.ERR_INVALID_EXPORT_SYNTAX, this.peek());
     }
@@ -720,18 +720,18 @@ export class Parser {
     fn expressionStatement(token) {
         let expr = this.expression();
         this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
-        return ExpressionStatement(expr);
+        return Ast.ExpressionStatement(expr, token);
     }
 
     fn logStatement(token) {
         let expr = this.expression();
         this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
-        return LogStatement(expr);
+        return Ast.LogStatement(expr, token);
     }
 
     fn switchStatement(token) {
         let valueToSwitch = this.expression();
-        this.consume(TokenType.PUNCT_LBRACE, ErrorCodes.ERR_MISSING_LBRACE_SWITCH);
+        let lbraceToken = this.consume(TokenType.PUNCT_LBRACE, ErrorCodes.ERR_MISSING_LBRACE_SWITCH);
         let cases = [];
         while (!this.check(TokenType.PUNCT_RBRACE) && !this.isAtEnd()) {
             let caseValue = null;
@@ -742,15 +742,15 @@ export class Parser {
             } else {
                 this.throwParseErr(ErrorCodes.ERR_EXPECTED_CASE_OR_DEFAULT, this.peek());
             }
-            this.consume(TokenType.PUNCT_COLON, ErrorCodes.ERR_MISSING_COLON_CASE);
+            let colonToken = this.consume(TokenType.PUNCT_COLON, ErrorCodes.ERR_MISSING_COLON_CASE);
             let statements = [];
             while (!this.check(TokenType.PUNCT_RBRACE) && !this.check(TokenType.KEYWORD_CASE) && !this.check(TokenType.KEYWORD_DEFAULT) && !this.isAtEnd()) {
                 statements.push(this.statement());
             }
-            cases.push(SwitchCase(caseValue, statements));
+            cases.push(Ast.SwitchCase(caseValue, statements, caseToken));
         }
         this.consume(TokenType.PUNCT_RBRACE, ErrorCodes.ERR_MISSING_RBRACE_SWITCH);
-        return SwitchStatement(valueToSwitch, cases);
+        return Ast.SwitchStatement(valueToSwitch, cases, token);
     }
 
     fn doWhileStatement(token) {
@@ -758,16 +758,15 @@ export class Parser {
         this.consume(TokenType.KEYWORD_WHILE, ErrorCodes.ERR_MISSING_WHILE_DOWHILE);
         let condition = this.expression();
         this.consumeSemicolon(ErrorCodes.ERR_MISSING_SEMICOLON);
-        return DoWhileStatement(body, condition);
+        return Ast.DoWhileStatement(body, condition, token);
     }
 
     fn parseProgram() {
-        let program = Program([]);
+        let program = Ast.Program([], this.peek());
         while (!this.isAtEnd()) {
             try {
                 let decl = this.declaration();
                 if (decl) {
-
                     program.body.push(decl);
                 }
             } catch (e) {

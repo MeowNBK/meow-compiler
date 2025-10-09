@@ -68,62 +68,15 @@ export let visitLetStatement = fn(cg, node) {
     }
 };
 
-// export fn visitClassStatement(cg, node) {
-//     let className = node.name.name;
-//     let classNameIdx = cg.currentState.pool.add(className);
-
-    
-
-//     let classReg = cg.currentState.allocator.take();
-
-//     let localIdx = cg.currentState.localCount++;
-    
-
-//     cg.currentState.regToLocalIndex[str(classReg)] = localIdx;
-//     cg.currentState.localIndexToReg[localIdx] = classReg;
-
-//     let currentScope = cg.currentState.scope[cg.currentState.scope.length - 1];
-//     currentScope[className] = localIdx;
-
-
-//     Emitter.emit(cg.currentState.proto, OpCodes.NEW_CLASS, [classReg, classNameIdx]);
-    
-
-//     cg.currentState.allocator.beginScope(); 
-//     if (node.superclass != null) {
-//         let parentClassReg = cg.visitExpression(node.superclass);
-//         Emitter.emit(cg.currentState.proto, OpCodes.INHERIT, [classReg, parentClassReg]);
-//     }
-
-//     cg.isInsideClass = true;
-//     for (methodNode in node.methods) {
-//         let methodName = methodNode.name.name;
-//         let functionLiteral = methodNode.value;
-//         let methodClosureReg = cg.visitExpression(functionLiteral);
-//         let methodNameIdx = cg.currentState.pool.add(methodName);
-//         Emitter.emit(cg.currentState.proto, OpCodes.SET_METHOD, [classReg, methodNameIdx, methodClosureReg]);
-//     }
-//     cg.isInsideClass = false;
-//     cg.currentState.allocator.endScope();
-
-//     if (cg.currentState.scope.length == 1) {
-//         Emitter.emit(cg.currentState.proto, OpCodes.SET_GLOBAL, [classNameIdx, classReg]);
-//     }
-// }
-
-
 export let visitFunctionStatement = fn(cg, node) {
     let name = node.name.name;
-    // Gán tên hàm cho node FunctionLiteral để có thể truy cập trong visitFunctionLiteral
     node.func.name = name;
 
-    // Truy cập FunctionLiteral bên trong FunctionStatement
     let valueReg = cg.visitExpression(node.func);
 
     let scopeLevel = cg.currentState.scope.length - 1;
     let currentScope = cg.currentState.scope[scopeLevel];
 
-    // Khai báo biến trong scope hiện tại, tương tự visitLetStatement
     let destReg;
     if (scopeLevel > 0) {
         destReg = cg.currentState.allocator.take();
