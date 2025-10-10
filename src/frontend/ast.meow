@@ -288,22 +288,6 @@ export fn UnaryExpression(op, operand, token) {
     };
 }
 
-export fn DereferenceExpression(operand, token) {
-    return {
-        type: "DereferenceExpression",
-        operand: operand,
-        token: token
-    };
-}
-
-export fn AddressOfExpression(operand, token) {
-    return {
-        type: "AddressOfExpression",
-        operand: operand,
-        token: token
-    };
-}
-
 export fn CallExpression(callee, args, token) {
     return {
         type: "CallExpression",
