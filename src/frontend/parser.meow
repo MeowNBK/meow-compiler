@@ -11,8 +11,8 @@ export class Parser {
         this.initRules();
     }
 
-    fn throwParseErr(code, node) {
-        throw (Diagnostic.ParseErr(code, node));
+    fn throwParseErr(code, token) {
+        throw (Diagnostic.ParseErr(code, token));
     }
 
     fn isAtEnd() {
@@ -67,27 +67,34 @@ export class Parser {
     }
 
     fn consumeSemicolon(code) {
-        if (this.match([TokenType.PUNCT_SEMICOLON])) return true;
+        if (this.match([TokenType.PUNCT_SEMICOLON])) {
+            return true;
+        }
+
         let prev = this.previous();
         let next = this.peek();
 
-        if (next && (next.type == TokenType.PUNCT_RBRACE || next.type == TokenType.END_OF_FILE)) {
+        if (next.type == TokenType.PUNCT_RBRACE || next.type == TokenType.END_OF_FILE) {
             return true;
         }
 
         let canEndStatement = {
-            [TokenType.IDENTIFIER]: true,
-            [TokenType.INTEGER]: true,
-            [TokenType.REAL]: true,
-            [TokenType.BOOLEAN]: true,
-            [TokenType.STRING]: true,
-            [TokenType.CHAR]: true,
-            [TokenType.PUNCT_RPAREN]: true,
-            [TokenType.PUNCT_RBRACKET]: true,
-            [TokenType.OP_INCREMENT]: true,
-            [TokenType.OP_DECREMENT]: true
+            [TokenType.IDENTIFIER]: true,       // Vd: x
+            [TokenType.INTEGER]: true,          // Vd: 5
+            [TokenType.REAL]: true,             // Vd: 3.14
+            [TokenType.BOOLEAN]: true,          // Vd: true
+            [TokenType.STRING]: true,           // Vd: "meow"
+            [TokenType.CHAR]: true,             // Vd: 'm'
+            [TokenType.PUNCT_RPAREN]: true,     // Vd: foo()
+            [TokenType.PUNCT_RBRACKET]: true,   // Vd: arr[i]
+            [TokenType.OP_INCREMENT]: true,     // Vd: i++
+            [TokenType.OP_DECREMENT]: true      // Vd: i--
         };
         if (prev.line != next.line && canEndStatement[prev.type]) {
+            return true;
+        }
+
+        if (next.type == TokenType.KEYWORD_ELSE) {
             return true;
         }
 

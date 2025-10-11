@@ -150,9 +150,6 @@ fn _getLineContent(filename, lineNum) {
 }
 
 export fn getParseErrorMessage(code, token) {
-    print(code);
-    print(token);
-    return;
     let filename = Io.getFileName(token.file);
     let baseMsg = ErrorMessages[code];
     if (!baseMsg) {
@@ -210,9 +207,8 @@ fn getSemanticErrorMessage(code, node, replacements) {
 }
 
 export let Diagnostic = {
-    ParseErr: fn(code, node) {
-        print(node);
-        return getParseErrorMessage(code, node.token);
+    ParseErr: fn(code, token) {
+        return getParseErrorMessage(code, token);
     },
     SemanticErr: fn(code, node, replacements) {
         return getSemanticErrorMessage(code, node, replacements);

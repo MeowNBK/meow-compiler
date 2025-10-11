@@ -1,0 +1,47 @@
+#!/bin/bash
+# --- Meow Build Script 🐾 ---
+# Tác giả: Mèo mất não 😺
+# Mục đích: Đơn giản hóa lệnh build MeowScript các stage
+
+CONFIG_DIR=".meowconfig"
+CONFIG_FILE="$CONFIG_DIR/config"
+
+# Kiểm tra xem thư mục config có tồn tại chưa
+if [ ! -d "$CONFIG_DIR" ]; then
+    mkdir -p "$CONFIG_DIR"
+fi
+
+# Hàm đọc stage hiện tại
+get_stage() {
+    if [ -f "$CONFIG_FILE" ]; then
+        cat "$CONFIG_FILE"
+    else
+        echo "1"
+    fi
+}
+
+# Nếu người dùng nhập "--set-stage <stage>"
+if [ "$1" = "--stage" ]; then
+    if [ -z "$2" ]; then
+        echo "⚠️  Dùng: $0 --stage <stage>"
+        exit 1
+    fi
+    echo "$2" > "$CONFIG_FILE"
+    echo "✅ [INFO] Đã đặt stage hiện tại thành: $2"
+    exit 0
+fi
+
+# Lấy stage hiện tại
+STAGE="build-stage$(get_stage)"
+
+# Kiểm tra xem file meow-vm có tồn tại không
+if [ ! -f "./bin/meow-vm" ]; then
+    echo "❌ [ERROR] Không tìm thấy ./bin/meow-vm, bạn có chắc là đang ở thư mục đúng không?"
+    exit 1
+fi
+
+# Thông báo stage
+echo "😺 [LOG] Đang build với stage: $STAGE"
+
+# Thực thi lệnh
+./bin/meow-vm "$STAGE/main.meowb" "$@"

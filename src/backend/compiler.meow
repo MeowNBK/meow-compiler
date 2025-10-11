@@ -104,12 +104,6 @@ export class Compiler {
             System.exit(1);
         }
 
-        source = "
-            #ifndef __compiler_version\n
-            #define __compiler_version \"0.0.1\"\n
-            #endif\n
-        " + source;
-
         // let filename = Io.getFileName(absolutePath);
         let preprocessor = new Preprocessor();
         let processedSource = preprocessor.process(source, absolutePath);
@@ -166,9 +160,59 @@ export class Compiler {
     }
 
     fn _resolvePath(p, importerDir) {
+        // 0) absolute -> trả luôn
         if (_isAbsolutePath(p)) return Io.getAbsolutePath(p);
-        return Io.getAbsolutePath(importerDir + "/" + p);
+
+        // Chuẩn hoá importerDir thành absolute (nếu có)
+        let absImporter = null;
+        if (importerDir && importerDir.length > 0) {
+            absImporter = Io.getAbsolutePath(importerDir);
+        }
+
+        // Xác định xem import có phải là explicit-relative (./ or ../)
+        let isExplicitRelative = false;
+        if (p.startsWith("./") || p.startsWith("../")) isExplicitRelative = true;
+
+        // Build candidate list:
+        let candidates = [];
+
+        // 1) nếu import dạng ./... hoặc ../... thì ưu tiên importerDir
+        if (isExplicitRelative && absImporter) {
+            candidates.push(absImporter + "/" + p);
+        }
+
+        // 2) includePaths từ options (nếu có)
+        if (this && this.options && this.options.includePaths) {
+            for (ip in this.options.includePaths) {
+                candidates.push(Io.getAbsolutePath(ip) + "/" + p);
+            }
+        }
+
+        // 3) cwd
+        candidates.push(Io.getAbsolutePath(".") + "/" + p);
+
+        // 4) fallback: original p (module name / maybe absolute after Io.getAbsolutePath)
+        candidates.push(p);
+
+        // Thử each candidate; nếu không tìm, thử thêm .meow
+        let tryWithExt = !p.endsWith(".meow");
+        for (cand in candidates) {
+            let absCand = Io.getAbsolutePath(cand);
+            if (Io.fileExists(absCand)) return absCand;
+            if (tryWithExt) {
+                let absExt = Io.getAbsolutePath(cand + ".meow");
+                if (Io.fileExists(absExt)) return absExt;
+            }
+        }
+
+        // cuối cùng: nếu import là explicit-relative thì trả path relativized importerDir/p
+        if (isExplicitRelative && absImporter) return Io.getAbsolutePath(absImporter + "/" + p);
+
+        // fallback cuối cùng
+        if (absImporter && !isExplicitRelative) return Io.getAbsolutePath(absImporter + "/" + p);
+        return Io.getAbsolutePath(p);
     }
+
 
     fn _extractImportsFromAST(ast, sourceDir) {
         let imports = [];
