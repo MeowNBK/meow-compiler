@@ -1,6 +1,6 @@
 import { isalpha, isdigit, isxdigit, isalnum, isspace } from "./checkType.meow";
 import { Token, TokenType } from "./token.meow";
-import { keywords, symbols } from "./tokenTables.meow"
+import { keywords, symbols } from "./tokenTables.meow";
 
 export class Lexer {
     fn init(source, filename) {

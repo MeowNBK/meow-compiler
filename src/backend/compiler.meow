@@ -1,6 +1,7 @@
 import * as CodeGenerator from "./codeGenerator.meow";
 import * as Io from "io";
 import * as Json from "json";
+import * as System from "system";
 // import * as Meta from "meta";
 import { makeCacheFile } from "./utils/makeCacheFile.meow";
 import { BytecodeStringifier } from "./bytecodeStringifier.meow";
@@ -128,6 +129,21 @@ export class Compiler {
 
         let generator = CodeGenerator.CodeGenerator(ast, this, absolutePath);
         let protos = generator.compile();
+
+        if (!Io.fileExists("tokens")) {
+            Io.createDir("tokens");
+        }
+
+        if (!Io.fileExists("asts")) {
+            Io.createDir("asts");
+        }
+        if (!Io.fileExists("protos")) {
+            Io.createDir("protos");
+        }
+
+        Io.write("tokens/" + Io.getFileStem(absolutePath) + ".json", str(Json.stringify(tokens)));
+        Io.write("asts/" + Io.getFileStem(absolutePath) + ".json", str(Json.stringify(ast)));
+        Io.write("protos/" + Io.getFileStem(absolutePath) + ".json", str(Json.stringify(protos)));
 
         let stringifier = BytecodeStringifier();
         let bytecodeText = stringifier.stringify(protos);
