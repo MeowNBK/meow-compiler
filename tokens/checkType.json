@@ -1,0 +1,1038 @@
+[
+  {
+    "col": 1,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "import",
+    "type": 19
+  },
+  {
+    "col": 8,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 10,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "contains",
+    "type": 29
+  },
+  {
+    "col": 18,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ",",
+    "type": 75
+  },
+  {
+    "col": 20,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "join",
+    "type": 29
+  },
+  {
+    "col": 25,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 27,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "from",
+    "type": 22
+  },
+  {
+    "col": 32,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "string",
+    "type": 33
+  },
+  {
+    "col": 40,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 1,
+    "line": 3,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "let",
+    "type": 0
+  },
+  {
+    "col": 5,
+    "line": 3,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "DIGITS",
+    "type": 29
+  },
+  {
+    "col": 12,
+    "line": 3,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "=",
+    "type": 56
+  },
+  {
+    "col": 14,
+    "line": 3,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "0123456789",
+    "type": 33
+  },
+  {
+    "col": 26,
+    "line": 3,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 1,
+    "line": 4,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "let",
+    "type": 0
+  },
+  {
+    "col": 5,
+    "line": 4,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "HEX_DIGITS",
+    "type": 29
+  },
+  {
+    "col": 16,
+    "line": 4,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "=",
+    "type": 56
+  },
+  {
+    "col": 18,
+    "line": 4,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "0123456789abcdefABCDEF",
+    "type": 33
+  },
+  {
+    "col": 42,
+    "line": 4,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 1,
+    "line": 5,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "let",
+    "type": 0
+  },
+  {
+    "col": 5,
+    "line": 5,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "LETTERS",
+    "type": 29
+  },
+  {
+    "col": 13,
+    "line": 5,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "=",
+    "type": 56
+  },
+  {
+    "col": 15,
+    "line": 5,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    "type": 33
+  },
+  {
+    "col": 69,
+    "line": 5,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 1,
+    "line": 6,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "let",
+    "type": 0
+  },
+  {
+    "col": 5,
+    "line": 6,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "WHITESPACE",
+    "type": 29
+  },
+  {
+    "col": 16,
+    "line": 6,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "=",
+    "type": 56
+  },
+  {
+    "col": 18,
+    "line": 6,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": " \t\r\n",
+    "type": 33
+  },
+  {
+    "col": 27,
+    "line": 6,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 1,
+    "line": 8,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "export",
+    "type": 20
+  },
+  {
+    "col": 8,
+    "line": 8,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "fn",
+    "type": 9
+  },
+  {
+    "col": 11,
+    "line": 8,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "isalpha",
+    "type": 29
+  },
+  {
+    "col": 18,
+    "line": 8,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 19,
+    "line": 8,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "char",
+    "type": 29
+  },
+  {
+    "col": 23,
+    "line": 8,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 25,
+    "line": 8,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 5,
+    "line": 9,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "return",
+    "type": 6
+  },
+  {
+    "col": 12,
+    "line": 9,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "contains",
+    "type": 29
+  },
+  {
+    "col": 20,
+    "line": 9,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 21,
+    "line": 9,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "LETTERS",
+    "type": 29
+  },
+  {
+    "col": 28,
+    "line": 9,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ",",
+    "type": 75
+  },
+  {
+    "col": 30,
+    "line": 9,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "char",
+    "type": 29
+  },
+  {
+    "col": 34,
+    "line": 9,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 35,
+    "line": 9,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 1,
+    "line": 10,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 1,
+    "line": 12,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "export",
+    "type": 20
+  },
+  {
+    "col": 8,
+    "line": 12,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "fn",
+    "type": 9
+  },
+  {
+    "col": 11,
+    "line": 12,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "isdigit",
+    "type": 29
+  },
+  {
+    "col": 18,
+    "line": 12,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 19,
+    "line": 12,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "char",
+    "type": 29
+  },
+  {
+    "col": 23,
+    "line": 12,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 25,
+    "line": 12,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 5,
+    "line": 13,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "return",
+    "type": 6
+  },
+  {
+    "col": 12,
+    "line": 13,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "contains",
+    "type": 29
+  },
+  {
+    "col": 20,
+    "line": 13,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 21,
+    "line": 13,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "DIGITS",
+    "type": 29
+  },
+  {
+    "col": 27,
+    "line": 13,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ",",
+    "type": 75
+  },
+  {
+    "col": 29,
+    "line": 13,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "char",
+    "type": 29
+  },
+  {
+    "col": 33,
+    "line": 13,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 34,
+    "line": 13,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 1,
+    "line": 14,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 1,
+    "line": 16,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "export",
+    "type": 20
+  },
+  {
+    "col": 8,
+    "line": 16,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "fn",
+    "type": 9
+  },
+  {
+    "col": 11,
+    "line": 16,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "isxdigit",
+    "type": 29
+  },
+  {
+    "col": 19,
+    "line": 16,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 20,
+    "line": 16,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "char",
+    "type": 29
+  },
+  {
+    "col": 24,
+    "line": 16,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 26,
+    "line": 16,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 3,
+    "line": 17,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "return",
+    "type": 6
+  },
+  {
+    "col": 10,
+    "line": 17,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "contains",
+    "type": 29
+  },
+  {
+    "col": 18,
+    "line": 17,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 19,
+    "line": 17,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "HEX_DIGITS",
+    "type": 29
+  },
+  {
+    "col": 29,
+    "line": 17,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ",",
+    "type": 75
+  },
+  {
+    "col": 31,
+    "line": 17,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "char",
+    "type": 29
+  },
+  {
+    "col": 35,
+    "line": 17,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 36,
+    "line": 17,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 1,
+    "line": 18,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 1,
+    "line": 20,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "export",
+    "type": 20
+  },
+  {
+    "col": 8,
+    "line": 20,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "fn",
+    "type": 9
+  },
+  {
+    "col": 11,
+    "line": 20,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "isalnum",
+    "type": 29
+  },
+  {
+    "col": 18,
+    "line": 20,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 19,
+    "line": 20,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "char",
+    "type": 29
+  },
+  {
+    "col": 23,
+    "line": 20,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 25,
+    "line": 20,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 5,
+    "line": 21,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "return",
+    "type": 6
+  },
+  {
+    "col": 12,
+    "line": 21,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "isalpha",
+    "type": 29
+  },
+  {
+    "col": 19,
+    "line": 21,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 20,
+    "line": 21,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "char",
+    "type": 29
+  },
+  {
+    "col": 24,
+    "line": 21,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 26,
+    "line": 21,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "||",
+    "type": 54
+  },
+  {
+    "col": 29,
+    "line": 21,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "isdigit",
+    "type": 29
+  },
+  {
+    "col": 36,
+    "line": 21,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 37,
+    "line": 21,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "char",
+    "type": 29
+  },
+  {
+    "col": 41,
+    "line": 21,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 42,
+    "line": 21,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 1,
+    "line": 22,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 1,
+    "line": 24,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "export",
+    "type": 20
+  },
+  {
+    "col": 8,
+    "line": 24,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "fn",
+    "type": 9
+  },
+  {
+    "col": 11,
+    "line": 24,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "isspace",
+    "type": 29
+  },
+  {
+    "col": 18,
+    "line": 24,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 19,
+    "line": 24,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "char",
+    "type": 29
+  },
+  {
+    "col": 23,
+    "line": 24,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 25,
+    "line": 24,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 5,
+    "line": 25,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "return",
+    "type": 6
+  },
+  {
+    "col": 12,
+    "line": 25,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "contains",
+    "type": 29
+  },
+  {
+    "col": 20,
+    "line": 25,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 21,
+    "line": 25,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "WHITESPACE",
+    "type": 29
+  },
+  {
+    "col": 31,
+    "line": 25,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ",",
+    "type": 75
+  },
+  {
+    "col": 33,
+    "line": 25,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "char",
+    "type": 29
+  },
+  {
+    "col": 37,
+    "line": 25,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 38,
+    "line": 25,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 1,
+    "line": 26,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 1,
+    "line": 28,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "export",
+    "type": 20
+  },
+  {
+    "col": 8,
+    "line": 28,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "fn",
+    "type": 9
+  },
+  {
+    "col": 11,
+    "line": 28,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "prettyPrint",
+    "type": 29
+  },
+  {
+    "col": 22,
+    "line": 28,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 23,
+    "line": 28,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "token",
+    "type": 29
+  },
+  {
+    "col": 28,
+    "line": 28,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 30,
+    "line": 28,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 5,
+    "line": 29,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "let",
+    "type": 0
+  },
+  {
+    "col": 9,
+    "line": 29,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "parts",
+    "type": 29
+  },
+  {
+    "col": 15,
+    "line": 29,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "=",
+    "type": 56
+  },
+  {
+    "col": 17,
+    "line": 29,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "[",
+    "type": 80
+  },
+  {
+    "col": 9,
+    "line": 30,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "{ 'type': '",
+    "type": 33
+  },
+  {
+    "col": 22,
+    "line": 30,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ",",
+    "type": 75
+  },
+  {
+    "col": 9,
+    "line": 31,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "token",
+    "type": 29
+  },
+  {
+    "col": 14,
+    "line": 31,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ".",
+    "type": 82
+  },
+  {
+    "col": 15,
+    "line": 31,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "TokenType",
+    "type": 29
+  },
+  {
+    "col": 24,
+    "line": 31,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ",",
+    "type": 75
+  },
+  {
+    "col": 9,
+    "line": 32,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "', 'value': '",
+    "type": 33
+  },
+  {
+    "col": 24,
+    "line": 32,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ",",
+    "type": 75
+  },
+  {
+    "col": 9,
+    "line": 33,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "token",
+    "type": 29
+  },
+  {
+    "col": 14,
+    "line": 33,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ".",
+    "type": 82
+  },
+  {
+    "col": 15,
+    "line": 33,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "Lexeme",
+    "type": 29
+  },
+  {
+    "col": 21,
+    "line": 33,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ",",
+    "type": 75
+  },
+  {
+    "col": 9,
+    "line": 34,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "' }",
+    "type": 33
+  },
+  {
+    "col": 5,
+    "line": 35,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "]",
+    "type": 81
+  },
+  {
+    "col": 6,
+    "line": 35,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 5,
+    "line": 36,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "return",
+    "type": 6
+  },
+  {
+    "col": 12,
+    "line": 36,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "join",
+    "type": 29
+  },
+  {
+    "col": 16,
+    "line": 36,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 17,
+    "line": 36,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "parts",
+    "type": 29
+  },
+  {
+    "col": 22,
+    "line": 36,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ",",
+    "type": 75
+  },
+  {
+    "col": 24,
+    "line": 36,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "",
+    "type": 33
+  },
+  {
+    "col": 26,
+    "line": 36,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 27,
+    "line": 36,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 1,
+    "line": 37,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 2,
+    "line": 37,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "",
+    "type": 87
+  }
+]

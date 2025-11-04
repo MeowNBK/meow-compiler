@@ -1,0 +1,3844 @@
+{
+  "@main": {
+    "pendingJumps": [],
+    "labels": {},
+    "upvalueDescs": [],
+    "constantPool": [
+      "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/builds/build-stage12/token.meowb",
+      "TokenType",
+      "let",
+      "KEYWORD_LET",
+      "const",
+      "KEYWORD_CONST",
+      "while",
+      "KEYWORD_WHILE",
+      "for",
+      "KEYWORD_FOR",
+      "if",
+      "KEYWORD_IF",
+      "else",
+      "KEYWORD_ELSE",
+      "return",
+      "KEYWORD_RETURN",
+      "break",
+      "KEYWORD_BREAK",
+      "continue",
+      "KEYWORD_CONTINUE",
+      "function",
+      "KEYWORD_FUNCTION",
+      "fn",
+      "null",
+      "KEYWORD_NULL",
+      "class",
+      "KEYWORD_CLASS",
+      "this",
+      "KEYWORD_THIS",
+      "super",
+      "KEYWORD_SUPER",
+      "new",
+      "KEYWORD_NEW",
+      "static",
+      "KEYWORD_STATIC",
+      "throw",
+      "KEYWORD_THROW",
+      "import",
+      "KEYWORD_IMPORT",
+      "export",
+      "KEYWORD_EXPORT",
+      "as",
+      "KEYWORD_AS",
+      "from",
+      "KEYWORD_FROM",
+      "try",
+      "KEYWORD_TRY",
+      "catch",
+      "KEYWORD_CATCH",
+      "switch",
+      "KEYWORD_SWITCH",
+      "case",
+      "KEYWORD_CASE",
+      "default",
+      "KEYWORD_DEFAULT",
+      "do",
+      "KEYWORD_DO",
+      "in",
+      "KEYWORD_IN",
+      "log",
+      "KEYWORD_LOG",
+      "true",
+      "BOOLEAN",
+      "false",
+      "keywords",
+      "+",
+      "OP_PLUS",
+      "-",
+      "OP_MINUS",
+      "*",
+      "OP_MULTIPLY",
+      "/",
+      "OP_DIVIDE",
+      "%",
+      "OP_MODULO",
+      "&",
+      "OP_BIT_AND",
+      "|",
+      "OP_BIT_OR",
+      "^",
+      "OP_BIT_XOR",
+      "~",
+      "OP_BIT_NOT",
+      "<<",
+      "OP_LSHIFT",
+      ">>",
+      "OP_RSHIFT",
+      "==",
+      "OP_EQ",
+      "!=",
+      "OP_NEQ",
+      "<",
+      "OP_LT",
+      ">",
+      "OP_GT",
+      "<=",
+      "OP_LE",
+      ">=",
+      "OP_GE",
+      "&&",
+      "OP_LOGICAL_AND",
+      "||",
+      "OP_LOGICAL_OR",
+      "!",
+      "OP_LOGICAL_NOT",
+      "=",
+      "OP_ASSIGN",
+      "+=",
+      "OP_PLUS_ASSIGN",
+      "-=",
+      "OP_MINUS_ASSIGN",
+      "*=",
+      "OP_MULTIPLY_ASSIGN",
+      "/=",
+      "OP_DIVIDE_ASSIGN",
+      "%=",
+      "OP_MODULO_ASSIGN",
+      "**=",
+      "OP_EXPONENT_ASSIGN",
+      "&=",
+      "OP_AND_ASSIGN",
+      "|=",
+      "OP_OR_ASSIGN",
+      "^=",
+      "OP_XOR_ASSIGN",
+      "~=",
+      "OP_NOT_ASSIGN",
+      "<<=",
+      "OP_LSHIFT_ASSIGN",
+      ">>=",
+      "OP_RSHIFT_ASSIGN",
+      "++",
+      "OP_INCREMENT",
+      "--",
+      "OP_DECREMENT",
+      "...",
+      "OP_ELLIPSIS",
+      "??",
+      "OP_NULLISH",
+      "**",
+      "OP_EXPONENT",
+      ";",
+      "PUNCT_SEMICOLON",
+      ":",
+      "PUNCT_COLON",
+      ",",
+      "PUNCT_COMMA",
+      "(",
+      "PUNCT_LPAREN",
+      ")",
+      "PUNCT_RPAREN",
+      "{",
+      "PUNCT_LBRACE",
+      "}",
+      "PUNCT_RBRACE",
+      "[",
+      "PUNCT_LBRACKET",
+      "]",
+      "PUNCT_RBRACKET",
+      ".",
+      "PUNCT_DOT",
+      "?",
+      "PUNCT_QUESTION",
+      "`",
+      "PUNCT_BACKTICK",
+      "%{",
+      "PUNCT_PERCENT_LBRACE",
+      "symbols"
+    ],
+    "code": [
+      {
+        "args": [
+          0,
+          0
+        ],
+        "op": "IMPORT_MODULE"
+      },
+      {
+        "args": [
+          1,
+          0,
+          1
+        ],
+        "op": "GET_EXPORT"
+      },
+      {
+        "args": [
+          1,
+          1
+        ],
+        "op": "SET_GLOBAL"
+      },
+      {
+        "args": [
+          67,
+          2
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          3,
+          67
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          69,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          68,
+          69
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          70,
+          68,
+          3
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          4,
+          70
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          71,
+          4
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          5,
+          71
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          73,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          72,
+          73
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          74,
+          72,
+          5
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          6,
+          74
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          75,
+          6
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          7,
+          75
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          77,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          76,
+          77
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          78,
+          76,
+          7
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          8,
+          78
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          79,
+          8
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          9,
+          79
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          81,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          80,
+          81
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          82,
+          80,
+          9
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          10,
+          82
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          83,
+          10
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          11,
+          83
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          85,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          84,
+          85
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          86,
+          84,
+          11
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          12,
+          86
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          87,
+          12
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          13,
+          87
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          89,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          88,
+          89
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          90,
+          88,
+          13
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          14,
+          90
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          91,
+          14
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          15,
+          91
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          93,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          92,
+          93
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          94,
+          92,
+          15
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          16,
+          94
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          95,
+          16
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          17,
+          95
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          97,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          96,
+          97
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          98,
+          96,
+          17
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          18,
+          98
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          99,
+          18
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          19,
+          99
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          101,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          100,
+          101
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          102,
+          100,
+          19
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          20,
+          102
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          103,
+          20
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          21,
+          103
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          105,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          104,
+          105
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          106,
+          104,
+          21
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          22,
+          106
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          107,
+          22
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          23,
+          107
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          109,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          108,
+          109
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          110,
+          108,
+          21
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          24,
+          110
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          111,
+          23
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          25,
+          111
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          113,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          112,
+          113
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          114,
+          112,
+          24
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          26,
+          114
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          115,
+          25
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          27,
+          115
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          117,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          116,
+          117
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          118,
+          116,
+          26
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          28,
+          118
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          119,
+          27
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          29,
+          119
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          121,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          120,
+          121
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          122,
+          120,
+          28
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          30,
+          122
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          123,
+          29
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          31,
+          123
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          125,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          124,
+          125
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          126,
+          124,
+          30
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          32,
+          126
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          127,
+          31
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          33,
+          127
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          129,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          128,
+          129
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          130,
+          128,
+          32
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          34,
+          130
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          131,
+          33
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          35,
+          131
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          133,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          132,
+          133
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          134,
+          132,
+          34
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          36,
+          134
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          135,
+          35
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          37,
+          135
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          137,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          136,
+          137
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          138,
+          136,
+          36
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          38,
+          138
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          139,
+          37
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          39,
+          139
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          141,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          140,
+          141
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          142,
+          140,
+          38
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          40,
+          142
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          143,
+          39
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          41,
+          143
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          145,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          144,
+          145
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          146,
+          144,
+          40
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          42,
+          146
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          147,
+          41
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          43,
+          147
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          149,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          148,
+          149
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          150,
+          148,
+          42
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          44,
+          150
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          151,
+          43
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          45,
+          151
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          153,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          152,
+          153
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          154,
+          152,
+          44
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          46,
+          154
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          155,
+          45
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          47,
+          155
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          157,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          156,
+          157
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          158,
+          156,
+          46
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          48,
+          158
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          159,
+          47
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          49,
+          159
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          161,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          160,
+          161
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          162,
+          160,
+          48
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          50,
+          162
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          163,
+          49
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          51,
+          163
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          165,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          164,
+          165
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          166,
+          164,
+          50
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          52,
+          166
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          167,
+          51
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          53,
+          167
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          169,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          168,
+          169
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          170,
+          168,
+          52
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          54,
+          170
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          171,
+          53
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          55,
+          171
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          173,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          172,
+          173
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          174,
+          172,
+          54
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          56,
+          174
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          175,
+          55
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          57,
+          175
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          177,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          176,
+          177
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          178,
+          176,
+          56
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          58,
+          178
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          179,
+          57
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          59,
+          179
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          181,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          180,
+          181
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          182,
+          180,
+          58
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          60,
+          182
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          183,
+          59
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          61,
+          183
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          185,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          184,
+          185
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          186,
+          184,
+          60
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          62,
+          186
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          187,
+          61
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          63,
+          187
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          189,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          188,
+          189
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          190,
+          188,
+          62
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          64,
+          190
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          191,
+          63
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          65,
+          191
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          193,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          192,
+          193
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          194,
+          192,
+          62
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          66,
+          194
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          195,
+          3,
+          32
+        ],
+        "op": "NEW_HASH"
+      },
+      {
+        "args": [
+          2,
+          195
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          64,
+          2
+        ],
+        "op": "SET_GLOBAL"
+      },
+      {
+        "args": [
+          64,
+          2
+        ],
+        "op": "EXPORT"
+      },
+      {
+        "args": [
+          299,
+          65
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          197,
+          299
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          301,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          300,
+          301
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          302,
+          300,
+          66
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          198,
+          302
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          303,
+          67
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          199,
+          303
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          305,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          304,
+          305
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          306,
+          304,
+          68
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          200,
+          306
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          307,
+          69
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          201,
+          307
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          309,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          308,
+          309
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          310,
+          308,
+          70
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          202,
+          310
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          311,
+          71
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          203,
+          311
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          313,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          312,
+          313
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          314,
+          312,
+          72
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          204,
+          314
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          315,
+          73
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          205,
+          315
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          317,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          316,
+          317
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          318,
+          316,
+          74
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          206,
+          318
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          319,
+          75
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          207,
+          319
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          321,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          320,
+          321
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          322,
+          320,
+          76
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          208,
+          322
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          323,
+          77
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          209,
+          323
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          325,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          324,
+          325
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          326,
+          324,
+          78
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          210,
+          326
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          327,
+          79
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          211,
+          327
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          329,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          328,
+          329
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          330,
+          328,
+          80
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          212,
+          330
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          331,
+          81
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          213,
+          331
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          333,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          332,
+          333
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          334,
+          332,
+          82
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          214,
+          334
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          335,
+          83
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          215,
+          335
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          337,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          336,
+          337
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          338,
+          336,
+          84
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          216,
+          338
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          339,
+          85
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          217,
+          339
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          341,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          340,
+          341
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          342,
+          340,
+          86
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          218,
+          342
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          343,
+          87
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          219,
+          343
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          345,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          344,
+          345
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          346,
+          344,
+          88
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          220,
+          346
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          347,
+          89
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          221,
+          347
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          349,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          348,
+          349
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          350,
+          348,
+          90
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          222,
+          350
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          351,
+          91
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          223,
+          351
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          353,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          352,
+          353
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          354,
+          352,
+          92
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          224,
+          354
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          355,
+          93
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          225,
+          355
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          357,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          356,
+          357
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          358,
+          356,
+          94
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          226,
+          358
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          359,
+          95
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          227,
+          359
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          361,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          360,
+          361
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          362,
+          360,
+          96
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          228,
+          362
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          363,
+          97
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          229,
+          363
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          365,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          364,
+          365
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          366,
+          364,
+          98
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          230,
+          366
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          367,
+          99
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          231,
+          367
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          369,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          368,
+          369
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          370,
+          368,
+          100
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          232,
+          370
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          371,
+          101
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          233,
+          371
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          373,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          372,
+          373
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          374,
+          372,
+          102
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          234,
+          374
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          375,
+          103
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          235,
+          375
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          377,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          376,
+          377
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          378,
+          376,
+          104
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          236,
+          378
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          379,
+          105
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          237,
+          379
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          381,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          380,
+          381
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          382,
+          380,
+          106
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          238,
+          382
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          383,
+          107
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          239,
+          383
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          385,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          384,
+          385
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          386,
+          384,
+          108
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          240,
+          386
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          387,
+          109
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          241,
+          387
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          389,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          388,
+          389
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          390,
+          388,
+          110
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          242,
+          390
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          391,
+          111
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          243,
+          391
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          393,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          392,
+          393
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          394,
+          392,
+          112
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          244,
+          394
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          395,
+          113
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          245,
+          395
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          397,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          396,
+          397
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          398,
+          396,
+          114
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          246,
+          398
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          399,
+          115
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          247,
+          399
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          401,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          400,
+          401
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          402,
+          400,
+          116
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          248,
+          402
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          403,
+          117
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          249,
+          403
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          405,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          404,
+          405
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          406,
+          404,
+          118
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          250,
+          406
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          407,
+          119
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          251,
+          407
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          409,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          408,
+          409
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          410,
+          408,
+          120
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          252,
+          410
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          411,
+          121
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          253,
+          411
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          413,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          412,
+          413
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          414,
+          412,
+          122
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          254,
+          414
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          415,
+          123
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          255,
+          415
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          417,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          416,
+          417
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          418,
+          416,
+          124
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          256,
+          418
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          419,
+          125
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          257,
+          419
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          421,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          420,
+          421
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          422,
+          420,
+          126
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          258,
+          422
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          423,
+          127
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          259,
+          423
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          425,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          424,
+          425
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          426,
+          424,
+          128
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          260,
+          426
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          427,
+          129
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          261,
+          427
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          429,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          428,
+          429
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          430,
+          428,
+          130
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          262,
+          430
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          431,
+          131
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          263,
+          431
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          433,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          432,
+          433
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          434,
+          432,
+          132
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          264,
+          434
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          435,
+          133
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          265,
+          435
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          437,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          436,
+          437
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          438,
+          436,
+          134
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          266,
+          438
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          439,
+          135
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          267,
+          439
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          441,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          440,
+          441
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          442,
+          440,
+          136
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          268,
+          442
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          443,
+          137
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          269,
+          443
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          445,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          444,
+          445
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          446,
+          444,
+          138
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          270,
+          446
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          447,
+          139
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          271,
+          447
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          449,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          448,
+          449
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          450,
+          448,
+          140
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          272,
+          450
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          451,
+          141
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          273,
+          451
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          453,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          452,
+          453
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          454,
+          452,
+          142
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          274,
+          454
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          455,
+          143
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          275,
+          455
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          457,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          456,
+          457
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          458,
+          456,
+          144
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          276,
+          458
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          459,
+          145
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          277,
+          459
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          461,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          460,
+          461
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          462,
+          460,
+          146
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          278,
+          462
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          463,
+          147
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          279,
+          463
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          465,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          464,
+          465
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          466,
+          464,
+          148
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          280,
+          466
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          467,
+          149
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          281,
+          467
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          469,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          468,
+          469
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          470,
+          468,
+          150
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          282,
+          470
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          471,
+          151
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          283,
+          471
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          473,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          472,
+          473
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          474,
+          472,
+          152
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          284,
+          474
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          475,
+          153
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          285,
+          475
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          477,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          476,
+          477
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          478,
+          476,
+          154
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          286,
+          478
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          479,
+          155
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          287,
+          479
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          481,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          480,
+          481
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          482,
+          480,
+          156
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          288,
+          482
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          483,
+          157
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          289,
+          483
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          485,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          484,
+          485
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          486,
+          484,
+          158
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          290,
+          486
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          487,
+          159
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          291,
+          487
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          489,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          488,
+          489
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          490,
+          488,
+          160
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          292,
+          490
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          491,
+          161
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          293,
+          491
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          493,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          492,
+          493
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          494,
+          492,
+          162
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          294,
+          494
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          495,
+          163
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          295,
+          495
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          497,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          496,
+          497
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          498,
+          496,
+          164
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          296,
+          498
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          499,
+          165
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          297,
+          499
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          501,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          500,
+          501
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          502,
+          500,
+          166
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          298,
+          502
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          503,
+          197,
+          51
+        ],
+        "op": "NEW_HASH"
+      },
+      {
+        "args": [
+          196,
+          503
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          167,
+          196
+        ],
+        "op": "SET_GLOBAL"
+      },
+      {
+        "args": [
+          167,
+          196
+        ],
+        "op": "EXPORT"
+      },
+      {
+        "args": [
+          504
+        ],
+        "op": "LOAD_NULL"
+      },
+      {
+        "args": [
+          504
+        ],
+        "op": "RETURN"
+      }
+    ],
+    "sourceName": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./tokenTables.meow",
+    "numRegisters": 505,
+    "numUpvalues": 0,
+    "id": 147
+  }
+}

@@ -1,0 +1,1825 @@
+{
+  "token": {
+    "col": 1,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+    "lexeme": "export",
+    "type": 20
+  },
+  "body": [
+    {
+      "token": {
+        "col": 1,
+        "line": 1,
+        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+        "lexeme": "export",
+        "type": 20
+      },
+      "specifiers": [],
+      "declaration": {
+        "static_fields": [],
+        "methods": [
+          {
+            "token": {
+              "col": 5,
+              "line": 2,
+              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+              "lexeme": "fn",
+              "type": 9
+            },
+            "func": {
+              "token": {
+                "col": 5,
+                "line": 2,
+                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                "lexeme": "fn",
+                "type": 9
+              },
+              "returnType": null,
+              "restParam": null,
+              "body": {
+                "token": {
+                  "col": 19,
+                  "line": 2,
+                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                  "lexeme": "{",
+                  "type": 78
+                },
+                "statements": [
+                  {
+                    "token": {
+                      "col": 9,
+                      "line": 3,
+                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                      "lexeme": "this",
+                      "type": 12
+                    },
+                    "expression": {
+                      "token": {
+                        "col": 19,
+                        "line": 3,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                        "lexeme": "=",
+                        "type": 56
+                      },
+                      "value": {
+                        "token": {
+                          "col": 21,
+                          "line": 3,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                          "lexeme": "pool",
+                          "type": 29
+                        },
+                        "name": "pool",
+                        "type": "Identifier"
+                      },
+                      "target": {
+                        "token": {
+                          "col": 13,
+                          "line": 3,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                          "lexeme": ".",
+                          "type": 82
+                        },
+                        "property": {
+                          "token": {
+                            "col": 14,
+                            "line": 3,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "pool",
+                            "type": 29
+                          },
+                          "name": "pool",
+                          "type": "Identifier"
+                        },
+                        "object": {
+                          "token": {
+                            "col": 9,
+                            "line": 3,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "this",
+                            "type": 12
+                          },
+                          "type": "ThisExpression"
+                        },
+                        "type": "PropertyAccess"
+                      },
+                      "type": "AssignmentExpression"
+                    },
+                    "type": "ExpressionStatement"
+                  },
+                  {
+                    "token": {
+                      "col": 9,
+                      "line": 4,
+                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                      "lexeme": "this",
+                      "type": 12
+                    },
+                    "expression": {
+                      "token": {
+                        "col": 21,
+                        "line": 4,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                        "lexeme": "=",
+                        "type": 56
+                      },
+                      "value": {
+                        "token": {
+                          "col": 23,
+                          "line": 4,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                          "lexeme": "{",
+                          "type": 78
+                        },
+                        "properties": [],
+                        "type": "ObjectLiteral"
+                      },
+                      "target": {
+                        "token": {
+                          "col": 13,
+                          "line": 4,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                          "lexeme": ".",
+                          "type": 82
+                        },
+                        "property": {
+                          "token": {
+                            "col": 14,
+                            "line": 4,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "lookup",
+                            "type": 29
+                          },
+                          "name": "lookup",
+                          "type": "Identifier"
+                        },
+                        "object": {
+                          "token": {
+                            "col": 9,
+                            "line": 4,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "this",
+                            "type": 12
+                          },
+                          "type": "ThisExpression"
+                        },
+                        "type": "PropertyAccess"
+                      },
+                      "type": "AssignmentExpression"
+                    },
+                    "type": "ExpressionStatement"
+                  }
+                ],
+                "type": "BlockStatement"
+              },
+              "parameters": [
+                {
+                  "token": {
+                    "col": 13,
+                    "line": 2,
+                    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                    "lexeme": "pool",
+                    "type": 29
+                  },
+                  "name": "pool",
+                  "type": "Identifier"
+                }
+              ],
+              "name": "ConstantPool.init",
+              "type": "FunctionLiteral"
+            },
+            "name": {
+              "token": {
+                "col": 8,
+                "line": 2,
+                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                "lexeme": "init",
+                "type": 29
+              },
+              "name": "init",
+              "type": "Identifier"
+            },
+            "type": "FunctionStatement"
+          },
+          {
+            "token": {
+              "col": 5,
+              "line": 7,
+              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+              "lexeme": "fn",
+              "type": 9
+            },
+            "func": {
+              "token": {
+                "col": 5,
+                "line": 7,
+                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                "lexeme": "fn",
+                "type": 9
+              },
+              "returnType": null,
+              "restParam": null,
+              "body": {
+                "token": {
+                  "col": 19,
+                  "line": 7,
+                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                  "lexeme": "{",
+                  "type": 78
+                },
+                "statements": [
+                  {
+                    "token": {
+                      "col": 9,
+                      "line": 8,
+                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                      "lexeme": "if",
+                      "type": 4
+                    },
+                    "elseBranch": null,
+                    "thenBranch": {
+                      "token": {
+                        "col": 90,
+                        "line": 8,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                        "lexeme": "{",
+                        "type": 78
+                      },
+                      "statements": [
+                        {
+                          "token": {
+                            "col": 14,
+                            "line": 9,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "let",
+                            "type": 0
+                          },
+                          "isConstant": false,
+                          "value": {
+                            "token": {
+                              "col": 33,
+                              "line": 9,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "+",
+                              "type": 35
+                            },
+                            "right": {
+                              "token": {
+                                "col": 40,
+                                "line": 9,
+                                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                "lexeme": ".",
+                                "type": 82
+                              },
+                              "property": {
+                                "token": {
+                                  "col": 41,
+                                  "line": 9,
+                                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                  "lexeme": "sourceName",
+                                  "type": 29
+                                },
+                                "name": "sourceName",
+                                "type": "Identifier"
+                              },
+                              "object": {
+                                "token": {
+                                  "col": 35,
+                                  "line": 9,
+                                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                  "lexeme": "value",
+                                  "type": 29
+                                },
+                                "name": "value",
+                                "type": "Identifier"
+                              },
+                              "type": "PropertyAccess"
+                            },
+                            "op": 35,
+                            "left": {
+                              "token": {
+                                "col": 24,
+                                "line": 9,
+                                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                "lexeme": "proto:",
+                                "type": 33
+                              },
+                              "value": "proto:",
+                              "type": "StringLiteral"
+                            },
+                            "type": "BinaryExpression"
+                          },
+                          "name": {
+                            "token": {
+                              "col": 18,
+                              "line": 9,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "key",
+                              "type": 29
+                            },
+                            "name": "key",
+                            "type": "Identifier"
+                          },
+                          "type": "LetStatement"
+                        },
+                        {
+                          "token": {
+                            "col": 14,
+                            "line": 10,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "if",
+                            "type": 4
+                          },
+                          "elseBranch": null,
+                          "thenBranch": {
+                            "token": {
+                              "col": 44,
+                              "line": 10,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "{",
+                              "type": 78
+                            },
+                            "statements": [
+                              {
+                                "token": {
+                                  "col": 18,
+                                  "line": 11,
+                                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                  "lexeme": "return",
+                                  "type": 6
+                                },
+                                "value": {
+                                  "token": {
+                                    "col": 36,
+                                    "line": 11,
+                                    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                    "lexeme": "[",
+                                    "type": 80
+                                  },
+                                  "index": {
+                                    "token": {
+                                      "col": 37,
+                                      "line": 11,
+                                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                      "lexeme": "key",
+                                      "type": 29
+                                    },
+                                    "name": "key",
+                                    "type": "Identifier"
+                                  },
+                                  "object": {
+                                    "token": {
+                                      "col": 29,
+                                      "line": 11,
+                                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                      "lexeme": ".",
+                                      "type": 82
+                                    },
+                                    "property": {
+                                      "token": {
+                                        "col": 30,
+                                        "line": 11,
+                                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                        "lexeme": "lookup",
+                                        "type": 29
+                                      },
+                                      "name": "lookup",
+                                      "type": "Identifier"
+                                    },
+                                    "object": {
+                                      "token": {
+                                        "col": 25,
+                                        "line": 11,
+                                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                        "lexeme": "this",
+                                        "type": 12
+                                      },
+                                      "type": "ThisExpression"
+                                    },
+                                    "type": "PropertyAccess"
+                                  },
+                                  "type": "IndexExpression"
+                                },
+                                "type": "ReturnStatement"
+                              }
+                            ],
+                            "type": "BlockStatement"
+                          },
+                          "condition": {
+                            "token": {
+                              "col": 35,
+                              "line": 10,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "!=",
+                              "type": 48
+                            },
+                            "right": {
+                              "token": {
+                                "col": 38,
+                                "line": 10,
+                                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                "lexeme": "null",
+                                "type": 10
+                              },
+                              "value": null,
+                              "type": "NullLiteral"
+                            },
+                            "op": 48,
+                            "left": {
+                              "token": {
+                                "col": 29,
+                                "line": 10,
+                                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                "lexeme": "[",
+                                "type": 80
+                              },
+                              "index": {
+                                "token": {
+                                  "col": 30,
+                                  "line": 10,
+                                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                  "lexeme": "key",
+                                  "type": 29
+                                },
+                                "name": "key",
+                                "type": "Identifier"
+                              },
+                              "object": {
+                                "token": {
+                                  "col": 22,
+                                  "line": 10,
+                                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                  "lexeme": ".",
+                                  "type": 82
+                                },
+                                "property": {
+                                  "token": {
+                                    "col": 23,
+                                    "line": 10,
+                                    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                    "lexeme": "lookup",
+                                    "type": 29
+                                  },
+                                  "name": "lookup",
+                                  "type": "Identifier"
+                                },
+                                "object": {
+                                  "token": {
+                                    "col": 18,
+                                    "line": 10,
+                                    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                    "lexeme": "this",
+                                    "type": 12
+                                  },
+                                  "type": "ThisExpression"
+                                },
+                                "type": "PropertyAccess"
+                              },
+                              "type": "IndexExpression"
+                            },
+                            "type": "BinaryExpression"
+                          },
+                          "type": "IfStatement"
+                        },
+                        {
+                          "token": {
+                            "col": 14,
+                            "line": 13,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "let",
+                            "type": 0
+                          },
+                          "isConstant": false,
+                          "value": {
+                            "token": {
+                              "col": 35,
+                              "line": 13,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": ".",
+                              "type": 82
+                            },
+                            "property": {
+                              "token": {
+                                "col": 36,
+                                "line": 13,
+                                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                "lexeme": "length",
+                                "type": 29
+                              },
+                              "name": "length",
+                              "type": "Identifier"
+                            },
+                            "object": {
+                              "token": {
+                                "col": 30,
+                                "line": 13,
+                                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                "lexeme": ".",
+                                "type": 82
+                              },
+                              "property": {
+                                "token": {
+                                  "col": 31,
+                                  "line": 13,
+                                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                  "lexeme": "pool",
+                                  "type": 29
+                                },
+                                "name": "pool",
+                                "type": "Identifier"
+                              },
+                              "object": {
+                                "token": {
+                                  "col": 26,
+                                  "line": 13,
+                                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                  "lexeme": "this",
+                                  "type": 12
+                                },
+                                "type": "ThisExpression"
+                              },
+                              "type": "PropertyAccess"
+                            },
+                            "type": "PropertyAccess"
+                          },
+                          "name": {
+                            "token": {
+                              "col": 18,
+                              "line": 13,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "index",
+                              "type": 29
+                            },
+                            "name": "index",
+                            "type": "Identifier"
+                          },
+                          "type": "LetStatement"
+                        },
+                        {
+                          "token": {
+                            "col": 14,
+                            "line": 14,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "this",
+                            "type": 12
+                          },
+                          "expression": {
+                            "args": [
+                              {
+                                "token": {
+                                  "col": 29,
+                                  "line": 14,
+                                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                  "lexeme": "value",
+                                  "type": 29
+                                },
+                                "name": "value",
+                                "type": "Identifier"
+                              }
+                            ],
+                            "token": {
+                              "col": 28,
+                              "line": 14,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "(",
+                              "type": 76
+                            },
+                            "callee": {
+                              "token": {
+                                "col": 23,
+                                "line": 14,
+                                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                "lexeme": ".",
+                                "type": 82
+                              },
+                              "property": {
+                                "token": {
+                                  "col": 24,
+                                  "line": 14,
+                                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                  "lexeme": "push",
+                                  "type": 29
+                                },
+                                "name": "push",
+                                "type": "Identifier"
+                              },
+                              "object": {
+                                "token": {
+                                  "col": 18,
+                                  "line": 14,
+                                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                  "lexeme": ".",
+                                  "type": 82
+                                },
+                                "property": {
+                                  "token": {
+                                    "col": 19,
+                                    "line": 14,
+                                    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                    "lexeme": "pool",
+                                    "type": 29
+                                  },
+                                  "name": "pool",
+                                  "type": "Identifier"
+                                },
+                                "object": {
+                                  "token": {
+                                    "col": 14,
+                                    "line": 14,
+                                    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                    "lexeme": "this",
+                                    "type": 12
+                                  },
+                                  "type": "ThisExpression"
+                                },
+                                "type": "PropertyAccess"
+                              },
+                              "type": "PropertyAccess"
+                            },
+                            "type": "CallExpression"
+                          },
+                          "type": "ExpressionStatement"
+                        },
+                        {
+                          "token": {
+                            "col": 14,
+                            "line": 15,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "this",
+                            "type": 12
+                          },
+                          "expression": {
+                            "token": {
+                              "col": 31,
+                              "line": 15,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "=",
+                              "type": 56
+                            },
+                            "value": {
+                              "token": {
+                                "col": 33,
+                                "line": 15,
+                                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                "lexeme": "index",
+                                "type": 29
+                              },
+                              "name": "index",
+                              "type": "Identifier"
+                            },
+                            "target": {
+                              "token": {
+                                "col": 25,
+                                "line": 15,
+                                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                "lexeme": "[",
+                                "type": 80
+                              },
+                              "index": {
+                                "token": {
+                                  "col": 26,
+                                  "line": 15,
+                                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                  "lexeme": "key",
+                                  "type": 29
+                                },
+                                "name": "key",
+                                "type": "Identifier"
+                              },
+                              "object": {
+                                "token": {
+                                  "col": 18,
+                                  "line": 15,
+                                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                  "lexeme": ".",
+                                  "type": 82
+                                },
+                                "property": {
+                                  "token": {
+                                    "col": 19,
+                                    "line": 15,
+                                    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                    "lexeme": "lookup",
+                                    "type": 29
+                                  },
+                                  "name": "lookup",
+                                  "type": "Identifier"
+                                },
+                                "object": {
+                                  "token": {
+                                    "col": 14,
+                                    "line": 15,
+                                    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                    "lexeme": "this",
+                                    "type": 12
+                                  },
+                                  "type": "ThisExpression"
+                                },
+                                "type": "PropertyAccess"
+                              },
+                              "type": "IndexExpression"
+                            },
+                            "type": "AssignmentExpression"
+                          },
+                          "type": "ExpressionStatement"
+                        },
+                        {
+                          "token": {
+                            "col": 14,
+                            "line": 16,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "return",
+                            "type": 6
+                          },
+                          "value": {
+                            "token": {
+                              "col": 21,
+                              "line": 16,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "index",
+                              "type": 29
+                            },
+                            "name": "index",
+                            "type": "Identifier"
+                          },
+                          "type": "ReturnStatement"
+                        }
+                      ],
+                      "type": "BlockStatement"
+                    },
+                    "condition": {
+                      "token": {
+                        "col": 56,
+                        "line": 8,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                        "lexeme": "&&",
+                        "type": 53
+                      },
+                      "right": {
+                        "token": {
+                          "col": 80,
+                          "line": 8,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                          "lexeme": "!=",
+                          "type": 48
+                        },
+                        "right": {
+                          "token": {
+                            "col": 83,
+                            "line": 8,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "null",
+                            "type": 10
+                          },
+                          "value": null,
+                          "type": "NullLiteral"
+                        },
+                        "op": 48,
+                        "left": {
+                          "token": {
+                            "col": 65,
+                            "line": 8,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "[",
+                            "type": 80
+                          },
+                          "index": {
+                            "token": {
+                              "col": 66,
+                              "line": 8,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "sourceName",
+                              "type": 33
+                            },
+                            "value": "sourceName",
+                            "type": "StringLiteral"
+                          },
+                          "object": {
+                            "token": {
+                              "col": 60,
+                              "line": 8,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "value",
+                              "type": 29
+                            },
+                            "name": "value",
+                            "type": "Identifier"
+                          },
+                          "type": "IndexExpression"
+                        },
+                        "type": "BinaryExpression"
+                      },
+                      "op": 53,
+                      "left": {
+                        "token": {
+                          "col": 39,
+                          "line": 8,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                          "lexeme": "&&",
+                          "type": 53
+                        },
+                        "right": {
+                          "token": {
+                            "col": 48,
+                            "line": 8,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "!=",
+                            "type": 48
+                          },
+                          "right": {
+                            "token": {
+                              "col": 51,
+                              "line": 8,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "null",
+                              "type": 10
+                            },
+                            "value": null,
+                            "type": "NullLiteral"
+                          },
+                          "op": 48,
+                          "left": {
+                            "token": {
+                              "col": 42,
+                              "line": 8,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "value",
+                              "type": 29
+                            },
+                            "name": "value",
+                            "type": "Identifier"
+                          },
+                          "type": "BinaryExpression"
+                        },
+                        "op": 53,
+                        "left": {
+                          "token": {
+                            "col": 27,
+                            "line": 8,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "==",
+                            "type": 47
+                          },
+                          "right": {
+                            "token": {
+                              "col": 30,
+                              "line": 8,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "object",
+                              "type": 33
+                            },
+                            "value": "object",
+                            "type": "StringLiteral"
+                          },
+                          "op": 47,
+                          "left": {
+                            "args": [
+                              {
+                                "token": {
+                                  "col": 20,
+                                  "line": 8,
+                                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                  "lexeme": "value",
+                                  "type": 29
+                                },
+                                "name": "value",
+                                "type": "Identifier"
+                              }
+                            ],
+                            "token": {
+                              "col": 19,
+                              "line": 8,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "(",
+                              "type": 76
+                            },
+                            "callee": {
+                              "token": {
+                                "col": 13,
+                                "line": 8,
+                                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                "lexeme": "typeof",
+                                "type": 29
+                              },
+                              "name": "typeof",
+                              "type": "Identifier"
+                            },
+                            "type": "CallExpression"
+                          },
+                          "type": "BinaryExpression"
+                        },
+                        "type": "BinaryExpression"
+                      },
+                      "type": "BinaryExpression"
+                    },
+                    "type": "IfStatement"
+                  },
+                  {
+                    "token": {
+                      "col": 9,
+                      "line": 19,
+                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                      "lexeme": "let",
+                      "type": 0
+                    },
+                    "isConstant": false,
+                    "value": {
+                      "args": [
+                        {
+                          "token": {
+                            "col": 28,
+                            "line": 19,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "value",
+                            "type": 29
+                          },
+                          "name": "value",
+                          "type": "Identifier"
+                        }
+                      ],
+                      "token": {
+                        "col": 27,
+                        "line": 19,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                        "lexeme": "(",
+                        "type": 76
+                      },
+                      "callee": {
+                        "token": {
+                          "col": 24,
+                          "line": 19,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                          "lexeme": "str",
+                          "type": 29
+                        },
+                        "name": "str",
+                        "type": "Identifier"
+                      },
+                      "type": "CallExpression"
+                    },
+                    "name": {
+                      "token": {
+                        "col": 13,
+                        "line": 19,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                        "lexeme": "valueStr",
+                        "type": 29
+                      },
+                      "name": "valueStr",
+                      "type": "Identifier"
+                    },
+                    "type": "LetStatement"
+                  },
+                  {
+                    "token": {
+                      "col": 9,
+                      "line": 21,
+                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                      "lexeme": "let",
+                      "type": 0
+                    },
+                    "isConstant": false,
+                    "value": {
+                      "token": {
+                        "col": 27,
+                        "line": 21,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                        "lexeme": "+",
+                        "type": 35
+                      },
+                      "right": {
+                        "token": {
+                          "col": 29,
+                          "line": 21,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                          "lexeme": "valueStr",
+                          "type": 29
+                        },
+                        "name": "valueStr",
+                        "type": "Identifier"
+                      },
+                      "op": 35,
+                      "left": {
+                        "token": {
+                          "col": 19,
+                          "line": 21,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                          "lexeme": "meow:",
+                          "type": 33
+                        },
+                        "value": "meow:",
+                        "type": "StringLiteral"
+                      },
+                      "type": "BinaryExpression"
+                    },
+                    "name": {
+                      "token": {
+                        "col": 13,
+                        "line": 21,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                        "lexeme": "key",
+                        "type": 29
+                      },
+                      "name": "key",
+                      "type": "Identifier"
+                    },
+                    "type": "LetStatement"
+                  },
+                  {
+                    "token": {
+                      "col": 9,
+                      "line": 23,
+                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                      "lexeme": "if",
+                      "type": 4
+                    },
+                    "elseBranch": null,
+                    "thenBranch": {
+                      "token": {
+                        "col": 31,
+                        "line": 23,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                        "lexeme": "{",
+                        "type": 78
+                      },
+                      "statements": [
+                        {
+                          "token": {
+                            "col": 13,
+                            "line": 24,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "return",
+                            "type": 6
+                          },
+                          "value": {
+                            "token": {
+                              "col": 31,
+                              "line": 24,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "[",
+                              "type": 80
+                            },
+                            "index": {
+                              "token": {
+                                "col": 32,
+                                "line": 24,
+                                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                "lexeme": "key",
+                                "type": 29
+                              },
+                              "name": "key",
+                              "type": "Identifier"
+                            },
+                            "object": {
+                              "token": {
+                                "col": 24,
+                                "line": 24,
+                                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                "lexeme": ".",
+                                "type": 82
+                              },
+                              "property": {
+                                "token": {
+                                  "col": 25,
+                                  "line": 24,
+                                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                  "lexeme": "lookup",
+                                  "type": 29
+                                },
+                                "name": "lookup",
+                                "type": "Identifier"
+                              },
+                              "object": {
+                                "token": {
+                                  "col": 20,
+                                  "line": 24,
+                                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                  "lexeme": "this",
+                                  "type": 12
+                                },
+                                "type": "ThisExpression"
+                              },
+                              "type": "PropertyAccess"
+                            },
+                            "type": "IndexExpression"
+                          },
+                          "type": "ReturnStatement"
+                        }
+                      ],
+                      "type": "BlockStatement"
+                    },
+                    "condition": {
+                      "token": {
+                        "col": 24,
+                        "line": 23,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                        "lexeme": "[",
+                        "type": 80
+                      },
+                      "index": {
+                        "token": {
+                          "col": 25,
+                          "line": 23,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                          "lexeme": "key",
+                          "type": 29
+                        },
+                        "name": "key",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 17,
+                          "line": 23,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                          "lexeme": ".",
+                          "type": 82
+                        },
+                        "property": {
+                          "token": {
+                            "col": 18,
+                            "line": 23,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "lookup",
+                            "type": 29
+                          },
+                          "name": "lookup",
+                          "type": "Identifier"
+                        },
+                        "object": {
+                          "token": {
+                            "col": 13,
+                            "line": 23,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "this",
+                            "type": 12
+                          },
+                          "type": "ThisExpression"
+                        },
+                        "type": "PropertyAccess"
+                      },
+                      "type": "IndexExpression"
+                    },
+                    "type": "IfStatement"
+                  },
+                  {
+                    "token": {
+                      "col": 9,
+                      "line": 27,
+                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                      "lexeme": "let",
+                      "type": 0
+                    },
+                    "isConstant": false,
+                    "value": {
+                      "token": {
+                        "col": 30,
+                        "line": 27,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 31,
+                          "line": 27,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                          "lexeme": "length",
+                          "type": 29
+                        },
+                        "name": "length",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 25,
+                          "line": 27,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                          "lexeme": ".",
+                          "type": 82
+                        },
+                        "property": {
+                          "token": {
+                            "col": 26,
+                            "line": 27,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "pool",
+                            "type": 29
+                          },
+                          "name": "pool",
+                          "type": "Identifier"
+                        },
+                        "object": {
+                          "token": {
+                            "col": 21,
+                            "line": 27,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "this",
+                            "type": 12
+                          },
+                          "type": "ThisExpression"
+                        },
+                        "type": "PropertyAccess"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "name": {
+                      "token": {
+                        "col": 13,
+                        "line": 27,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                        "lexeme": "index",
+                        "type": 29
+                      },
+                      "name": "index",
+                      "type": "Identifier"
+                    },
+                    "type": "LetStatement"
+                  },
+                  {
+                    "token": {
+                      "col": 9,
+                      "line": 28,
+                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                      "lexeme": "this",
+                      "type": 12
+                    },
+                    "expression": {
+                      "args": [
+                        {
+                          "token": {
+                            "col": 24,
+                            "line": 28,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "value",
+                            "type": 29
+                          },
+                          "name": "value",
+                          "type": "Identifier"
+                        }
+                      ],
+                      "token": {
+                        "col": 23,
+                        "line": 28,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                        "lexeme": "(",
+                        "type": 76
+                      },
+                      "callee": {
+                        "token": {
+                          "col": 18,
+                          "line": 28,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                          "lexeme": ".",
+                          "type": 82
+                        },
+                        "property": {
+                          "token": {
+                            "col": 19,
+                            "line": 28,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "push",
+                            "type": 29
+                          },
+                          "name": "push",
+                          "type": "Identifier"
+                        },
+                        "object": {
+                          "token": {
+                            "col": 13,
+                            "line": 28,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": ".",
+                            "type": 82
+                          },
+                          "property": {
+                            "token": {
+                              "col": 14,
+                              "line": 28,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "pool",
+                              "type": 29
+                            },
+                            "name": "pool",
+                            "type": "Identifier"
+                          },
+                          "object": {
+                            "token": {
+                              "col": 9,
+                              "line": 28,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "this",
+                              "type": 12
+                            },
+                            "type": "ThisExpression"
+                          },
+                          "type": "PropertyAccess"
+                        },
+                        "type": "PropertyAccess"
+                      },
+                      "type": "CallExpression"
+                    },
+                    "type": "ExpressionStatement"
+                  },
+                  {
+                    "token": {
+                      "col": 9,
+                      "line": 29,
+                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                      "lexeme": "this",
+                      "type": 12
+                    },
+                    "expression": {
+                      "token": {
+                        "col": 26,
+                        "line": 29,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                        "lexeme": "=",
+                        "type": 56
+                      },
+                      "value": {
+                        "token": {
+                          "col": 28,
+                          "line": 29,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                          "lexeme": "index",
+                          "type": 29
+                        },
+                        "name": "index",
+                        "type": "Identifier"
+                      },
+                      "target": {
+                        "token": {
+                          "col": 20,
+                          "line": 29,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                          "lexeme": "[",
+                          "type": 80
+                        },
+                        "index": {
+                          "token": {
+                            "col": 21,
+                            "line": 29,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "key",
+                            "type": 29
+                          },
+                          "name": "key",
+                          "type": "Identifier"
+                        },
+                        "object": {
+                          "token": {
+                            "col": 13,
+                            "line": 29,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": ".",
+                            "type": 82
+                          },
+                          "property": {
+                            "token": {
+                              "col": 14,
+                              "line": 29,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "lookup",
+                              "type": 29
+                            },
+                            "name": "lookup",
+                            "type": "Identifier"
+                          },
+                          "object": {
+                            "token": {
+                              "col": 9,
+                              "line": 29,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "this",
+                              "type": 12
+                            },
+                            "type": "ThisExpression"
+                          },
+                          "type": "PropertyAccess"
+                        },
+                        "type": "IndexExpression"
+                      },
+                      "type": "AssignmentExpression"
+                    },
+                    "type": "ExpressionStatement"
+                  },
+                  {
+                    "token": {
+                      "col": 9,
+                      "line": 31,
+                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                      "lexeme": "return",
+                      "type": 6
+                    },
+                    "value": {
+                      "token": {
+                        "col": 16,
+                        "line": 31,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                        "lexeme": "index",
+                        "type": 29
+                      },
+                      "name": "index",
+                      "type": "Identifier"
+                    },
+                    "type": "ReturnStatement"
+                  }
+                ],
+                "type": "BlockStatement"
+              },
+              "parameters": [
+                {
+                  "token": {
+                    "col": 12,
+                    "line": 7,
+                    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                    "lexeme": "value",
+                    "type": 29
+                  },
+                  "name": "value",
+                  "type": "Identifier"
+                }
+              ],
+              "name": "ConstantPool.add",
+              "type": "FunctionLiteral"
+            },
+            "name": {
+              "token": {
+                "col": 8,
+                "line": 7,
+                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                "lexeme": "add",
+                "type": 29
+              },
+              "name": "add",
+              "type": "Identifier"
+            },
+            "type": "FunctionStatement"
+          },
+          {
+            "token": {
+              "col": 5,
+              "line": 34,
+              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+              "lexeme": "fn",
+              "type": 9
+            },
+            "func": {
+              "token": {
+                "col": 5,
+                "line": 34,
+                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                "lexeme": "fn",
+                "type": 9
+              },
+              "returnType": null,
+              "restParam": null,
+              "body": {
+                "token": {
+                  "col": 19,
+                  "line": 34,
+                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                  "lexeme": "{",
+                  "type": 78
+                },
+                "statements": [
+                  {
+                    "token": {
+                      "col": 9,
+                      "line": 35,
+                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                      "lexeme": "if",
+                      "type": 4
+                    },
+                    "elseBranch": null,
+                    "thenBranch": {
+                      "token": {
+                        "col": 53,
+                        "line": 35,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                        "lexeme": "{",
+                        "type": 78
+                      },
+                      "statements": [
+                        {
+                          "token": {
+                            "col": 13,
+                            "line": 36,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "return",
+                            "type": 6
+                          },
+                          "value": {
+                            "token": {
+                              "col": 29,
+                              "line": 36,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "[",
+                              "type": 80
+                            },
+                            "index": {
+                              "token": {
+                                "col": 30,
+                                "line": 36,
+                                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                "lexeme": "index",
+                                "type": 29
+                              },
+                              "name": "index",
+                              "type": "Identifier"
+                            },
+                            "object": {
+                              "token": {
+                                "col": 24,
+                                "line": 36,
+                                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                "lexeme": ".",
+                                "type": 82
+                              },
+                              "property": {
+                                "token": {
+                                  "col": 25,
+                                  "line": 36,
+                                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                  "lexeme": "pool",
+                                  "type": 29
+                                },
+                                "name": "pool",
+                                "type": "Identifier"
+                              },
+                              "object": {
+                                "token": {
+                                  "col": 20,
+                                  "line": 36,
+                                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                  "lexeme": "this",
+                                  "type": 12
+                                },
+                                "type": "ThisExpression"
+                              },
+                              "type": "PropertyAccess"
+                            },
+                            "type": "IndexExpression"
+                          },
+                          "type": "ReturnStatement"
+                        }
+                      ],
+                      "type": "BlockStatement"
+                    },
+                    "condition": {
+                      "token": {
+                        "col": 24,
+                        "line": 35,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                        "lexeme": "&&",
+                        "type": 53
+                      },
+                      "right": {
+                        "token": {
+                          "col": 33,
+                          "line": 35,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                          "lexeme": "<",
+                          "type": 49
+                        },
+                        "right": {
+                          "token": {
+                            "col": 44,
+                            "line": 35,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": ".",
+                            "type": 82
+                          },
+                          "property": {
+                            "token": {
+                              "col": 45,
+                              "line": 35,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": "length",
+                              "type": 29
+                            },
+                            "name": "length",
+                            "type": "Identifier"
+                          },
+                          "object": {
+                            "token": {
+                              "col": 39,
+                              "line": 35,
+                              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                              "lexeme": ".",
+                              "type": 82
+                            },
+                            "property": {
+                              "token": {
+                                "col": 40,
+                                "line": 35,
+                                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                "lexeme": "pool",
+                                "type": 29
+                              },
+                              "name": "pool",
+                              "type": "Identifier"
+                            },
+                            "object": {
+                              "token": {
+                                "col": 35,
+                                "line": 35,
+                                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                                "lexeme": "this",
+                                "type": 12
+                              },
+                              "type": "ThisExpression"
+                            },
+                            "type": "PropertyAccess"
+                          },
+                          "type": "PropertyAccess"
+                        },
+                        "op": 49,
+                        "left": {
+                          "token": {
+                            "col": 27,
+                            "line": 35,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "index",
+                            "type": 29
+                          },
+                          "name": "index",
+                          "type": "Identifier"
+                        },
+                        "type": "BinaryExpression"
+                      },
+                      "op": 53,
+                      "left": {
+                        "token": {
+                          "col": 19,
+                          "line": 35,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                          "lexeme": ">=",
+                          "type": 52
+                        },
+                        "right": {
+                          "token": {
+                            "col": 22,
+                            "line": 35,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "0",
+                            "type": 30
+                          },
+                          "value": 0,
+                          "type": "IntegerLiteral"
+                        },
+                        "op": 52,
+                        "left": {
+                          "token": {
+                            "col": 13,
+                            "line": 35,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "index",
+                            "type": 29
+                          },
+                          "name": "index",
+                          "type": "Identifier"
+                        },
+                        "type": "BinaryExpression"
+                      },
+                      "type": "BinaryExpression"
+                    },
+                    "type": "IfStatement"
+                  },
+                  {
+                    "token": {
+                      "col": 9,
+                      "line": 38,
+                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                      "lexeme": "assert",
+                      "type": 29
+                    },
+                    "expression": {
+                      "args": [
+                        {
+                          "token": {
+                            "col": 16,
+                            "line": 38,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "false",
+                            "type": 32
+                          },
+                          "value": false,
+                          "type": "BooleanLiteral"
+                        },
+                        {
+                          "token": {
+                            "col": 23,
+                            "line": 38,
+                            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                            "lexeme": "Lỗi: Index hằng số nằm ngoài giới hạn!",
+                            "type": 33
+                          },
+                          "value": "Lỗi: Index hằng số nằm ngoài giới hạn!",
+                          "type": "StringLiteral"
+                        }
+                      ],
+                      "token": {
+                        "col": 15,
+                        "line": 38,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                        "lexeme": "(",
+                        "type": 76
+                      },
+                      "callee": {
+                        "token": {
+                          "col": 9,
+                          "line": 38,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                          "lexeme": "assert",
+                          "type": 29
+                        },
+                        "name": "assert",
+                        "type": "Identifier"
+                      },
+                      "type": "CallExpression"
+                    },
+                    "type": "ExpressionStatement"
+                  },
+                  {
+                    "token": {
+                      "col": 9,
+                      "line": 39,
+                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                      "lexeme": "return",
+                      "type": 6
+                    },
+                    "value": {
+                      "token": {
+                        "col": 16,
+                        "line": 39,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                        "lexeme": "null",
+                        "type": 10
+                      },
+                      "value": null,
+                      "type": "NullLiteral"
+                    },
+                    "type": "ReturnStatement"
+                  }
+                ],
+                "type": "BlockStatement"
+              },
+              "parameters": [
+                {
+                  "token": {
+                    "col": 12,
+                    "line": 34,
+                    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                    "lexeme": "index",
+                    "type": 29
+                  },
+                  "name": "index",
+                  "type": "Identifier"
+                }
+              ],
+              "name": "ConstantPool.get",
+              "type": "FunctionLiteral"
+            },
+            "name": {
+              "token": {
+                "col": 8,
+                "line": 34,
+                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+                "lexeme": "get",
+                "type": 29
+              },
+              "name": "get",
+              "type": "Identifier"
+            },
+            "type": "FunctionStatement"
+          }
+        ],
+        "token": {
+          "col": 8,
+          "line": 1,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+          "lexeme": "class",
+          "type": 11
+        },
+        "superclass": null,
+        "name": {
+          "token": {
+            "col": 14,
+            "line": 1,
+            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+            "lexeme": "ConstantPool",
+            "type": 29
+          },
+          "name": "ConstantPool",
+          "type": "Identifier"
+        },
+        "type": "ClassStatement"
+      },
+      "type": "ExportStatement"
+    }
+  ],
+  "type": "Program"
+}

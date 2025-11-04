@@ -1,0 +1,429 @@
+[
+  {
+    "col": 1,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "import",
+    "type": 19
+  },
+  {
+    "col": 8,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "*",
+    "type": 37
+  },
+  {
+    "col": 10,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "as",
+    "type": 21
+  },
+  {
+    "col": 13,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "Io",
+    "type": 29
+  },
+  {
+    "col": 16,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "from",
+    "type": 22
+  },
+  {
+    "col": 21,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "io",
+    "type": 33
+  },
+  {
+    "col": 25,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 1,
+    "line": 61,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "export",
+    "type": 20
+  },
+  {
+    "col": 8,
+    "line": 61,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "fn",
+    "type": 9
+  },
+  {
+    "col": 11,
+    "line": 61,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "makeCacheFile",
+    "type": 29
+  },
+  {
+    "col": 24,
+    "line": 61,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 25,
+    "line": 61,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "sourcePath",
+    "type": 29
+  },
+  {
+    "col": 35,
+    "line": 61,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": ",",
+    "type": 75
+  },
+  {
+    "col": 37,
+    "line": 61,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "cacheDir",
+    "type": 29
+  },
+  {
+    "col": 45,
+    "line": 61,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 47,
+    "line": 61,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 5,
+    "line": 62,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "let",
+    "type": 0
+  },
+  {
+    "col": 9,
+    "line": 62,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "basename",
+    "type": 29
+  },
+  {
+    "col": 18,
+    "line": 62,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "=",
+    "type": 56
+  },
+  {
+    "col": 20,
+    "line": 62,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "Io",
+    "type": 29
+  },
+  {
+    "col": 22,
+    "line": 62,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": ".",
+    "type": 82
+  },
+  {
+    "col": 23,
+    "line": 62,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "getFileStem",
+    "type": 29
+  },
+  {
+    "col": 34,
+    "line": 62,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 35,
+    "line": 62,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "sourcePath",
+    "type": 29
+  },
+  {
+    "col": 45,
+    "line": 62,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 46,
+    "line": 62,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 5,
+    "line": 64,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "if",
+    "type": 4
+  },
+  {
+    "col": 8,
+    "line": 64,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 9,
+    "line": 64,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "!",
+    "type": 55
+  },
+  {
+    "col": 10,
+    "line": 64,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "Io",
+    "type": 29
+  },
+  {
+    "col": 12,
+    "line": 64,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": ".",
+    "type": 82
+  },
+  {
+    "col": 13,
+    "line": 64,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "fileExists",
+    "type": 29
+  },
+  {
+    "col": 23,
+    "line": 64,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 24,
+    "line": 64,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "cacheDir",
+    "type": 29
+  },
+  {
+    "col": 32,
+    "line": 64,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 33,
+    "line": 64,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 35,
+    "line": 64,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 9,
+    "line": 65,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "Io",
+    "type": 29
+  },
+  {
+    "col": 11,
+    "line": 65,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": ".",
+    "type": 82
+  },
+  {
+    "col": 12,
+    "line": 65,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "createDir",
+    "type": 29
+  },
+  {
+    "col": 21,
+    "line": 65,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 22,
+    "line": 65,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "cacheDir",
+    "type": 29
+  },
+  {
+    "col": 30,
+    "line": 65,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 31,
+    "line": 65,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 5,
+    "line": 66,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 5,
+    "line": 68,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "let",
+    "type": 0
+  },
+  {
+    "col": 9,
+    "line": 68,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "cacheName",
+    "type": 29
+  },
+  {
+    "col": 19,
+    "line": 68,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "=",
+    "type": 56
+  },
+  {
+    "col": 21,
+    "line": 68,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "basename",
+    "type": 29
+  },
+  {
+    "col": 30,
+    "line": 68,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "+",
+    "type": 35
+  },
+  {
+    "col": 32,
+    "line": 68,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": ".meowb",
+    "type": 33
+  },
+  {
+    "col": 40,
+    "line": 68,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 5,
+    "line": 69,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "return",
+    "type": 6
+  },
+  {
+    "col": 12,
+    "line": 69,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "cacheDir",
+    "type": 29
+  },
+  {
+    "col": 21,
+    "line": 69,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "+",
+    "type": 35
+  },
+  {
+    "col": 23,
+    "line": 69,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "/",
+    "type": 33
+  },
+  {
+    "col": 27,
+    "line": 69,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "+",
+    "type": 35
+  },
+  {
+    "col": 29,
+    "line": 69,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "cacheName",
+    "type": 29
+  },
+  {
+    "col": 38,
+    "line": 69,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 1,
+    "line": 70,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 2,
+    "line": 70,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//./utils/makeCacheFile.meow",
+    "lexeme": "",
+    "type": 87
+  }
+]

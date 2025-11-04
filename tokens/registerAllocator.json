@@ -1,0 +1,1255 @@
+[
+  {
+    "col": 1,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "export",
+    "type": 20
+  },
+  {
+    "col": 8,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "class",
+    "type": 11
+  },
+  {
+    "col": 14,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "RegisterAllocator",
+    "type": 29
+  },
+  {
+    "col": 32,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 5,
+    "line": 2,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "fn",
+    "type": 9
+  },
+  {
+    "col": 8,
+    "line": 2,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "init",
+    "type": 29
+  },
+  {
+    "col": 12,
+    "line": 2,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 13,
+    "line": 2,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "numRegisters",
+    "type": 29
+  },
+  {
+    "col": 25,
+    "line": 2,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 27,
+    "line": 2,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 9,
+    "line": 5,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "this",
+    "type": 12
+  },
+  {
+    "col": 13,
+    "line": 5,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ".",
+    "type": 82
+  },
+  {
+    "col": 14,
+    "line": 5,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "_numRegisters",
+    "type": 29
+  },
+  {
+    "col": 28,
+    "line": 5,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "=",
+    "type": 56
+  },
+  {
+    "col": 30,
+    "line": 5,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 31,
+    "line": 5,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "numRegisters",
+    "type": 29
+  },
+  {
+    "col": 44,
+    "line": 5,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ">",
+    "type": 50
+  },
+  {
+    "col": 46,
+    "line": 5,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "0",
+    "type": 30
+  },
+  {
+    "col": 47,
+    "line": 5,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 49,
+    "line": 5,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "?",
+    "type": 83
+  },
+  {
+    "col": 51,
+    "line": 5,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "numRegisters",
+    "type": 29
+  },
+  {
+    "col": 64,
+    "line": 5,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ":",
+    "type": 74
+  },
+  {
+    "col": 66,
+    "line": 5,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "256",
+    "type": 30
+  },
+  {
+    "col": 69,
+    "line": 5,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 9,
+    "line": 6,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "this",
+    "type": 12
+  },
+  {
+    "col": 13,
+    "line": 6,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ".",
+    "type": 82
+  },
+  {
+    "col": 14,
+    "line": 6,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "reset",
+    "type": 29
+  },
+  {
+    "col": 19,
+    "line": 6,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 20,
+    "line": 6,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 21,
+    "line": 6,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 5,
+    "line": 7,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 5,
+    "line": 9,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "fn",
+    "type": 9
+  },
+  {
+    "col": 8,
+    "line": 9,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "reset",
+    "type": 29
+  },
+  {
+    "col": 13,
+    "line": 9,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 14,
+    "line": 9,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 16,
+    "line": 9,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 9,
+    "line": 10,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "this",
+    "type": 12
+  },
+  {
+    "col": 13,
+    "line": 10,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ".",
+    "type": 82
+  },
+  {
+    "col": 14,
+    "line": 10,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "_nextRegister",
+    "type": 29
+  },
+  {
+    "col": 28,
+    "line": 10,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "=",
+    "type": 56
+  },
+  {
+    "col": 30,
+    "line": 10,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "0",
+    "type": 30
+  },
+  {
+    "col": 31,
+    "line": 10,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 5,
+    "line": 11,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 5,
+    "line": 15,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "fn",
+    "type": 9
+  },
+  {
+    "col": 8,
+    "line": 15,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "ralloc",
+    "type": 29
+  },
+  {
+    "col": 14,
+    "line": 15,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 15,
+    "line": 15,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 17,
+    "line": 15,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 9,
+    "line": 17,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "let",
+    "type": 0
+  },
+  {
+    "col": 13,
+    "line": 17,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "r",
+    "type": 29
+  },
+  {
+    "col": 15,
+    "line": 17,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "=",
+    "type": 56
+  },
+  {
+    "col": 17,
+    "line": 17,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "this",
+    "type": 12
+  },
+  {
+    "col": 21,
+    "line": 17,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ".",
+    "type": 82
+  },
+  {
+    "col": 22,
+    "line": 17,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "_nextRegister",
+    "type": 29
+  },
+  {
+    "col": 35,
+    "line": 17,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 9,
+    "line": 18,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "this",
+    "type": 12
+  },
+  {
+    "col": 13,
+    "line": 18,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ".",
+    "type": 82
+  },
+  {
+    "col": 14,
+    "line": 18,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "_nextRegister",
+    "type": 29
+  },
+  {
+    "col": 27,
+    "line": 18,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "++",
+    "type": 68
+  },
+  {
+    "col": 29,
+    "line": 18,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 9,
+    "line": 19,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "return",
+    "type": 6
+  },
+  {
+    "col": 16,
+    "line": 19,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "r",
+    "type": 29
+  },
+  {
+    "col": 17,
+    "line": 19,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 5,
+    "line": 20,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 5,
+    "line": 22,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "fn",
+    "type": 9
+  },
+  {
+    "col": 8,
+    "line": 22,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "rallocBlock",
+    "type": 29
+  },
+  {
+    "col": 19,
+    "line": 22,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 20,
+    "line": 22,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "n",
+    "type": 29
+  },
+  {
+    "col": 21,
+    "line": 22,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 23,
+    "line": 22,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 9,
+    "line": 23,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "assert",
+    "type": 29
+  },
+  {
+    "col": 15,
+    "line": 23,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 16,
+    "line": 23,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "n",
+    "type": 29
+  },
+  {
+    "col": 18,
+    "line": 23,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ">",
+    "type": 50
+  },
+  {
+    "col": 20,
+    "line": 23,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "0",
+    "type": 30
+  },
+  {
+    "col": 21,
+    "line": 23,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ",",
+    "type": 75
+  },
+  {
+    "col": 23,
+    "line": 23,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "RegisterAllocator.rallocBlock: n phải > 0",
+    "type": 33
+  },
+  {
+    "col": 68,
+    "line": 23,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 69,
+    "line": 23,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 9,
+    "line": 25,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "let",
+    "type": 0
+  },
+  {
+    "col": 13,
+    "line": 25,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "startReg",
+    "type": 29
+  },
+  {
+    "col": 22,
+    "line": 25,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "=",
+    "type": 56
+  },
+  {
+    "col": 24,
+    "line": 25,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "this",
+    "type": 12
+  },
+  {
+    "col": 28,
+    "line": 25,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ".",
+    "type": 82
+  },
+  {
+    "col": 29,
+    "line": 25,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "_nextRegister",
+    "type": 29
+  },
+  {
+    "col": 42,
+    "line": 25,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 9,
+    "line": 26,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "this",
+    "type": 12
+  },
+  {
+    "col": 13,
+    "line": 26,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ".",
+    "type": 82
+  },
+  {
+    "col": 14,
+    "line": 26,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "_nextRegister",
+    "type": 29
+  },
+  {
+    "col": 28,
+    "line": 26,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "+=",
+    "type": 57
+  },
+  {
+    "col": 31,
+    "line": 26,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "n",
+    "type": 29
+  },
+  {
+    "col": 32,
+    "line": 26,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 9,
+    "line": 27,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "return",
+    "type": 6
+  },
+  {
+    "col": 16,
+    "line": 27,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "startReg",
+    "type": 29
+  },
+  {
+    "col": 24,
+    "line": 27,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 5,
+    "line": 28,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 5,
+    "line": 30,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "fn",
+    "type": 9
+  },
+  {
+    "col": 8,
+    "line": 30,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "free",
+    "type": 29
+  },
+  {
+    "col": 12,
+    "line": 30,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 13,
+    "line": 30,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "reg",
+    "type": 29
+  },
+  {
+    "col": 16,
+    "line": 30,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 18,
+    "line": 30,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 5,
+    "line": 33,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 5,
+    "line": 35,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "fn",
+    "type": 9
+  },
+  {
+    "col": 8,
+    "line": 35,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "beginScope",
+    "type": 29
+  },
+  {
+    "col": 18,
+    "line": 35,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 19,
+    "line": 35,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 21,
+    "line": 35,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 5,
+    "line": 37,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 5,
+    "line": 39,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "fn",
+    "type": 9
+  },
+  {
+    "col": 8,
+    "line": 39,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "endScope",
+    "type": 29
+  },
+  {
+    "col": 16,
+    "line": 39,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 17,
+    "line": 39,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 19,
+    "line": 39,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 5,
+    "line": 41,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 5,
+    "line": 43,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "fn",
+    "type": 9
+  },
+  {
+    "col": 8,
+    "line": 43,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "take",
+    "type": 29
+  },
+  {
+    "col": 12,
+    "line": 43,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 13,
+    "line": 43,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 15,
+    "line": 43,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 9,
+    "line": 45,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "return",
+    "type": 6
+  },
+  {
+    "col": 16,
+    "line": 45,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "this",
+    "type": 12
+  },
+  {
+    "col": 20,
+    "line": 45,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ".",
+    "type": 82
+  },
+  {
+    "col": 21,
+    "line": 45,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "ralloc",
+    "type": 29
+  },
+  {
+    "col": 27,
+    "line": 45,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 28,
+    "line": 45,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 29,
+    "line": 45,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 5,
+    "line": 46,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 5,
+    "line": 48,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "fn",
+    "type": 9
+  },
+  {
+    "col": 8,
+    "line": 48,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "withTemp",
+    "type": 29
+  },
+  {
+    "col": 16,
+    "line": 48,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 17,
+    "line": 48,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "fnUse",
+    "type": 29
+  },
+  {
+    "col": 22,
+    "line": 48,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 24,
+    "line": 48,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 9,
+    "line": 49,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "let",
+    "type": 0
+  },
+  {
+    "col": 13,
+    "line": 49,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "r",
+    "type": 29
+  },
+  {
+    "col": 15,
+    "line": 49,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "=",
+    "type": 56
+  },
+  {
+    "col": 17,
+    "line": 49,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "this",
+    "type": 12
+  },
+  {
+    "col": 21,
+    "line": 49,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ".",
+    "type": 82
+  },
+  {
+    "col": 22,
+    "line": 49,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "ralloc",
+    "type": 29
+  },
+  {
+    "col": 28,
+    "line": 49,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 29,
+    "line": 49,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 30,
+    "line": 49,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 9,
+    "line": 50,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "let",
+    "type": 0
+  },
+  {
+    "col": 13,
+    "line": 50,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "out",
+    "type": 29
+  },
+  {
+    "col": 17,
+    "line": 50,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "=",
+    "type": 56
+  },
+  {
+    "col": 19,
+    "line": 50,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "fnUse",
+    "type": 29
+  },
+  {
+    "col": 24,
+    "line": 50,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 25,
+    "line": 50,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "r",
+    "type": 29
+  },
+  {
+    "col": 26,
+    "line": 50,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 27,
+    "line": 50,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 9,
+    "line": 52,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "return",
+    "type": 6
+  },
+  {
+    "col": 16,
+    "line": 52,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "out",
+    "type": 29
+  },
+  {
+    "col": 19,
+    "line": 52,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 5,
+    "line": 53,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 5,
+    "line": 55,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "fn",
+    "type": 9
+  },
+  {
+    "col": 8,
+    "line": 55,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "usedRegisters",
+    "type": 29
+  },
+  {
+    "col": 21,
+    "line": 55,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 22,
+    "line": 55,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 24,
+    "line": 55,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 9,
+    "line": 57,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "return",
+    "type": 6
+  },
+  {
+    "col": 16,
+    "line": 57,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "this",
+    "type": 12
+  },
+  {
+    "col": 20,
+    "line": 57,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ".",
+    "type": 82
+  },
+  {
+    "col": 21,
+    "line": 57,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "_nextRegister",
+    "type": 29
+  },
+  {
+    "col": 34,
+    "line": 57,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 5,
+    "line": 58,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 5,
+    "line": 60,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "fn",
+    "type": 9
+  },
+  {
+    "col": 8,
+    "line": 60,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "numRegisters",
+    "type": 29
+  },
+  {
+    "col": 20,
+    "line": 60,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "(",
+    "type": 76
+  },
+  {
+    "col": 21,
+    "line": 60,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ")",
+    "type": 77
+  },
+  {
+    "col": 23,
+    "line": 60,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "{",
+    "type": 78
+  },
+  {
+    "col": 9,
+    "line": 62,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "return",
+    "type": 6
+  },
+  {
+    "col": 16,
+    "line": 62,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "this",
+    "type": 12
+  },
+  {
+    "col": 20,
+    "line": 62,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ".",
+    "type": 82
+  },
+  {
+    "col": 21,
+    "line": 62,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "_nextRegister",
+    "type": 29
+  },
+  {
+    "col": 34,
+    "line": 62,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": ";",
+    "type": 73
+  },
+  {
+    "col": 5,
+    "line": 63,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 1,
+    "line": 64,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "}",
+    "type": 79
+  },
+  {
+    "col": 2,
+    "line": 64,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./registerAllocator.meow",
+    "lexeme": "",
+    "type": 87
+  }
+]

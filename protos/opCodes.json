@@ -1,0 +1,1711 @@
+{
+  "@main": {
+    "pendingJumps": [],
+    "labels": {},
+    "upvalueDescs": [],
+    "constantPool": [
+      "LOAD_CONST",
+      "LOAD_CONST",
+      "LOAD_NULL",
+      "LOAD_TRUE",
+      "LOAD_FALSE",
+      "LOAD_INT",
+      "MOVE",
+      "ADD",
+      "SUB",
+      "MUL",
+      "DIV",
+      "MOD",
+      "POW",
+      "EQ",
+      "NEQ",
+      "GT",
+      "GE",
+      "LT",
+      "LE",
+      "NEG",
+      "NOT",
+      "GET_GLOBAL",
+      "SET_GLOBAL",
+      "GET_UPVALUE",
+      "SET_UPVALUE",
+      "CLOSURE",
+      "CLOSE_UPVALUES",
+      "JUMP",
+      "JUMP_IF_FALSE",
+      "JUMP_IF_TRUE",
+      "CALL",
+      "RETURN",
+      "HALT",
+      "NEW_ARRAY",
+      "NEW_HASH",
+      "GET_INDEX",
+      "SET_INDEX",
+      "GET_KEYS",
+      "GET_VALUES",
+      "NEW_CLASS",
+      "GET_PROP",
+      "SET_PROP",
+      "SET_METHOD",
+      "INHERIT",
+      "GET_SUPER",
+      "BIT_AND",
+      "BIT_OR",
+      "BIT_XOR",
+      "BIT_NOT",
+      "LSHIFT",
+      "RSHIFT",
+      "THROW",
+      "SETUP_TRY",
+      "POP_TRY",
+      "IMPORT_MODULE",
+      "EXPORT",
+      "GET_EXPORT",
+      "IMPORT_ALL",
+      "OpCodes"
+    ],
+    "code": [
+      {
+        "args": [
+          115,
+          0
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          1,
+          115
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          116,
+          1
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          2,
+          116
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          117,
+          2
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          3,
+          117
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          118,
+          2
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          4,
+          118
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          119,
+          3
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          5,
+          119
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          120,
+          3
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          6,
+          120
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          121,
+          4
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          7,
+          121
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          122,
+          4
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          8,
+          122
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          123,
+          5
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          9,
+          123
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          124,
+          5
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          10,
+          124
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          125,
+          6
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          11,
+          125
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          126,
+          6
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          12,
+          126
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          127,
+          7
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          13,
+          127
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          128,
+          7
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          14,
+          128
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          129,
+          8
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          15,
+          129
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          130,
+          8
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          16,
+          130
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          131,
+          9
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          17,
+          131
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          132,
+          9
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          18,
+          132
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          133,
+          10
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          19,
+          133
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          134,
+          10
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          20,
+          134
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          135,
+          11
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          21,
+          135
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          136,
+          11
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          22,
+          136
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          137,
+          12
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          23,
+          137
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          138,
+          12
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          24,
+          138
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          139,
+          13
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          25,
+          139
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          140,
+          13
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          26,
+          140
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          141,
+          14
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          27,
+          141
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          142,
+          14
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          28,
+          142
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          143,
+          15
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          29,
+          143
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          144,
+          15
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          30,
+          144
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          145,
+          16
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          31,
+          145
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          146,
+          16
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          32,
+          146
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          147,
+          17
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          33,
+          147
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          148,
+          17
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          34,
+          148
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          149,
+          18
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          35,
+          149
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          150,
+          18
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          36,
+          150
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          151,
+          19
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          37,
+          151
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          152,
+          19
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          38,
+          152
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          153,
+          20
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          39,
+          153
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          154,
+          20
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          40,
+          154
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          155,
+          21
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          41,
+          155
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          156,
+          21
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          42,
+          156
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          157,
+          22
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          43,
+          157
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          158,
+          22
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          44,
+          158
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          159,
+          23
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          45,
+          159
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          160,
+          23
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          46,
+          160
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          161,
+          24
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          47,
+          161
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          162,
+          24
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          48,
+          162
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          163,
+          25
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          49,
+          163
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          164,
+          25
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          50,
+          164
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          165,
+          26
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          51,
+          165
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          166,
+          26
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          52,
+          166
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          167,
+          27
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          53,
+          167
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          168,
+          27
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          54,
+          168
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          169,
+          28
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          55,
+          169
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          170,
+          28
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          56,
+          170
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          171,
+          29
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          57,
+          171
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          172,
+          29
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          58,
+          172
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          173,
+          30
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          59,
+          173
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          174,
+          30
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          60,
+          174
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          175,
+          31
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          61,
+          175
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          176,
+          31
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          62,
+          176
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          177,
+          32
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          63,
+          177
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          178,
+          32
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          64,
+          178
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          179,
+          33
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          65,
+          179
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          180,
+          33
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          66,
+          180
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          181,
+          34
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          67,
+          181
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          182,
+          34
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          68,
+          182
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          183,
+          35
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          69,
+          183
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          184,
+          35
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          70,
+          184
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          185,
+          36
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          71,
+          185
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          186,
+          36
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          72,
+          186
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          187,
+          37
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          73,
+          187
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          188,
+          37
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          74,
+          188
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          189,
+          38
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          75,
+          189
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          190,
+          38
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          76,
+          190
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          191,
+          39
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          77,
+          191
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          192,
+          39
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          78,
+          192
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          193,
+          40
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          79,
+          193
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          194,
+          40
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          80,
+          194
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          195,
+          41
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          81,
+          195
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          196,
+          41
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          82,
+          196
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          197,
+          42
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          83,
+          197
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          198,
+          42
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          84,
+          198
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          199,
+          43
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          85,
+          199
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          200,
+          43
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          86,
+          200
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          201,
+          44
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          87,
+          201
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          202,
+          44
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          88,
+          202
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          203,
+          45
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          89,
+          203
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          204,
+          45
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          90,
+          204
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          205,
+          46
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          91,
+          205
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          206,
+          46
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          92,
+          206
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          207,
+          47
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          93,
+          207
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          208,
+          47
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          94,
+          208
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          209,
+          48
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          95,
+          209
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          210,
+          48
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          96,
+          210
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          211,
+          49
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          97,
+          211
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          212,
+          49
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          98,
+          212
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          213,
+          50
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          99,
+          213
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          214,
+          50
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          100,
+          214
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          215,
+          51
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          101,
+          215
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          216,
+          51
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          102,
+          216
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          217,
+          52
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          103,
+          217
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          218,
+          52
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          104,
+          218
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          219,
+          53
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          105,
+          219
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          220,
+          53
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          106,
+          220
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          221,
+          54
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          107,
+          221
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          222,
+          54
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          108,
+          222
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          223,
+          55
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          109,
+          223
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          224,
+          55
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          110,
+          224
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          225,
+          56
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          111,
+          225
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          226,
+          56
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          112,
+          226
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          227,
+          57
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          113,
+          227
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          228,
+          57
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          114,
+          228
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          229,
+          1,
+          57
+        ],
+        "op": "NEW_HASH"
+      },
+      {
+        "args": [
+          0,
+          229
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          58,
+          0
+        ],
+        "op": "SET_GLOBAL"
+      },
+      {
+        "args": [
+          58,
+          0
+        ],
+        "op": "EXPORT"
+      },
+      {
+        "args": [
+          230
+        ],
+        "op": "LOAD_NULL"
+      },
+      {
+        "args": [
+          230
+        ],
+        "op": "RETURN"
+      }
+    ],
+    "sourceName": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//.//./opCodes.meow",
+    "numRegisters": 231,
+    "numUpvalues": 0,
+    "id": 16
+  }
+}
