@@ -1,0 +1,2354 @@
+{
+  "@main": {
+    "pendingJumps": [],
+    "labels": {},
+    "upvalueDescs": [],
+    "constantPool": [
+      "ConstantPool",
+      {
+        "pendingJumps": [],
+        "labels": {},
+        "upvalueDescs": [],
+        "constantPool": [
+          "pool",
+          "lookup"
+        ],
+        "code": [
+          {
+            "args": [
+              2,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              3,
+              1
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              2,
+              0,
+              3
+            ],
+            "op": "SET_PROP"
+          },
+          {
+            "args": [
+              4,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              5,
+              0,
+              0
+            ],
+            "op": "NEW_HASH"
+          },
+          {
+            "args": [
+              4,
+              1,
+              5
+            ],
+            "op": "SET_PROP"
+          },
+          {
+            "args": [
+              6
+            ],
+            "op": "LOAD_NULL"
+          },
+          {
+            "args": [
+              6
+            ],
+            "op": "RETURN"
+          }
+        ],
+        "sourceName": "@ConstantPool.init_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow_1",
+        "numRegisters": 7,
+        "numUpvalues": 0,
+        "id": 13
+      },
+      "init",
+      {
+        "pendingJumps": [],
+        "labels": {
+          "L_ENDIF_10": 87,
+          "L_ENDIF_4": 65,
+          "L_ENDIF_8": 42,
+          "L_AND_END_5": 21,
+          "L_AND_END_6": 13
+        },
+        "upvalueDescs": [],
+        "constantPool": [
+          "typeof",
+          "object",
+          "sourceName",
+          "proto:",
+          "lookup",
+          "pool",
+          "length",
+          "push",
+          "str",
+          "meow:"
+        ],
+        "code": [
+          {
+            "args": [
+              7,
+              0
+            ],
+            "op": "GET_GLOBAL"
+          },
+          {
+            "args": [
+              6,
+              7
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              8,
+              1
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              9,
+              8
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              5,
+              6,
+              9,
+              1
+            ],
+            "op": "CALL"
+          },
+          {
+            "args": [
+              10,
+              1
+            ],
+            "op": "LOAD_CONST"
+          },
+          {
+            "args": [
+              4,
+              5,
+              10
+            ],
+            "op": "EQ"
+          },
+          {
+            "args": [
+              3,
+              4
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              4,
+              13
+            ],
+            "op": "JUMP_IF_FALSE"
+          },
+          {
+            "args": [
+              12,
+              1
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              13
+            ],
+            "op": "LOAD_NULL"
+          },
+          {
+            "args": [
+              11,
+              12,
+              13
+            ],
+            "op": "NEQ"
+          },
+          {
+            "args": [
+              3,
+              11
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              2,
+              3
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              3,
+              21
+            ],
+            "op": "JUMP_IF_FALSE"
+          },
+          {
+            "args": [
+              16,
+              1
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              17,
+              2
+            ],
+            "op": "LOAD_CONST"
+          },
+          {
+            "args": [
+              15,
+              16,
+              17
+            ],
+            "op": "GET_INDEX"
+          },
+          {
+            "args": [
+              18
+            ],
+            "op": "LOAD_NULL"
+          },
+          {
+            "args": [
+              14,
+              15,
+              18
+            ],
+            "op": "NEQ"
+          },
+          {
+            "args": [
+              2,
+              14
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              2,
+              65
+            ],
+            "op": "JUMP_IF_FALSE"
+          },
+          {
+            "args": [
+              21,
+              3
+            ],
+            "op": "LOAD_CONST"
+          },
+          {
+            "args": [
+              23,
+              1
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              22,
+              23
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              24,
+              22,
+              2
+            ],
+            "op": "GET_PROP"
+          },
+          {
+            "args": [
+              20,
+              21,
+              24
+            ],
+            "op": "ADD"
+          },
+          {
+            "args": [
+              19,
+              20
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              28,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              27,
+              28
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              29,
+              27,
+              4
+            ],
+            "op": "GET_PROP"
+          },
+          {
+            "args": [
+              30,
+              19
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              26,
+              29,
+              30
+            ],
+            "op": "GET_INDEX"
+          },
+          {
+            "args": [
+              31
+            ],
+            "op": "LOAD_NULL"
+          },
+          {
+            "args": [
+              25,
+              26,
+              31
+            ],
+            "op": "NEQ"
+          },
+          {
+            "args": [
+              25,
+              42
+            ],
+            "op": "JUMP_IF_FALSE"
+          },
+          {
+            "args": [
+              34,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              33,
+              34
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              35,
+              33,
+              4
+            ],
+            "op": "GET_PROP"
+          },
+          {
+            "args": [
+              36,
+              19
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              32,
+              35,
+              36
+            ],
+            "op": "GET_INDEX"
+          },
+          {
+            "args": [
+              32
+            ],
+            "op": "RETURN"
+          },
+          {
+            "args": [
+              40,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              39,
+              40
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              41,
+              39,
+              5
+            ],
+            "op": "GET_PROP"
+          },
+          {
+            "args": [
+              38,
+              41
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              42,
+              38,
+              6
+            ],
+            "op": "GET_PROP"
+          },
+          {
+            "args": [
+              37,
+              42
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              47,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              46,
+              47
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              48,
+              46,
+              5
+            ],
+            "op": "GET_PROP"
+          },
+          {
+            "args": [
+              45,
+              48
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              49,
+              45,
+              7
+            ],
+            "op": "GET_PROP"
+          },
+          {
+            "args": [
+              44,
+              49
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              50,
+              1
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              51,
+              50
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              43,
+              44,
+              51,
+              1
+            ],
+            "op": "CALL"
+          },
+          {
+            "args": [
+              53,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              52,
+              53
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              54,
+              52,
+              4
+            ],
+            "op": "GET_PROP"
+          },
+          {
+            "args": [
+              55,
+              19
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              56,
+              37
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              54,
+              55,
+              56
+            ],
+            "op": "SET_INDEX"
+          },
+          {
+            "args": [
+              57,
+              37
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              57
+            ],
+            "op": "RETURN"
+          },
+          {
+            "args": [
+              61,
+              8
+            ],
+            "op": "GET_GLOBAL"
+          },
+          {
+            "args": [
+              60,
+              61
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              62,
+              1
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              63,
+              62
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              59,
+              60,
+              63,
+              1
+            ],
+            "op": "CALL"
+          },
+          {
+            "args": [
+              58,
+              59
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              66,
+              9
+            ],
+            "op": "LOAD_CONST"
+          },
+          {
+            "args": [
+              67,
+              58
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              65,
+              66,
+              67
+            ],
+            "op": "ADD"
+          },
+          {
+            "args": [
+              64,
+              65
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              70,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              69,
+              70
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              71,
+              69,
+              4
+            ],
+            "op": "GET_PROP"
+          },
+          {
+            "args": [
+              72,
+              64
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              68,
+              71,
+              72
+            ],
+            "op": "GET_INDEX"
+          },
+          {
+            "args": [
+              68,
+              87
+            ],
+            "op": "JUMP_IF_FALSE"
+          },
+          {
+            "args": [
+              75,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              74,
+              75
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              76,
+              74,
+              4
+            ],
+            "op": "GET_PROP"
+          },
+          {
+            "args": [
+              77,
+              64
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              73,
+              76,
+              77
+            ],
+            "op": "GET_INDEX"
+          },
+          {
+            "args": [
+              73
+            ],
+            "op": "RETURN"
+          },
+          {
+            "args": [
+              81,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              80,
+              81
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              82,
+              80,
+              5
+            ],
+            "op": "GET_PROP"
+          },
+          {
+            "args": [
+              79,
+              82
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              83,
+              79,
+              6
+            ],
+            "op": "GET_PROP"
+          },
+          {
+            "args": [
+              78,
+              83
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              88,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              87,
+              88
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              89,
+              87,
+              5
+            ],
+            "op": "GET_PROP"
+          },
+          {
+            "args": [
+              86,
+              89
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              90,
+              86,
+              7
+            ],
+            "op": "GET_PROP"
+          },
+          {
+            "args": [
+              85,
+              90
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              91,
+              1
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              92,
+              91
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              84,
+              85,
+              92,
+              1
+            ],
+            "op": "CALL"
+          },
+          {
+            "args": [
+              94,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              93,
+              94
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              95,
+              93,
+              4
+            ],
+            "op": "GET_PROP"
+          },
+          {
+            "args": [
+              96,
+              64
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              97,
+              78
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              95,
+              96,
+              97
+            ],
+            "op": "SET_INDEX"
+          },
+          {
+            "args": [
+              98,
+              78
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              98
+            ],
+            "op": "RETURN"
+          }
+        ],
+        "sourceName": "@ConstantPool.add_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow_3",
+        "numRegisters": 99,
+        "numUpvalues": 0,
+        "id": 14
+      },
+      "add",
+      {
+        "pendingJumps": [],
+        "labels": {
+          "L_ENDIF_12": 20,
+          "L_AND_END_13": 13
+        },
+        "upvalueDescs": [],
+        "constantPool": [
+          "pool",
+          "length",
+          "pool",
+          "assert",
+          "Lỗi: Index hằng số nằm ngoài giới hạn!"
+        ],
+        "code": [
+          {
+            "args": [
+              4,
+              1
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              5,
+              0
+            ],
+            "op": "LOAD_INT"
+          },
+          {
+            "args": [
+              3,
+              4,
+              5
+            ],
+            "op": "GE"
+          },
+          {
+            "args": [
+              2,
+              3
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              3,
+              13
+            ],
+            "op": "JUMP_IF_FALSE"
+          },
+          {
+            "args": [
+              7,
+              1
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              10,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              9,
+              10
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              11,
+              9,
+              0
+            ],
+            "op": "GET_PROP"
+          },
+          {
+            "args": [
+              8,
+              11
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              12,
+              8,
+              1
+            ],
+            "op": "GET_PROP"
+          },
+          {
+            "args": [
+              6,
+              7,
+              12
+            ],
+            "op": "LT"
+          },
+          {
+            "args": [
+              2,
+              6
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              2,
+              20
+            ],
+            "op": "JUMP_IF_FALSE"
+          },
+          {
+            "args": [
+              15,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              14,
+              15
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              16,
+              14,
+              2
+            ],
+            "op": "GET_PROP"
+          },
+          {
+            "args": [
+              17,
+              1
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              13,
+              16,
+              17
+            ],
+            "op": "GET_INDEX"
+          },
+          {
+            "args": [
+              13
+            ],
+            "op": "RETURN"
+          },
+          {
+            "args": [
+              20,
+              3
+            ],
+            "op": "GET_GLOBAL"
+          },
+          {
+            "args": [
+              19,
+              20
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              21
+            ],
+            "op": "LOAD_FALSE"
+          },
+          {
+            "args": [
+              22,
+              4
+            ],
+            "op": "LOAD_CONST"
+          },
+          {
+            "args": [
+              23,
+              21
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              24,
+              22
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              18,
+              19,
+              23,
+              2
+            ],
+            "op": "CALL"
+          },
+          {
+            "args": [
+              25
+            ],
+            "op": "LOAD_NULL"
+          },
+          {
+            "args": [
+              25
+            ],
+            "op": "RETURN"
+          }
+        ],
+        "sourceName": "@ConstantPool.get_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow_5",
+        "numRegisters": 26,
+        "numUpvalues": 0,
+        "id": 15
+      },
+      "get",
+      "ConstantPool"
+    ],
+    "code": [
+      {
+        "args": [
+          0,
+          0
+        ],
+        "op": "NEW_CLASS"
+      },
+      {
+        "args": [
+          1,
+          1
+        ],
+        "op": "CLOSURE"
+      },
+      {
+        "args": [
+          0,
+          2,
+          1
+        ],
+        "op": "SET_METHOD"
+      },
+      {
+        "args": [
+          2,
+          3
+        ],
+        "op": "CLOSURE"
+      },
+      {
+        "args": [
+          0,
+          4,
+          2
+        ],
+        "op": "SET_METHOD"
+      },
+      {
+        "args": [
+          3,
+          5
+        ],
+        "op": "CLOSURE"
+      },
+      {
+        "args": [
+          0,
+          6,
+          3
+        ],
+        "op": "SET_METHOD"
+      },
+      {
+        "args": [
+          0,
+          0
+        ],
+        "op": "SET_GLOBAL"
+      },
+      {
+        "args": [
+          7,
+          0
+        ],
+        "op": "EXPORT"
+      },
+      {
+        "args": [
+          4
+        ],
+        "op": "LOAD_NULL"
+      },
+      {
+        "args": [
+          4
+        ],
+        "op": "RETURN"
+      }
+    ],
+    "sourceName": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow",
+    "numRegisters": 5,
+    "numUpvalues": 0,
+    "id": 12
+  },
+  "@ConstantPool.get_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow_5": {
+    "pendingJumps": [],
+    "labels": {
+      "L_ENDIF_12": 20,
+      "L_AND_END_13": 13
+    },
+    "upvalueDescs": [],
+    "constantPool": [
+      "pool",
+      "length",
+      "pool",
+      "assert",
+      "Lỗi: Index hằng số nằm ngoài giới hạn!"
+    ],
+    "code": [
+      {
+        "args": [
+          4,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          5,
+          0
+        ],
+        "op": "LOAD_INT"
+      },
+      {
+        "args": [
+          3,
+          4,
+          5
+        ],
+        "op": "GE"
+      },
+      {
+        "args": [
+          2,
+          3
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          3,
+          13
+        ],
+        "op": "JUMP_IF_FALSE"
+      },
+      {
+        "args": [
+          7,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          10,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          9,
+          10
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          11,
+          9,
+          0
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          8,
+          11
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          12,
+          8,
+          1
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          6,
+          7,
+          12
+        ],
+        "op": "LT"
+      },
+      {
+        "args": [
+          2,
+          6
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          2,
+          20
+        ],
+        "op": "JUMP_IF_FALSE"
+      },
+      {
+        "args": [
+          15,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          14,
+          15
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          16,
+          14,
+          2
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          17,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          13,
+          16,
+          17
+        ],
+        "op": "GET_INDEX"
+      },
+      {
+        "args": [
+          13
+        ],
+        "op": "RETURN"
+      },
+      {
+        "args": [
+          20,
+          3
+        ],
+        "op": "GET_GLOBAL"
+      },
+      {
+        "args": [
+          19,
+          20
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          21
+        ],
+        "op": "LOAD_FALSE"
+      },
+      {
+        "args": [
+          22,
+          4
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          23,
+          21
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          24,
+          22
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          18,
+          19,
+          23,
+          2
+        ],
+        "op": "CALL"
+      },
+      {
+        "args": [
+          25
+        ],
+        "op": "LOAD_NULL"
+      },
+      {
+        "args": [
+          25
+        ],
+        "op": "RETURN"
+      }
+    ],
+    "sourceName": "@ConstantPool.get_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow_5",
+    "numRegisters": 26,
+    "numUpvalues": 0,
+    "id": 15
+  },
+  "@ConstantPool.add_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow_3": {
+    "pendingJumps": [],
+    "labels": {
+      "L_ENDIF_10": 87,
+      "L_ENDIF_4": 65,
+      "L_ENDIF_8": 42,
+      "L_AND_END_5": 21,
+      "L_AND_END_6": 13
+    },
+    "upvalueDescs": [],
+    "constantPool": [
+      "typeof",
+      "object",
+      "sourceName",
+      "proto:",
+      "lookup",
+      "pool",
+      "length",
+      "push",
+      "str",
+      "meow:"
+    ],
+    "code": [
+      {
+        "args": [
+          7,
+          0
+        ],
+        "op": "GET_GLOBAL"
+      },
+      {
+        "args": [
+          6,
+          7
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          8,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          9,
+          8
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          5,
+          6,
+          9,
+          1
+        ],
+        "op": "CALL"
+      },
+      {
+        "args": [
+          10,
+          1
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          4,
+          5,
+          10
+        ],
+        "op": "EQ"
+      },
+      {
+        "args": [
+          3,
+          4
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          4,
+          13
+        ],
+        "op": "JUMP_IF_FALSE"
+      },
+      {
+        "args": [
+          12,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          13
+        ],
+        "op": "LOAD_NULL"
+      },
+      {
+        "args": [
+          11,
+          12,
+          13
+        ],
+        "op": "NEQ"
+      },
+      {
+        "args": [
+          3,
+          11
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          2,
+          3
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          3,
+          21
+        ],
+        "op": "JUMP_IF_FALSE"
+      },
+      {
+        "args": [
+          16,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          17,
+          2
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          15,
+          16,
+          17
+        ],
+        "op": "GET_INDEX"
+      },
+      {
+        "args": [
+          18
+        ],
+        "op": "LOAD_NULL"
+      },
+      {
+        "args": [
+          14,
+          15,
+          18
+        ],
+        "op": "NEQ"
+      },
+      {
+        "args": [
+          2,
+          14
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          2,
+          65
+        ],
+        "op": "JUMP_IF_FALSE"
+      },
+      {
+        "args": [
+          21,
+          3
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          23,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          22,
+          23
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          24,
+          22,
+          2
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          20,
+          21,
+          24
+        ],
+        "op": "ADD"
+      },
+      {
+        "args": [
+          19,
+          20
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          28,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          27,
+          28
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          29,
+          27,
+          4
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          30,
+          19
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          26,
+          29,
+          30
+        ],
+        "op": "GET_INDEX"
+      },
+      {
+        "args": [
+          31
+        ],
+        "op": "LOAD_NULL"
+      },
+      {
+        "args": [
+          25,
+          26,
+          31
+        ],
+        "op": "NEQ"
+      },
+      {
+        "args": [
+          25,
+          42
+        ],
+        "op": "JUMP_IF_FALSE"
+      },
+      {
+        "args": [
+          34,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          33,
+          34
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          35,
+          33,
+          4
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          36,
+          19
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          32,
+          35,
+          36
+        ],
+        "op": "GET_INDEX"
+      },
+      {
+        "args": [
+          32
+        ],
+        "op": "RETURN"
+      },
+      {
+        "args": [
+          40,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          39,
+          40
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          41,
+          39,
+          5
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          38,
+          41
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          42,
+          38,
+          6
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          37,
+          42
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          47,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          46,
+          47
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          48,
+          46,
+          5
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          45,
+          48
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          49,
+          45,
+          7
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          44,
+          49
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          50,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          51,
+          50
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          43,
+          44,
+          51,
+          1
+        ],
+        "op": "CALL"
+      },
+      {
+        "args": [
+          53,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          52,
+          53
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          54,
+          52,
+          4
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          55,
+          19
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          56,
+          37
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          54,
+          55,
+          56
+        ],
+        "op": "SET_INDEX"
+      },
+      {
+        "args": [
+          57,
+          37
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          57
+        ],
+        "op": "RETURN"
+      },
+      {
+        "args": [
+          61,
+          8
+        ],
+        "op": "GET_GLOBAL"
+      },
+      {
+        "args": [
+          60,
+          61
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          62,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          63,
+          62
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          59,
+          60,
+          63,
+          1
+        ],
+        "op": "CALL"
+      },
+      {
+        "args": [
+          58,
+          59
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          66,
+          9
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          67,
+          58
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          65,
+          66,
+          67
+        ],
+        "op": "ADD"
+      },
+      {
+        "args": [
+          64,
+          65
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          70,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          69,
+          70
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          71,
+          69,
+          4
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          72,
+          64
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          68,
+          71,
+          72
+        ],
+        "op": "GET_INDEX"
+      },
+      {
+        "args": [
+          68,
+          87
+        ],
+        "op": "JUMP_IF_FALSE"
+      },
+      {
+        "args": [
+          75,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          74,
+          75
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          76,
+          74,
+          4
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          77,
+          64
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          73,
+          76,
+          77
+        ],
+        "op": "GET_INDEX"
+      },
+      {
+        "args": [
+          73
+        ],
+        "op": "RETURN"
+      },
+      {
+        "args": [
+          81,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          80,
+          81
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          82,
+          80,
+          5
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          79,
+          82
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          83,
+          79,
+          6
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          78,
+          83
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          88,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          87,
+          88
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          89,
+          87,
+          5
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          86,
+          89
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          90,
+          86,
+          7
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          85,
+          90
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          91,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          92,
+          91
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          84,
+          85,
+          92,
+          1
+        ],
+        "op": "CALL"
+      },
+      {
+        "args": [
+          94,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          93,
+          94
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          95,
+          93,
+          4
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          96,
+          64
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          97,
+          78
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          95,
+          96,
+          97
+        ],
+        "op": "SET_INDEX"
+      },
+      {
+        "args": [
+          98,
+          78
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          98
+        ],
+        "op": "RETURN"
+      }
+    ],
+    "sourceName": "@ConstantPool.add_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow_3",
+    "numRegisters": 99,
+    "numUpvalues": 0,
+    "id": 14
+  },
+  "@ConstantPool.init_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow_1": {
+    "pendingJumps": [],
+    "labels": {},
+    "upvalueDescs": [],
+    "constantPool": [
+      "pool",
+      "lookup"
+    ],
+    "code": [
+      {
+        "args": [
+          2,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          3,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          2,
+          0,
+          3
+        ],
+        "op": "SET_PROP"
+      },
+      {
+        "args": [
+          4,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          5,
+          0,
+          0
+        ],
+        "op": "NEW_HASH"
+      },
+      {
+        "args": [
+          4,
+          1,
+          5
+        ],
+        "op": "SET_PROP"
+      },
+      {
+        "args": [
+          6
+        ],
+        "op": "LOAD_NULL"
+      },
+      {
+        "args": [
+          6
+        ],
+        "op": "RETURN"
+      }
+    ],
+    "sourceName": "@ConstantPool.init_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./constantPool.meow_1",
+    "numRegisters": 7,
+    "numUpvalues": 0,
+    "id": 13
+  }
+}

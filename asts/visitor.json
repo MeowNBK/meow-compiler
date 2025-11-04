@@ -1,0 +1,2009 @@
+{
+  "token": {
+    "col": 1,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+    "lexeme": "import",
+    "type": 19
+  },
+  "body": [
+    {
+      "token": {
+        "col": 1,
+        "line": 1,
+        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+        "lexeme": "import",
+        "type": 19
+      },
+      "importAll": false,
+      "namedImports": [],
+      "path": {
+        "token": {
+          "col": 29,
+          "line": 1,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+          "lexeme": "./expression.meow",
+          "type": 33
+        },
+        "value": "./expression.meow",
+        "type": "StringLiteral"
+      },
+      "namespaceImport": {
+        "token": {
+          "col": 13,
+          "line": 1,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+          "lexeme": "Expression",
+          "type": 29
+        },
+        "name": "Expression",
+        "type": "Identifier"
+      },
+      "type": "ImportStatement"
+    },
+    {
+      "token": {
+        "col": 1,
+        "line": 2,
+        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+        "lexeme": "import",
+        "type": 19
+      },
+      "importAll": false,
+      "namedImports": [],
+      "path": {
+        "token": {
+          "col": 28,
+          "line": 2,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+          "lexeme": "./statement.meow",
+          "type": 33
+        },
+        "value": "./statement.meow",
+        "type": "StringLiteral"
+      },
+      "namespaceImport": {
+        "token": {
+          "col": 13,
+          "line": 2,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+          "lexeme": "Statement",
+          "type": 29
+        },
+        "name": "Statement",
+        "type": "Identifier"
+      },
+      "type": "ImportStatement"
+    },
+    {
+      "token": {
+        "col": 1,
+        "line": 3,
+        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+        "lexeme": "import",
+        "type": 19
+      },
+      "importAll": false,
+      "namedImports": [],
+      "path": {
+        "token": {
+          "col": 26,
+          "line": 3,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+          "lexeme": "./literal.meow",
+          "type": 33
+        },
+        "value": "./literal.meow",
+        "type": "StringLiteral"
+      },
+      "namespaceImport": {
+        "token": {
+          "col": 13,
+          "line": 3,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+          "lexeme": "Literal",
+          "type": 29
+        },
+        "name": "Literal",
+        "type": "Identifier"
+      },
+      "type": "ImportStatement"
+    },
+    {
+      "token": {
+        "col": 1,
+        "line": 5,
+        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+        "lexeme": "export",
+        "type": 20
+      },
+      "specifiers": [],
+      "declaration": {
+        "token": {
+          "col": 8,
+          "line": 5,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+          "lexeme": "let",
+          "type": 0
+        },
+        "isConstant": false,
+        "value": {
+          "token": {
+            "col": 22,
+            "line": 5,
+            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+            "lexeme": "{",
+            "type": 78
+          },
+          "properties": [
+            {
+              "value": {
+                "token": {
+                  "col": 17,
+                  "line": 6,
+                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                  "lexeme": "{",
+                  "type": 78
+                },
+                "properties": [
+                  {
+                    "value": {
+                      "token": {
+                        "col": 34,
+                        "line": 7,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 35,
+                          "line": 7,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitLetStatement",
+                          "type": 29
+                        },
+                        "name": "visitLetStatement",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 25,
+                          "line": 7,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Statement",
+                          "type": 29
+                        },
+                        "name": "Statement",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 7,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "LetStatement",
+                        "type": 33
+                      },
+                      "value": "LetStatement",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 39,
+                        "line": 8,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 40,
+                          "line": 8,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitFunctionStatement",
+                          "type": 29
+                        },
+                        "name": "visitFunctionStatement",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 30,
+                          "line": 8,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Statement",
+                          "type": 29
+                        },
+                        "name": "Statement",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 8,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "FunctionStatement",
+                        "type": 33
+                      },
+                      "value": "FunctionStatement",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 36,
+                        "line": 9,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 37,
+                          "line": 9,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitClassStatement",
+                          "type": 29
+                        },
+                        "name": "visitClassStatement",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 27,
+                          "line": 9,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Statement",
+                          "type": 29
+                        },
+                        "name": "Statement",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 9,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "ClassStatement",
+                        "type": 33
+                      },
+                      "value": "ClassStatement",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 37,
+                        "line": 10,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 38,
+                          "line": 10,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitReturnStatement",
+                          "type": 29
+                        },
+                        "name": "visitReturnStatement",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 28,
+                          "line": 10,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Statement",
+                          "type": 29
+                        },
+                        "name": "Statement",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 10,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "ReturnStatement",
+                        "type": 33
+                      },
+                      "value": "ReturnStatement",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 33,
+                        "line": 11,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 34,
+                          "line": 11,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitIfStatement",
+                          "type": 29
+                        },
+                        "name": "visitIfStatement",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 24,
+                          "line": 11,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Statement",
+                          "type": 29
+                        },
+                        "name": "Statement",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 11,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "IfStatement",
+                        "type": 33
+                      },
+                      "value": "IfStatement",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 36,
+                        "line": 12,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 37,
+                          "line": 12,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitWhileStatement",
+                          "type": 29
+                        },
+                        "name": "visitWhileStatement",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 27,
+                          "line": 12,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Statement",
+                          "type": 29
+                        },
+                        "name": "Statement",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 12,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "WhileStatement",
+                        "type": 33
+                      },
+                      "value": "WhileStatement",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 36,
+                        "line": 13,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 37,
+                          "line": 13,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitBreakStatement",
+                          "type": 29
+                        },
+                        "name": "visitBreakStatement",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 27,
+                          "line": 13,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Statement",
+                          "type": 29
+                        },
+                        "name": "Statement",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 13,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "BreakStatement",
+                        "type": 33
+                      },
+                      "value": "BreakStatement",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 39,
+                        "line": 14,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 40,
+                          "line": 14,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitContinueStatement",
+                          "type": 29
+                        },
+                        "name": "visitContinueStatement",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 30,
+                          "line": 14,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Statement",
+                          "type": 29
+                        },
+                        "name": "Statement",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 14,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "ContinueStatement",
+                        "type": 33
+                      },
+                      "value": "ContinueStatement",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 36,
+                        "line": 15,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 37,
+                          "line": 15,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitBlockStatement",
+                          "type": 29
+                        },
+                        "name": "visitBlockStatement",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 27,
+                          "line": 15,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Statement",
+                          "type": 29
+                        },
+                        "name": "Statement",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 15,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "BlockStatement",
+                        "type": 33
+                      },
+                      "value": "BlockStatement",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 34,
+                        "line": 16,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 35,
+                          "line": 16,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitForStatement",
+                          "type": 29
+                        },
+                        "name": "visitForStatement",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 25,
+                          "line": 16,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Statement",
+                          "type": 29
+                        },
+                        "name": "Statement",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 16,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "ForStatement",
+                        "type": 33
+                      },
+                      "value": "ForStatement",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 36,
+                        "line": 17,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 37,
+                          "line": 17,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitForInStatement",
+                          "type": 29
+                        },
+                        "name": "visitForInStatement",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 27,
+                          "line": 17,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Statement",
+                          "type": 29
+                        },
+                        "name": "Statement",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 17,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "ForInStatement",
+                        "type": 33
+                      },
+                      "value": "ForInStatement",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 36,
+                        "line": 18,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 37,
+                          "line": 18,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitThrowStatement",
+                          "type": 29
+                        },
+                        "name": "visitThrowStatement",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 27,
+                          "line": 18,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Statement",
+                          "type": 29
+                        },
+                        "name": "Statement",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 18,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "ThrowStatement",
+                        "type": 33
+                      },
+                      "value": "ThrowStatement",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 34,
+                        "line": 19,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 35,
+                          "line": 19,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitTryStatement",
+                          "type": 29
+                        },
+                        "name": "visitTryStatement",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 25,
+                          "line": 19,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Statement",
+                          "type": 29
+                        },
+                        "name": "Statement",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 19,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "TryStatement",
+                        "type": 33
+                      },
+                      "value": "TryStatement",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 41,
+                        "line": 20,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 42,
+                          "line": 20,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitExpressionStatement",
+                          "type": 29
+                        },
+                        "name": "visitExpressionStatement",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 32,
+                          "line": 20,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Statement",
+                          "type": 29
+                        },
+                        "name": "Statement",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 20,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "ExpressionStatement",
+                        "type": 33
+                      },
+                      "value": "ExpressionStatement",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 37,
+                        "line": 21,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 38,
+                          "line": 21,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitExportStatement",
+                          "type": 29
+                        },
+                        "name": "visitExportStatement",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 28,
+                          "line": 21,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Statement",
+                          "type": 29
+                        },
+                        "name": "Statement",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 21,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "ExportStatement",
+                        "type": 33
+                      },
+                      "value": "ExportStatement",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 37,
+                        "line": 22,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 38,
+                          "line": 22,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitImportStatement",
+                          "type": 29
+                        },
+                        "name": "visitImportStatement",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 28,
+                          "line": 22,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Statement",
+                          "type": 29
+                        },
+                        "name": "Statement",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 22,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "ImportStatement",
+                        "type": 33
+                      },
+                      "value": "ImportStatement",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 38,
+                        "line": 23,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 39,
+                          "line": 23,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitDoWhileStatement",
+                          "type": 29
+                        },
+                        "name": "visitDoWhileStatement",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 29,
+                          "line": 23,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Statement",
+                          "type": 29
+                        },
+                        "name": "Statement",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 23,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "DoWhileStatement",
+                        "type": 33
+                      },
+                      "value": "DoWhileStatement",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 37,
+                        "line": 24,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 38,
+                          "line": 24,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitSwitchStatement",
+                          "type": 29
+                        },
+                        "name": "visitSwitchStatement",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 28,
+                          "line": 24,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Statement",
+                          "type": 29
+                        },
+                        "name": "Statement",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 24,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "SwitchStatement",
+                        "type": 33
+                      },
+                      "value": "SwitchStatement",
+                      "type": "StringLiteral"
+                    }
+                  }
+                ],
+                "type": "ObjectLiteral"
+              },
+              "key": {
+                "token": {
+                  "col": 5,
+                  "line": 6,
+                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                  "lexeme": "statements",
+                  "type": 29
+                },
+                "value": "statements",
+                "type": "StringLiteral"
+              }
+            },
+            {
+              "value": {
+                "token": {
+                  "col": 18,
+                  "line": 26,
+                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                  "lexeme": "{",
+                  "type": 78
+                },
+                "properties": [
+                  {
+                    "value": {
+                      "token": {
+                        "col": 34,
+                        "line": 27,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 35,
+                          "line": 27,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitIntegerLiteral",
+                          "type": 29
+                        },
+                        "name": "visitIntegerLiteral",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 27,
+                          "line": 27,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Literal",
+                          "type": 29
+                        },
+                        "name": "Literal",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 27,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "IntegerLiteral",
+                        "type": 33
+                      },
+                      "value": "IntegerLiteral",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 33,
+                        "line": 28,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 34,
+                          "line": 28,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitStringLiteral",
+                          "type": 29
+                        },
+                        "name": "visitStringLiteral",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 26,
+                          "line": 28,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Literal",
+                          "type": 29
+                        },
+                        "name": "Literal",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 28,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "StringLiteral",
+                        "type": 33
+                      },
+                      "value": "StringLiteral",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 31,
+                        "line": 29,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 32,
+                          "line": 29,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitRealLiteral",
+                          "type": 29
+                        },
+                        "name": "visitRealLiteral",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 24,
+                          "line": 29,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Literal",
+                          "type": 29
+                        },
+                        "name": "Literal",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 29,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "RealLiteral",
+                        "type": 33
+                      },
+                      "value": "RealLiteral",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 34,
+                        "line": 30,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 35,
+                          "line": 30,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitBooleanLiteral",
+                          "type": 29
+                        },
+                        "name": "visitBooleanLiteral",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 27,
+                          "line": 30,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Literal",
+                          "type": 29
+                        },
+                        "name": "Literal",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 30,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "BooleanLiteral",
+                        "type": 33
+                      },
+                      "value": "BooleanLiteral",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 31,
+                        "line": 31,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 32,
+                          "line": 31,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitNullLiteral",
+                          "type": 29
+                        },
+                        "name": "visitNullLiteral",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 24,
+                          "line": 31,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Literal",
+                          "type": 29
+                        },
+                        "name": "Literal",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 31,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "NullLiteral",
+                        "type": 33
+                      },
+                      "value": "NullLiteral",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 32,
+                        "line": 32,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 33,
+                          "line": 32,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitArrayLiteral",
+                          "type": 29
+                        },
+                        "name": "visitArrayLiteral",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 25,
+                          "line": 32,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Literal",
+                          "type": 29
+                        },
+                        "name": "Literal",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 32,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "ArrayLiteral",
+                        "type": 33
+                      },
+                      "value": "ArrayLiteral",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 33,
+                        "line": 33,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 34,
+                          "line": 33,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitObjectLiteral",
+                          "type": 29
+                        },
+                        "name": "visitObjectLiteral",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 26,
+                          "line": 33,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Literal",
+                          "type": 29
+                        },
+                        "name": "Literal",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 33,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "ObjectLiteral",
+                        "type": 33
+                      },
+                      "value": "ObjectLiteral",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 35,
+                        "line": 34,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 36,
+                          "line": 34,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitFunctionLiteral",
+                          "type": 29
+                        },
+                        "name": "visitFunctionLiteral",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 28,
+                          "line": 34,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Literal",
+                          "type": 29
+                        },
+                        "name": "Literal",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 34,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "FunctionLiteral",
+                        "type": 33
+                      },
+                      "value": "FunctionLiteral",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 35,
+                        "line": 35,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 36,
+                          "line": 35,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitTemplateLiteral",
+                          "type": 29
+                        },
+                        "name": "visitTemplateLiteral",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 28,
+                          "line": 35,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Literal",
+                          "type": 29
+                        },
+                        "name": "Literal",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 35,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "TemplateLiteral",
+                        "type": 33
+                      },
+                      "value": "TemplateLiteral",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 33,
+                        "line": 37,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 34,
+                          "line": 37,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitIdentifier",
+                          "type": 29
+                        },
+                        "name": "visitIdentifier",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 23,
+                          "line": 37,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Expression",
+                          "type": 29
+                        },
+                        "name": "Expression",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 37,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "Identifier",
+                        "type": 33
+                      },
+                      "value": "Identifier",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 39,
+                        "line": 38,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 40,
+                          "line": 38,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitBinaryExpression",
+                          "type": 29
+                        },
+                        "name": "visitBinaryExpression",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 29,
+                          "line": 38,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Expression",
+                          "type": 29
+                        },
+                        "name": "Expression",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 38,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "BinaryExpression",
+                        "type": 33
+                      },
+                      "value": "BinaryExpression",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 38,
+                        "line": 39,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 39,
+                          "line": 39,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitUnaryExpression",
+                          "type": 29
+                        },
+                        "name": "visitUnaryExpression",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 28,
+                          "line": 39,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Expression",
+                          "type": 29
+                        },
+                        "name": "Expression",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 39,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "UnaryExpression",
+                        "type": 33
+                      },
+                      "value": "UnaryExpression",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 37,
+                        "line": 40,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 38,
+                          "line": 40,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitCallExpression",
+                          "type": 29
+                        },
+                        "name": "visitCallExpression",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 27,
+                          "line": 40,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Expression",
+                          "type": 29
+                        },
+                        "name": "Expression",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 40,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "CallExpression",
+                        "type": 33
+                      },
+                      "value": "CallExpression",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 43,
+                        "line": 41,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 44,
+                          "line": 41,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitAssignmentExpression",
+                          "type": 29
+                        },
+                        "name": "visitAssignmentExpression",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 33,
+                          "line": 41,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Expression",
+                          "type": 29
+                        },
+                        "name": "Expression",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 41,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "AssignmentExpression",
+                        "type": 33
+                      },
+                      "value": "AssignmentExpression",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 45,
+                        "line": 42,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 46,
+                          "line": 42,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitPrefixUpdateExpression",
+                          "type": 29
+                        },
+                        "name": "visitPrefixUpdateExpression",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 35,
+                          "line": 42,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Expression",
+                          "type": 29
+                        },
+                        "name": "Expression",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 42,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "PrefixUpdateExpression",
+                        "type": 33
+                      },
+                      "value": "PrefixUpdateExpression",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 46,
+                        "line": 43,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 47,
+                          "line": 43,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitPostfixUpdateExpression",
+                          "type": 29
+                        },
+                        "name": "visitPostfixUpdateExpression",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 36,
+                          "line": 43,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Expression",
+                          "type": 29
+                        },
+                        "name": "Expression",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 43,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "PostfixUpdateExpression",
+                        "type": 33
+                      },
+                      "value": "PostfixUpdateExpression",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 38,
+                        "line": 44,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 39,
+                          "line": 44,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitIndexExpression",
+                          "type": 29
+                        },
+                        "name": "visitIndexExpression",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 28,
+                          "line": 44,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Expression",
+                          "type": 29
+                        },
+                        "name": "Expression",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 44,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "IndexExpression",
+                        "type": 33
+                      },
+                      "value": "IndexExpression",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 37,
+                        "line": 45,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 38,
+                          "line": 45,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitPropertyAccess",
+                          "type": 29
+                        },
+                        "name": "visitPropertyAccess",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 27,
+                          "line": 45,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Expression",
+                          "type": 29
+                        },
+                        "name": "Expression",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 45,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "PropertyAccess",
+                        "type": 33
+                      },
+                      "value": "PropertyAccess",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 36,
+                        "line": 46,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 37,
+                          "line": 46,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitNewExpression",
+                          "type": 29
+                        },
+                        "name": "visitNewExpression",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 26,
+                          "line": 46,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Expression",
+                          "type": 29
+                        },
+                        "name": "Expression",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 46,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "NewExpression",
+                        "type": 33
+                      },
+                      "value": "NewExpression",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 37,
+                        "line": 47,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 38,
+                          "line": 47,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitThisExpression",
+                          "type": 29
+                        },
+                        "name": "visitThisExpression",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 27,
+                          "line": 47,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Expression",
+                          "type": 29
+                        },
+                        "name": "Expression",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 47,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "ThisExpression",
+                        "type": 33
+                      },
+                      "value": "ThisExpression",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 38,
+                        "line": 48,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 39,
+                          "line": 48,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitSuperExpression",
+                          "type": 29
+                        },
+                        "name": "visitSuperExpression",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 28,
+                          "line": 48,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Expression",
+                          "type": 29
+                        },
+                        "name": "Expression",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 48,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "SuperExpression",
+                        "type": 33
+                      },
+                      "value": "SuperExpression",
+                      "type": "StringLiteral"
+                    }
+                  },
+                  {
+                    "value": {
+                      "token": {
+                        "col": 40,
+                        "line": 49,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 41,
+                          "line": 49,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "visitTernaryExpression",
+                          "type": 29
+                        },
+                        "name": "visitTernaryExpression",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 30,
+                          "line": 49,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                          "lexeme": "Expression",
+                          "type": 29
+                        },
+                        "name": "Expression",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    "key": {
+                      "token": {
+                        "col": 9,
+                        "line": 49,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                        "lexeme": "TernaryExpression",
+                        "type": 33
+                      },
+                      "value": "TernaryExpression",
+                      "type": "StringLiteral"
+                    }
+                  }
+                ],
+                "type": "ObjectLiteral"
+              },
+              "key": {
+                "token": {
+                  "col": 5,
+                  "line": 26,
+                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+                  "lexeme": "expressions",
+                  "type": 29
+                },
+                "value": "expressions",
+                "type": "StringLiteral"
+              }
+            }
+          ],
+          "type": "ObjectLiteral"
+        },
+        "name": {
+          "token": {
+            "col": 12,
+            "line": 5,
+            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//.//./visitor/visitor.meow",
+            "lexeme": "Visitor",
+            "type": 29
+          },
+          "name": "Visitor",
+          "type": "Identifier"
+        },
+        "type": "LetStatement"
+      },
+      "type": "ExportStatement"
+    }
+  ],
+  "type": "Program"
+}

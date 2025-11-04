@@ -1,0 +1,1106 @@
+{
+  "token": {
+    "col": 1,
+    "line": 1,
+    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "lexeme": "import",
+    "type": 19
+  },
+  "body": [
+    {
+      "token": {
+        "col": 1,
+        "line": 1,
+        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+        "lexeme": "import",
+        "type": 19
+      },
+      "importAll": false,
+      "namedImports": [
+        {
+          "token": {
+            "col": 10,
+            "line": 1,
+            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+            "lexeme": "contains",
+            "type": 29
+          },
+          "name": "contains",
+          "type": "Identifier"
+        },
+        {
+          "token": {
+            "col": 20,
+            "line": 1,
+            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+            "lexeme": "join",
+            "type": 29
+          },
+          "name": "join",
+          "type": "Identifier"
+        }
+      ],
+      "path": {
+        "token": {
+          "col": 32,
+          "line": 1,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+          "lexeme": "string",
+          "type": 33
+        },
+        "value": "string",
+        "type": "StringLiteral"
+      },
+      "namespaceImport": null,
+      "type": "ImportStatement"
+    },
+    {
+      "token": {
+        "col": 1,
+        "line": 3,
+        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+        "lexeme": "let",
+        "type": 0
+      },
+      "isConstant": false,
+      "value": {
+        "token": {
+          "col": 14,
+          "line": 3,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+          "lexeme": "0123456789",
+          "type": 33
+        },
+        "value": "0123456789",
+        "type": "StringLiteral"
+      },
+      "name": {
+        "token": {
+          "col": 5,
+          "line": 3,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+          "lexeme": "DIGITS",
+          "type": 29
+        },
+        "name": "DIGITS",
+        "type": "Identifier"
+      },
+      "type": "LetStatement"
+    },
+    {
+      "token": {
+        "col": 1,
+        "line": 4,
+        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+        "lexeme": "let",
+        "type": 0
+      },
+      "isConstant": false,
+      "value": {
+        "token": {
+          "col": 18,
+          "line": 4,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+          "lexeme": "0123456789abcdefABCDEF",
+          "type": 33
+        },
+        "value": "0123456789abcdefABCDEF",
+        "type": "StringLiteral"
+      },
+      "name": {
+        "token": {
+          "col": 5,
+          "line": 4,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+          "lexeme": "HEX_DIGITS",
+          "type": 29
+        },
+        "name": "HEX_DIGITS",
+        "type": "Identifier"
+      },
+      "type": "LetStatement"
+    },
+    {
+      "token": {
+        "col": 1,
+        "line": 5,
+        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+        "lexeme": "let",
+        "type": 0
+      },
+      "isConstant": false,
+      "value": {
+        "token": {
+          "col": 15,
+          "line": 5,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+          "lexeme": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+          "type": 33
+        },
+        "value": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        "type": "StringLiteral"
+      },
+      "name": {
+        "token": {
+          "col": 5,
+          "line": 5,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+          "lexeme": "LETTERS",
+          "type": 29
+        },
+        "name": "LETTERS",
+        "type": "Identifier"
+      },
+      "type": "LetStatement"
+    },
+    {
+      "token": {
+        "col": 1,
+        "line": 6,
+        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+        "lexeme": "let",
+        "type": 0
+      },
+      "isConstant": false,
+      "value": {
+        "token": {
+          "col": 18,
+          "line": 6,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+          "lexeme": " \t\r\n",
+          "type": 33
+        },
+        "value": " \t\r\n",
+        "type": "StringLiteral"
+      },
+      "name": {
+        "token": {
+          "col": 5,
+          "line": 6,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+          "lexeme": "WHITESPACE",
+          "type": 29
+        },
+        "name": "WHITESPACE",
+        "type": "Identifier"
+      },
+      "type": "LetStatement"
+    },
+    {
+      "token": {
+        "col": 1,
+        "line": 8,
+        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+        "lexeme": "export",
+        "type": 20
+      },
+      "specifiers": [],
+      "declaration": {
+        "token": {
+          "col": 8,
+          "line": 8,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+          "lexeme": "fn",
+          "type": 9
+        },
+        "func": {
+          "token": {
+            "col": 8,
+            "line": 8,
+            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+            "lexeme": "fn",
+            "type": 9
+          },
+          "returnType": null,
+          "restParam": null,
+          "body": {
+            "token": {
+              "col": 25,
+              "line": 8,
+              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+              "lexeme": "{",
+              "type": 78
+            },
+            "statements": [
+              {
+                "token": {
+                  "col": 5,
+                  "line": 9,
+                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                  "lexeme": "return",
+                  "type": 6
+                },
+                "value": {
+                  "args": [
+                    {
+                      "token": {
+                        "col": 21,
+                        "line": 9,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                        "lexeme": "LETTERS",
+                        "type": 29
+                      },
+                      "name": "LETTERS",
+                      "type": "Identifier"
+                    },
+                    {
+                      "token": {
+                        "col": 30,
+                        "line": 9,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                        "lexeme": "char",
+                        "type": 29
+                      },
+                      "name": "char",
+                      "type": "Identifier"
+                    }
+                  ],
+                  "token": {
+                    "col": 20,
+                    "line": 9,
+                    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                    "lexeme": "(",
+                    "type": 76
+                  },
+                  "callee": {
+                    "token": {
+                      "col": 12,
+                      "line": 9,
+                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                      "lexeme": "contains",
+                      "type": 29
+                    },
+                    "name": "contains",
+                    "type": "Identifier"
+                  },
+                  "type": "CallExpression"
+                },
+                "type": "ReturnStatement"
+              }
+            ],
+            "type": "BlockStatement"
+          },
+          "parameters": [
+            {
+              "token": {
+                "col": 19,
+                "line": 8,
+                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                "lexeme": "char",
+                "type": 29
+              },
+              "name": "char",
+              "type": "Identifier"
+            }
+          ],
+          "name": "isalpha",
+          "type": "FunctionLiteral"
+        },
+        "name": {
+          "token": {
+            "col": 11,
+            "line": 8,
+            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+            "lexeme": "isalpha",
+            "type": 29
+          },
+          "name": "isalpha",
+          "type": "Identifier"
+        },
+        "type": "FunctionStatement"
+      },
+      "type": "ExportStatement"
+    },
+    {
+      "token": {
+        "col": 1,
+        "line": 12,
+        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+        "lexeme": "export",
+        "type": 20
+      },
+      "specifiers": [],
+      "declaration": {
+        "token": {
+          "col": 8,
+          "line": 12,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+          "lexeme": "fn",
+          "type": 9
+        },
+        "func": {
+          "token": {
+            "col": 8,
+            "line": 12,
+            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+            "lexeme": "fn",
+            "type": 9
+          },
+          "returnType": null,
+          "restParam": null,
+          "body": {
+            "token": {
+              "col": 25,
+              "line": 12,
+              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+              "lexeme": "{",
+              "type": 78
+            },
+            "statements": [
+              {
+                "token": {
+                  "col": 5,
+                  "line": 13,
+                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                  "lexeme": "return",
+                  "type": 6
+                },
+                "value": {
+                  "args": [
+                    {
+                      "token": {
+                        "col": 21,
+                        "line": 13,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                        "lexeme": "DIGITS",
+                        "type": 29
+                      },
+                      "name": "DIGITS",
+                      "type": "Identifier"
+                    },
+                    {
+                      "token": {
+                        "col": 29,
+                        "line": 13,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                        "lexeme": "char",
+                        "type": 29
+                      },
+                      "name": "char",
+                      "type": "Identifier"
+                    }
+                  ],
+                  "token": {
+                    "col": 20,
+                    "line": 13,
+                    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                    "lexeme": "(",
+                    "type": 76
+                  },
+                  "callee": {
+                    "token": {
+                      "col": 12,
+                      "line": 13,
+                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                      "lexeme": "contains",
+                      "type": 29
+                    },
+                    "name": "contains",
+                    "type": "Identifier"
+                  },
+                  "type": "CallExpression"
+                },
+                "type": "ReturnStatement"
+              }
+            ],
+            "type": "BlockStatement"
+          },
+          "parameters": [
+            {
+              "token": {
+                "col": 19,
+                "line": 12,
+                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                "lexeme": "char",
+                "type": 29
+              },
+              "name": "char",
+              "type": "Identifier"
+            }
+          ],
+          "name": "isdigit",
+          "type": "FunctionLiteral"
+        },
+        "name": {
+          "token": {
+            "col": 11,
+            "line": 12,
+            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+            "lexeme": "isdigit",
+            "type": 29
+          },
+          "name": "isdigit",
+          "type": "Identifier"
+        },
+        "type": "FunctionStatement"
+      },
+      "type": "ExportStatement"
+    },
+    {
+      "token": {
+        "col": 1,
+        "line": 16,
+        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+        "lexeme": "export",
+        "type": 20
+      },
+      "specifiers": [],
+      "declaration": {
+        "token": {
+          "col": 8,
+          "line": 16,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+          "lexeme": "fn",
+          "type": 9
+        },
+        "func": {
+          "token": {
+            "col": 8,
+            "line": 16,
+            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+            "lexeme": "fn",
+            "type": 9
+          },
+          "returnType": null,
+          "restParam": null,
+          "body": {
+            "token": {
+              "col": 26,
+              "line": 16,
+              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+              "lexeme": "{",
+              "type": 78
+            },
+            "statements": [
+              {
+                "token": {
+                  "col": 3,
+                  "line": 17,
+                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                  "lexeme": "return",
+                  "type": 6
+                },
+                "value": {
+                  "args": [
+                    {
+                      "token": {
+                        "col": 19,
+                        "line": 17,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                        "lexeme": "HEX_DIGITS",
+                        "type": 29
+                      },
+                      "name": "HEX_DIGITS",
+                      "type": "Identifier"
+                    },
+                    {
+                      "token": {
+                        "col": 31,
+                        "line": 17,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                        "lexeme": "char",
+                        "type": 29
+                      },
+                      "name": "char",
+                      "type": "Identifier"
+                    }
+                  ],
+                  "token": {
+                    "col": 18,
+                    "line": 17,
+                    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                    "lexeme": "(",
+                    "type": 76
+                  },
+                  "callee": {
+                    "token": {
+                      "col": 10,
+                      "line": 17,
+                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                      "lexeme": "contains",
+                      "type": 29
+                    },
+                    "name": "contains",
+                    "type": "Identifier"
+                  },
+                  "type": "CallExpression"
+                },
+                "type": "ReturnStatement"
+              }
+            ],
+            "type": "BlockStatement"
+          },
+          "parameters": [
+            {
+              "token": {
+                "col": 20,
+                "line": 16,
+                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                "lexeme": "char",
+                "type": 29
+              },
+              "name": "char",
+              "type": "Identifier"
+            }
+          ],
+          "name": "isxdigit",
+          "type": "FunctionLiteral"
+        },
+        "name": {
+          "token": {
+            "col": 11,
+            "line": 16,
+            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+            "lexeme": "isxdigit",
+            "type": 29
+          },
+          "name": "isxdigit",
+          "type": "Identifier"
+        },
+        "type": "FunctionStatement"
+      },
+      "type": "ExportStatement"
+    },
+    {
+      "token": {
+        "col": 1,
+        "line": 20,
+        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+        "lexeme": "export",
+        "type": 20
+      },
+      "specifiers": [],
+      "declaration": {
+        "token": {
+          "col": 8,
+          "line": 20,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+          "lexeme": "fn",
+          "type": 9
+        },
+        "func": {
+          "token": {
+            "col": 8,
+            "line": 20,
+            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+            "lexeme": "fn",
+            "type": 9
+          },
+          "returnType": null,
+          "restParam": null,
+          "body": {
+            "token": {
+              "col": 25,
+              "line": 20,
+              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+              "lexeme": "{",
+              "type": 78
+            },
+            "statements": [
+              {
+                "token": {
+                  "col": 5,
+                  "line": 21,
+                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                  "lexeme": "return",
+                  "type": 6
+                },
+                "value": {
+                  "token": {
+                    "col": 26,
+                    "line": 21,
+                    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                    "lexeme": "||",
+                    "type": 54
+                  },
+                  "right": {
+                    "args": [
+                      {
+                        "token": {
+                          "col": 37,
+                          "line": 21,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                          "lexeme": "char",
+                          "type": 29
+                        },
+                        "name": "char",
+                        "type": "Identifier"
+                      }
+                    ],
+                    "token": {
+                      "col": 36,
+                      "line": 21,
+                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                      "lexeme": "(",
+                      "type": 76
+                    },
+                    "callee": {
+                      "token": {
+                        "col": 29,
+                        "line": 21,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                        "lexeme": "isdigit",
+                        "type": 29
+                      },
+                      "name": "isdigit",
+                      "type": "Identifier"
+                    },
+                    "type": "CallExpression"
+                  },
+                  "op": 54,
+                  "left": {
+                    "args": [
+                      {
+                        "token": {
+                          "col": 20,
+                          "line": 21,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                          "lexeme": "char",
+                          "type": 29
+                        },
+                        "name": "char",
+                        "type": "Identifier"
+                      }
+                    ],
+                    "token": {
+                      "col": 19,
+                      "line": 21,
+                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                      "lexeme": "(",
+                      "type": 76
+                    },
+                    "callee": {
+                      "token": {
+                        "col": 12,
+                        "line": 21,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                        "lexeme": "isalpha",
+                        "type": 29
+                      },
+                      "name": "isalpha",
+                      "type": "Identifier"
+                    },
+                    "type": "CallExpression"
+                  },
+                  "type": "BinaryExpression"
+                },
+                "type": "ReturnStatement"
+              }
+            ],
+            "type": "BlockStatement"
+          },
+          "parameters": [
+            {
+              "token": {
+                "col": 19,
+                "line": 20,
+                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                "lexeme": "char",
+                "type": 29
+              },
+              "name": "char",
+              "type": "Identifier"
+            }
+          ],
+          "name": "isalnum",
+          "type": "FunctionLiteral"
+        },
+        "name": {
+          "token": {
+            "col": 11,
+            "line": 20,
+            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+            "lexeme": "isalnum",
+            "type": 29
+          },
+          "name": "isalnum",
+          "type": "Identifier"
+        },
+        "type": "FunctionStatement"
+      },
+      "type": "ExportStatement"
+    },
+    {
+      "token": {
+        "col": 1,
+        "line": 24,
+        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+        "lexeme": "export",
+        "type": 20
+      },
+      "specifiers": [],
+      "declaration": {
+        "token": {
+          "col": 8,
+          "line": 24,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+          "lexeme": "fn",
+          "type": 9
+        },
+        "func": {
+          "token": {
+            "col": 8,
+            "line": 24,
+            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+            "lexeme": "fn",
+            "type": 9
+          },
+          "returnType": null,
+          "restParam": null,
+          "body": {
+            "token": {
+              "col": 25,
+              "line": 24,
+              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+              "lexeme": "{",
+              "type": 78
+            },
+            "statements": [
+              {
+                "token": {
+                  "col": 5,
+                  "line": 25,
+                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                  "lexeme": "return",
+                  "type": 6
+                },
+                "value": {
+                  "args": [
+                    {
+                      "token": {
+                        "col": 21,
+                        "line": 25,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                        "lexeme": "WHITESPACE",
+                        "type": 29
+                      },
+                      "name": "WHITESPACE",
+                      "type": "Identifier"
+                    },
+                    {
+                      "token": {
+                        "col": 33,
+                        "line": 25,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                        "lexeme": "char",
+                        "type": 29
+                      },
+                      "name": "char",
+                      "type": "Identifier"
+                    }
+                  ],
+                  "token": {
+                    "col": 20,
+                    "line": 25,
+                    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                    "lexeme": "(",
+                    "type": 76
+                  },
+                  "callee": {
+                    "token": {
+                      "col": 12,
+                      "line": 25,
+                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                      "lexeme": "contains",
+                      "type": 29
+                    },
+                    "name": "contains",
+                    "type": "Identifier"
+                  },
+                  "type": "CallExpression"
+                },
+                "type": "ReturnStatement"
+              }
+            ],
+            "type": "BlockStatement"
+          },
+          "parameters": [
+            {
+              "token": {
+                "col": 19,
+                "line": 24,
+                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                "lexeme": "char",
+                "type": 29
+              },
+              "name": "char",
+              "type": "Identifier"
+            }
+          ],
+          "name": "isspace",
+          "type": "FunctionLiteral"
+        },
+        "name": {
+          "token": {
+            "col": 11,
+            "line": 24,
+            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+            "lexeme": "isspace",
+            "type": 29
+          },
+          "name": "isspace",
+          "type": "Identifier"
+        },
+        "type": "FunctionStatement"
+      },
+      "type": "ExportStatement"
+    },
+    {
+      "token": {
+        "col": 1,
+        "line": 28,
+        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+        "lexeme": "export",
+        "type": 20
+      },
+      "specifiers": [],
+      "declaration": {
+        "token": {
+          "col": 8,
+          "line": 28,
+          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+          "lexeme": "fn",
+          "type": 9
+        },
+        "func": {
+          "token": {
+            "col": 8,
+            "line": 28,
+            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+            "lexeme": "fn",
+            "type": 9
+          },
+          "returnType": null,
+          "restParam": null,
+          "body": {
+            "token": {
+              "col": 30,
+              "line": 28,
+              "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+              "lexeme": "{",
+              "type": 78
+            },
+            "statements": [
+              {
+                "token": {
+                  "col": 5,
+                  "line": 29,
+                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                  "lexeme": "let",
+                  "type": 0
+                },
+                "isConstant": false,
+                "value": {
+                  "token": {
+                    "col": 17,
+                    "line": 29,
+                    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                    "lexeme": "[",
+                    "type": 80
+                  },
+                  "elements": [
+                    {
+                      "token": {
+                        "col": 9,
+                        "line": 30,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                        "lexeme": "{ 'type': '",
+                        "type": 33
+                      },
+                      "value": "{ 'type': '",
+                      "type": "StringLiteral"
+                    },
+                    {
+                      "token": {
+                        "col": 14,
+                        "line": 31,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 15,
+                          "line": 31,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                          "lexeme": "TokenType",
+                          "type": 29
+                        },
+                        "name": "TokenType",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 9,
+                          "line": 31,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                          "lexeme": "token",
+                          "type": 29
+                        },
+                        "name": "token",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    {
+                      "token": {
+                        "col": 9,
+                        "line": 32,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                        "lexeme": "', 'value': '",
+                        "type": 33
+                      },
+                      "value": "', 'value': '",
+                      "type": "StringLiteral"
+                    },
+                    {
+                      "token": {
+                        "col": 14,
+                        "line": 33,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                        "lexeme": ".",
+                        "type": 82
+                      },
+                      "property": {
+                        "token": {
+                          "col": 15,
+                          "line": 33,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                          "lexeme": "Lexeme",
+                          "type": 29
+                        },
+                        "name": "Lexeme",
+                        "type": "Identifier"
+                      },
+                      "object": {
+                        "token": {
+                          "col": 9,
+                          "line": 33,
+                          "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                          "lexeme": "token",
+                          "type": 29
+                        },
+                        "name": "token",
+                        "type": "Identifier"
+                      },
+                      "type": "PropertyAccess"
+                    },
+                    {
+                      "token": {
+                        "col": 9,
+                        "line": 34,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                        "lexeme": "' }",
+                        "type": 33
+                      },
+                      "value": "' }",
+                      "type": "StringLiteral"
+                    }
+                  ],
+                  "type": "ArrayLiteral"
+                },
+                "name": {
+                  "token": {
+                    "col": 9,
+                    "line": 29,
+                    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                    "lexeme": "parts",
+                    "type": 29
+                  },
+                  "name": "parts",
+                  "type": "Identifier"
+                },
+                "type": "LetStatement"
+              },
+              {
+                "token": {
+                  "col": 5,
+                  "line": 36,
+                  "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                  "lexeme": "return",
+                  "type": 6
+                },
+                "value": {
+                  "args": [
+                    {
+                      "token": {
+                        "col": 17,
+                        "line": 36,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                        "lexeme": "parts",
+                        "type": 29
+                      },
+                      "name": "parts",
+                      "type": "Identifier"
+                    },
+                    {
+                      "token": {
+                        "col": 24,
+                        "line": 36,
+                        "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                        "lexeme": "",
+                        "type": 33
+                      },
+                      "value": "",
+                      "type": "StringLiteral"
+                    }
+                  ],
+                  "token": {
+                    "col": 16,
+                    "line": 36,
+                    "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                    "lexeme": "(",
+                    "type": 76
+                  },
+                  "callee": {
+                    "token": {
+                      "col": 12,
+                      "line": 36,
+                      "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                      "lexeme": "join",
+                      "type": 29
+                    },
+                    "name": "join",
+                    "type": "Identifier"
+                  },
+                  "type": "CallExpression"
+                },
+                "type": "ReturnStatement"
+              }
+            ],
+            "type": "BlockStatement"
+          },
+          "parameters": [
+            {
+              "token": {
+                "col": 23,
+                "line": 28,
+                "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+                "lexeme": "token",
+                "type": 29
+              },
+              "name": "token",
+              "type": "Identifier"
+            }
+          ],
+          "name": "prettyPrint",
+          "type": "FunctionLiteral"
+        },
+        "name": {
+          "token": {
+            "col": 11,
+            "line": 28,
+            "file": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+            "lexeme": "prettyPrint",
+            "type": 29
+          },
+          "name": "prettyPrint",
+          "type": "Identifier"
+        },
+        "type": "FunctionStatement"
+      },
+      "type": "ExportStatement"
+    }
+  ],
+  "type": "Program"
+}

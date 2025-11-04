@@ -31,18 +31,23 @@ fn _isAbsolutePath(path) {
 
 fn _findExportedNames(ast) {
     let names = [];
-    if (!ast || !ast.body) return names;
+ if (!ast || !ast.body) return names;
     for (stmt in ast.body) {
-        if (stmt.type == "ExportStatement" && stmt.declaration) {
-            if (stmt.declaration.name && stmt.declaration.name.name) {
+        if (stmt.type == "ExportStatement") {
+            if (stmt.declaration && stmt.declaration.name && stmt.declaration.name.name) {
                 // Lấy tên từ `export class Name`, `export function Name`, `export let Name`
                 names.push(stmt.declaration.name.name);
+ } else if (stmt.specifiers && stmt.specifiers.length > 0) {
+                // === DÒNG SỬA ĐÂY ===
+                // Lấy tên từ `export { var1, var2 }`
+                for (spec in stmt.specifiers) {
+                    names.push(spec.name);
+                }
             }
         }
     }
     return names;
-}
-
+ }
 
 export class Compiler {
     fn init(isNoCache, options) {
@@ -299,84 +304,138 @@ export class Compiler {
         return Io.getAbsolutePath(outPath);
     }
 
-    // SỬA ĐỔI HÀM NÀY
-    fn _bundleAst(sourcePath, importerDir, visited) {
-        let absolutePath = this._resolvePath(sourcePath, importerDir);
+// Bên trong file: src/backend/compiler.meow
 
-        if (visited[absolutePath]) {
-            // Trả về một cấu trúc rỗng để tránh lỗi và import lặp.
-            return { type: "Program", body: [], exports: [] };
-        }
-        visited[absolutePath] = true;
+// SỬA ĐỔI HÀM NÀY
+fn _bundleAst(sourcePath, importerDir, visited) {
+    let absolutePath = this._resolvePath(sourcePath, importerDir);
 
-        let source = Io.read(absolutePath);
-        if (source == null) {
-            print("[ERROR] Bundle: Không thể đọc file nguồn: " + absolutePath);
-            System.exit(1);
-        }
+    if (visited[absolutePath]) {
+        // Trả về một cấu trúc rỗng để tránh lỗi và import lặp.
+        // Chú ý: Trả về exports rỗng RẤT QUAN TRỌNG
+        return { type: "Program", body: [], exports: [] };
+    }
+    visited[absolutePath] = true;
 
-        let lexer = new Lexer(source, absolutePath);
-        let tokens = lexer.tokenize();
-        let parser = new Parser(tokens);
-        let ast = parser.parseProgram();
-
-        let exportedNames = _findExportedNames(ast); // Tìm các tên export của file này.
-        let newBody = [];
-        let sourceDir = _getDirectoryPath(absolutePath);
-
-        for (stmt in ast.body) {
-            if (stmt.type == "ImportStatement") {
-                let dependencyPath = stmt.path.value;
-                if (dependencyPath.endsWith(".meow")) {
-                    // Đệ quy để lấy AST và danh sách export của module con.
-                    let importedResult = this._bundleAst(dependencyPath, sourceDir, visited);
-                    
-                    // Dán phần thân của module con vào trước.
-                    for (childStmt in importedResult.body) {
-                        newBody.push(childStmt);
-                    }
-
-                    // Xử lý logic tạo namespace nếu cần.
-                    if (stmt.namespaceImport != null) {
-                        // Đây là `import * as Name from ...`
-                        let namespaceName = stmt.namespaceImport.name;
-                        let properties = [];
-                        for (exportedName in importedResult.exports) {
-                            properties.push({
-                                key: { type: "StringLiteral", value: exportedName },
-                                value: { type: "Identifier", name: exportedName }
-                            });
-                        }
-                        let objectLiteral = { type: "ObjectLiteral", properties: properties };
-                        // Tạo câu lệnh `let Name = { ... };` bằng AST
-                        let letStmt = {
-                            type: "LetStatement",
-                            name: { type: "Identifier", name: namespaceName },
-                            value: objectLiteral,
-                            isConstant: true
-                        };
-                        newBody.push(letStmt);
-                    }
-                    // Với `import {..}` hoặc `import '...'`, ta chỉ cần dán code, không cần làm gì thêm.
-
-                } else {
-                    newBody.push(stmt); // Giữ lại import stdlib
-                }
-            } else if (stmt.type == "ExportStatement") {
-                // "Mở gói" export để nó trở thành khai báo bình thường.
-                if (stmt.declaration) {
-                    newBody.push(stmt.declaration);
-                }
-            } else {
-                newBody.push(stmt);
-            }
-        }
-
-        ast.body = newBody;
-        // Trả về cả thân AST đã xử lý và danh sách tên đã export.
-        return { type: "Program", body: ast.body, exports: exportedNames };
+    let source = Io.read(absolutePath);
+    if (source == null) {
+        print("[ERROR] Bundle: Không thể đọc file nguồn: " + absolutePath);
+        System.exit(1);
     }
 
+    let lexer = new Lexer(source, absolutePath);
+    let tokens = lexer.tokenize();
+    let parser = new Parser(tokens);
+    let ast = parser.parseProgram();
 
+    let exportedNames = _findExportedNames(ast); // Tìm các tên export của file này.
+    let newBody = []; // Đây là thân AST CỦA MODULE HIỆN TẠI
+    let sourceDir = _getDirectoryPath(absolutePath);
+
+    for (stmt in ast.body) {
+        if (stmt.type == "ImportStatement") {
+            let dependencyPath = stmt.path.value;
+            if (dependencyPath.endsWith(".meow")) {
+                
+                // Đệ quy để lấy AST và danh sách export của module con.
+                let importedResult = this._bundleAst(dependencyPath, sourceDir, visited);
+                
+                // === LOGIC IIFE BẮT ĐẦU TỪ ĐÂY ===
+                
+                // Lấy thân AST của module con
+                let iifeBodyStmts = importedResult.body;
+                
+                if (stmt.namespaceImport != null) {
+                    // Đây là `import * as Name from ...`
+                    let namespaceName = stmt.namespaceImport.name;
+
+                    // 1. Tạo câu lệnh return { export1: export1, ... }
+                    let properties = [];
+                    for (exportedName in importedResult.exports) {
+                        properties.push({
+                            key: { type: "StringLiteral", value: exportedName }, // Dùng String hay Identifier đều được
+                            value: { type: "Identifier", name: exportedName }
+                        });
+                    }
+                    let objectLiteral = { type: "ObjectLiteral", properties: properties };
+                    // Token 'fake' có thể thêm vào nếu CodeGenerator cần
+                    let returnStmt = { type: "ReturnStatement", value: objectLiteral }; 
+                    
+                    // 2. Thêm return vào cuối thân hàm IIFE
+                    iifeBodyStmts.push(returnStmt);
+
+                    // 3. Tạo nút FunctionLiteral (fn() { ... })
+                    let iifeBlock = { type: "BlockStatement", statements: iifeBodyStmts };
+                    let iifeFunc = { 
+                        type: "FunctionLiteral", 
+                        parameters: [], 
+                        body: iifeBlock, 
+                        restParam: null 
+                    };
+                    
+                    // 4. Tạo nút CallExpression ( (fn(){...})() )
+                    let iifeCall = { 
+                        type: "CallExpression", 
+                        callee: iifeFunc, 
+                        args: [] 
+                    };
+
+                    // 5. Tạo câu lệnh `let Name = (fn() { ... })();`
+                    let letStmt = {
+                        type: "LetStatement",
+                        name: { type: "Identifier", name: namespaceName },
+                        value: iifeCall,
+                        isConstant: true // Import namespace nên là const
+                    };
+                    
+                    // 6. Thêm vào thân của module CHA (module hiện tại)
+                    newBody.push(letStmt);
+
+                } else {
+                    // Đây là `import '...'` (cho side effects)
+                    // hoặc `import {...}` (cậu chưa hỗ trợ, nhưng cứ bọc IIFE là nó chạy)
+                    
+                    // 1. Tạo nút FunctionLiteral (fn() { ... })
+                    let iifeBlock = { type: "BlockStatement", statements: iifeBodyStmts };
+                    let iifeFunc = { 
+                        type: "FunctionLiteral", 
+                        parameters: [], 
+                        body: iifeBlock, 
+                        restParam: null 
+                    };
+                    
+                    // 2. Tạo nút CallExpression ( (fn(){...})() )
+                    let iifeCall = { 
+                        type: "CallExpression", 
+                        callee: iifeFunc, 
+                        args: [] 
+                    };
+                    
+                    // 3. Tạo nút ExpressionStatement để nó được thực thi
+                    newBody.push({ type: "ExpressionStatement", expression: iifeCall });
+                }
+                
+            } else {
+                newBody.push(stmt); // Giữ lại import stdlib
+            }
+        } else if (stmt.type == "ExportStatement") {
+            // "Mở gói" export để nó trở thành khai báo bình thường.
+            if (stmt.declaration) {
+                newBody.push(stmt.declaration);
+            }
+            // Nếu là `export { var1 }`, ta không cần làm gì,
+            // vì `_findExportedNames` đã lấy tên rồi
+            // và biến `var1` đã được khai báo ở đâu đó rồi.
+            
+        } else {
+            // Các câu lệnh bình thường (let, if, for,...)
+            newBody.push(stmt);
+        }
+    }
+
+    ast.body = newBody;
+    // Trả về cả thân AST đã xử lý và danh sách tên đã export.
+    return { type: "Program", body: ast.body, exports: exportedNames };
+}
 
 }

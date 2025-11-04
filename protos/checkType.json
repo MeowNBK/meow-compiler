@@ -1,0 +1,1597 @@
+{
+  "@main": {
+    "pendingJumps": [],
+    "labels": {},
+    "upvalueDescs": [],
+    "constantPool": [
+      "string",
+      "contains",
+      "join",
+      "0123456789",
+      "DIGITS",
+      "0123456789abcdefABCDEF",
+      "HEX_DIGITS",
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+      "LETTERS",
+      " \t\r\n",
+      "WHITESPACE",
+      {
+        "pendingJumps": [],
+        "labels": {},
+        "upvalueDescs": [
+          {
+            "index": 1,
+            "isLocal": true
+          },
+          {
+            "index": 7,
+            "isLocal": true
+          }
+        ],
+        "constantPool": [],
+        "code": [
+          {
+            "args": [
+              3,
+              0
+            ],
+            "op": "GET_UPVALUE"
+          },
+          {
+            "args": [
+              2,
+              3
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              4,
+              1
+            ],
+            "op": "GET_UPVALUE"
+          },
+          {
+            "args": [
+              5,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              6,
+              4
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              7,
+              5
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              1,
+              2,
+              6,
+              2
+            ],
+            "op": "CALL"
+          },
+          {
+            "args": [
+              1
+            ],
+            "op": "RETURN"
+          }
+        ],
+        "sourceName": "@isalpha_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow_17",
+        "numRegisters": 8,
+        "numUpvalues": 2,
+        "id": 141
+      },
+      "isalpha",
+      {
+        "pendingJumps": [],
+        "labels": {},
+        "upvalueDescs": [
+          {
+            "index": 1,
+            "isLocal": true
+          },
+          {
+            "index": 3,
+            "isLocal": true
+          }
+        ],
+        "constantPool": [],
+        "code": [
+          {
+            "args": [
+              3,
+              0
+            ],
+            "op": "GET_UPVALUE"
+          },
+          {
+            "args": [
+              2,
+              3
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              4,
+              1
+            ],
+            "op": "GET_UPVALUE"
+          },
+          {
+            "args": [
+              5,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              6,
+              4
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              7,
+              5
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              1,
+              2,
+              6,
+              2
+            ],
+            "op": "CALL"
+          },
+          {
+            "args": [
+              1
+            ],
+            "op": "RETURN"
+          }
+        ],
+        "sourceName": "@isdigit_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow_21",
+        "numRegisters": 8,
+        "numUpvalues": 2,
+        "id": 142
+      },
+      "isdigit",
+      {
+        "pendingJumps": [],
+        "labels": {},
+        "upvalueDescs": [
+          {
+            "index": 1,
+            "isLocal": true
+          },
+          {
+            "index": 5,
+            "isLocal": true
+          }
+        ],
+        "constantPool": [],
+        "code": [
+          {
+            "args": [
+              3,
+              0
+            ],
+            "op": "GET_UPVALUE"
+          },
+          {
+            "args": [
+              2,
+              3
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              4,
+              1
+            ],
+            "op": "GET_UPVALUE"
+          },
+          {
+            "args": [
+              5,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              6,
+              4
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              7,
+              5
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              1,
+              2,
+              6,
+              2
+            ],
+            "op": "CALL"
+          },
+          {
+            "args": [
+              1
+            ],
+            "op": "RETURN"
+          }
+        ],
+        "sourceName": "@isxdigit_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow_25",
+        "numRegisters": 8,
+        "numUpvalues": 2,
+        "id": 143
+      },
+      "isxdigit",
+      {
+        "pendingJumps": [],
+        "labels": {
+          "L_OR_END_491": 13
+        },
+        "upvalueDescs": [
+          {
+            "index": 12,
+            "isLocal": true
+          },
+          {
+            "index": 14,
+            "isLocal": true
+          }
+        ],
+        "constantPool": [],
+        "code": [
+          {
+            "args": [
+              4,
+              0
+            ],
+            "op": "GET_UPVALUE"
+          },
+          {
+            "args": [
+              3,
+              4
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              5,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              6,
+              5
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              2,
+              3,
+              6,
+              1
+            ],
+            "op": "CALL"
+          },
+          {
+            "args": [
+              1,
+              2
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              2,
+              13
+            ],
+            "op": "JUMP_IF_TRUE"
+          },
+          {
+            "args": [
+              9,
+              1
+            ],
+            "op": "GET_UPVALUE"
+          },
+          {
+            "args": [
+              8,
+              9
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              10,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              11,
+              10
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              7,
+              8,
+              11,
+              1
+            ],
+            "op": "CALL"
+          },
+          {
+            "args": [
+              1,
+              7
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              1
+            ],
+            "op": "RETURN"
+          }
+        ],
+        "sourceName": "@isalnum_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow_29",
+        "numRegisters": 12,
+        "numUpvalues": 2,
+        "id": 144
+      },
+      "isalnum",
+      {
+        "pendingJumps": [],
+        "labels": {},
+        "upvalueDescs": [
+          {
+            "index": 1,
+            "isLocal": true
+          },
+          {
+            "index": 9,
+            "isLocal": true
+          }
+        ],
+        "constantPool": [],
+        "code": [
+          {
+            "args": [
+              3,
+              0
+            ],
+            "op": "GET_UPVALUE"
+          },
+          {
+            "args": [
+              2,
+              3
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              4,
+              1
+            ],
+            "op": "GET_UPVALUE"
+          },
+          {
+            "args": [
+              5,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              6,
+              4
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              7,
+              5
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              1,
+              2,
+              6,
+              2
+            ],
+            "op": "CALL"
+          },
+          {
+            "args": [
+              1
+            ],
+            "op": "RETURN"
+          }
+        ],
+        "sourceName": "@isspace_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow_33",
+        "numRegisters": 8,
+        "numUpvalues": 2,
+        "id": 145
+      },
+      "isspace",
+      {
+        "pendingJumps": [],
+        "labels": {},
+        "upvalueDescs": [
+          {
+            "index": 2,
+            "isLocal": true
+          }
+        ],
+        "constantPool": [
+          "{ 'type': '",
+          "TokenType",
+          "', 'value': '",
+          "Lexeme",
+          "' }",
+          ""
+        ],
+        "code": [
+          {
+            "args": [
+              7,
+              0
+            ],
+            "op": "LOAD_CONST"
+          },
+          {
+            "args": [
+              2,
+              7
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              9,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              8,
+              9
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              10,
+              8,
+              1
+            ],
+            "op": "GET_PROP"
+          },
+          {
+            "args": [
+              3,
+              10
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              11,
+              2
+            ],
+            "op": "LOAD_CONST"
+          },
+          {
+            "args": [
+              4,
+              11
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              13,
+              0
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              12,
+              13
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              14,
+              12,
+              3
+            ],
+            "op": "GET_PROP"
+          },
+          {
+            "args": [
+              5,
+              14
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              15,
+              4
+            ],
+            "op": "LOAD_CONST"
+          },
+          {
+            "args": [
+              6,
+              15
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              16,
+              2,
+              5
+            ],
+            "op": "NEW_ARRAY"
+          },
+          {
+            "args": [
+              1,
+              16
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              19,
+              0
+            ],
+            "op": "GET_UPVALUE"
+          },
+          {
+            "args": [
+              18,
+              19
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              20,
+              1
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              21,
+              5
+            ],
+            "op": "LOAD_CONST"
+          },
+          {
+            "args": [
+              22,
+              20
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              23,
+              21
+            ],
+            "op": "MOVE"
+          },
+          {
+            "args": [
+              17,
+              18,
+              22,
+              2
+            ],
+            "op": "CALL"
+          },
+          {
+            "args": [
+              17
+            ],
+            "op": "RETURN"
+          }
+        ],
+        "sourceName": "@prettyPrint_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow_37",
+        "numRegisters": 24,
+        "numUpvalues": 1,
+        "id": 146
+      },
+      "prettyPrint"
+    ],
+    "code": [
+      {
+        "args": [
+          0,
+          0
+        ],
+        "op": "IMPORT_MODULE"
+      },
+      {
+        "args": [
+          1,
+          0,
+          1
+        ],
+        "op": "GET_EXPORT"
+      },
+      {
+        "args": [
+          1,
+          1
+        ],
+        "op": "SET_GLOBAL"
+      },
+      {
+        "args": [
+          2,
+          0,
+          2
+        ],
+        "op": "GET_EXPORT"
+      },
+      {
+        "args": [
+          2,
+          2
+        ],
+        "op": "SET_GLOBAL"
+      },
+      {
+        "args": [
+          4,
+          3
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          3,
+          4
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          4,
+          3
+        ],
+        "op": "SET_GLOBAL"
+      },
+      {
+        "args": [
+          6,
+          5
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          5,
+          6
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          6,
+          5
+        ],
+        "op": "SET_GLOBAL"
+      },
+      {
+        "args": [
+          8,
+          7
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          7,
+          8
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          8,
+          7
+        ],
+        "op": "SET_GLOBAL"
+      },
+      {
+        "args": [
+          10,
+          9
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          9,
+          10
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          10,
+          9
+        ],
+        "op": "SET_GLOBAL"
+      },
+      {
+        "args": [
+          11,
+          11
+        ],
+        "op": "CLOSURE"
+      },
+      {
+        "args": [
+          12,
+          11
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          12,
+          12
+        ],
+        "op": "SET_GLOBAL"
+      },
+      {
+        "args": [
+          12,
+          12
+        ],
+        "op": "EXPORT"
+      },
+      {
+        "args": [
+          13,
+          13
+        ],
+        "op": "CLOSURE"
+      },
+      {
+        "args": [
+          14,
+          13
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          14,
+          14
+        ],
+        "op": "SET_GLOBAL"
+      },
+      {
+        "args": [
+          14,
+          14
+        ],
+        "op": "EXPORT"
+      },
+      {
+        "args": [
+          15,
+          15
+        ],
+        "op": "CLOSURE"
+      },
+      {
+        "args": [
+          16,
+          15
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          16,
+          16
+        ],
+        "op": "SET_GLOBAL"
+      },
+      {
+        "args": [
+          16,
+          16
+        ],
+        "op": "EXPORT"
+      },
+      {
+        "args": [
+          17,
+          17
+        ],
+        "op": "CLOSURE"
+      },
+      {
+        "args": [
+          18,
+          17
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          18,
+          18
+        ],
+        "op": "SET_GLOBAL"
+      },
+      {
+        "args": [
+          18,
+          18
+        ],
+        "op": "EXPORT"
+      },
+      {
+        "args": [
+          19,
+          19
+        ],
+        "op": "CLOSURE"
+      },
+      {
+        "args": [
+          20,
+          19
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          20,
+          20
+        ],
+        "op": "SET_GLOBAL"
+      },
+      {
+        "args": [
+          20,
+          20
+        ],
+        "op": "EXPORT"
+      },
+      {
+        "args": [
+          21,
+          21
+        ],
+        "op": "CLOSURE"
+      },
+      {
+        "args": [
+          22,
+          21
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          22,
+          22
+        ],
+        "op": "SET_GLOBAL"
+      },
+      {
+        "args": [
+          22,
+          22
+        ],
+        "op": "EXPORT"
+      },
+      {
+        "args": [
+          23
+        ],
+        "op": "LOAD_NULL"
+      },
+      {
+        "args": [
+          23
+        ],
+        "op": "RETURN"
+      }
+    ],
+    "sourceName": "/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow",
+    "numRegisters": 24,
+    "numUpvalues": 0,
+    "id": 140
+  },
+  "@prettyPrint_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow_37": {
+    "pendingJumps": [],
+    "labels": {},
+    "upvalueDescs": [
+      {
+        "index": 2,
+        "isLocal": true
+      }
+    ],
+    "constantPool": [
+      "{ 'type': '",
+      "TokenType",
+      "', 'value': '",
+      "Lexeme",
+      "' }",
+      ""
+    ],
+    "code": [
+      {
+        "args": [
+          7,
+          0
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          2,
+          7
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          9,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          8,
+          9
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          10,
+          8,
+          1
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          3,
+          10
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          11,
+          2
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          4,
+          11
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          13,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          12,
+          13
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          14,
+          12,
+          3
+        ],
+        "op": "GET_PROP"
+      },
+      {
+        "args": [
+          5,
+          14
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          15,
+          4
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          6,
+          15
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          16,
+          2,
+          5
+        ],
+        "op": "NEW_ARRAY"
+      },
+      {
+        "args": [
+          1,
+          16
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          19,
+          0
+        ],
+        "op": "GET_UPVALUE"
+      },
+      {
+        "args": [
+          18,
+          19
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          20,
+          1
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          21,
+          5
+        ],
+        "op": "LOAD_CONST"
+      },
+      {
+        "args": [
+          22,
+          20
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          23,
+          21
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          17,
+          18,
+          22,
+          2
+        ],
+        "op": "CALL"
+      },
+      {
+        "args": [
+          17
+        ],
+        "op": "RETURN"
+      }
+    ],
+    "sourceName": "@prettyPrint_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow_37",
+    "numRegisters": 24,
+    "numUpvalues": 1,
+    "id": 146
+  },
+  "@isspace_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow_33": {
+    "pendingJumps": [],
+    "labels": {},
+    "upvalueDescs": [
+      {
+        "index": 1,
+        "isLocal": true
+      },
+      {
+        "index": 9,
+        "isLocal": true
+      }
+    ],
+    "constantPool": [],
+    "code": [
+      {
+        "args": [
+          3,
+          0
+        ],
+        "op": "GET_UPVALUE"
+      },
+      {
+        "args": [
+          2,
+          3
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          4,
+          1
+        ],
+        "op": "GET_UPVALUE"
+      },
+      {
+        "args": [
+          5,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          6,
+          4
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          7,
+          5
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          1,
+          2,
+          6,
+          2
+        ],
+        "op": "CALL"
+      },
+      {
+        "args": [
+          1
+        ],
+        "op": "RETURN"
+      }
+    ],
+    "sourceName": "@isspace_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow_33",
+    "numRegisters": 8,
+    "numUpvalues": 2,
+    "id": 145
+  },
+  "@isalnum_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow_29": {
+    "pendingJumps": [],
+    "labels": {
+      "L_OR_END_491": 13
+    },
+    "upvalueDescs": [
+      {
+        "index": 12,
+        "isLocal": true
+      },
+      {
+        "index": 14,
+        "isLocal": true
+      }
+    ],
+    "constantPool": [],
+    "code": [
+      {
+        "args": [
+          4,
+          0
+        ],
+        "op": "GET_UPVALUE"
+      },
+      {
+        "args": [
+          3,
+          4
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          5,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          6,
+          5
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          2,
+          3,
+          6,
+          1
+        ],
+        "op": "CALL"
+      },
+      {
+        "args": [
+          1,
+          2
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          2,
+          13
+        ],
+        "op": "JUMP_IF_TRUE"
+      },
+      {
+        "args": [
+          9,
+          1
+        ],
+        "op": "GET_UPVALUE"
+      },
+      {
+        "args": [
+          8,
+          9
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          10,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          11,
+          10
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          7,
+          8,
+          11,
+          1
+        ],
+        "op": "CALL"
+      },
+      {
+        "args": [
+          1,
+          7
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          1
+        ],
+        "op": "RETURN"
+      }
+    ],
+    "sourceName": "@isalnum_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow_29",
+    "numRegisters": 12,
+    "numUpvalues": 2,
+    "id": 144
+  },
+  "@isxdigit_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow_25": {
+    "pendingJumps": [],
+    "labels": {},
+    "upvalueDescs": [
+      {
+        "index": 1,
+        "isLocal": true
+      },
+      {
+        "index": 5,
+        "isLocal": true
+      }
+    ],
+    "constantPool": [],
+    "code": [
+      {
+        "args": [
+          3,
+          0
+        ],
+        "op": "GET_UPVALUE"
+      },
+      {
+        "args": [
+          2,
+          3
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          4,
+          1
+        ],
+        "op": "GET_UPVALUE"
+      },
+      {
+        "args": [
+          5,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          6,
+          4
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          7,
+          5
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          1,
+          2,
+          6,
+          2
+        ],
+        "op": "CALL"
+      },
+      {
+        "args": [
+          1
+        ],
+        "op": "RETURN"
+      }
+    ],
+    "sourceName": "@isxdigit_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow_25",
+    "numRegisters": 8,
+    "numUpvalues": 2,
+    "id": 143
+  },
+  "@isdigit_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow_21": {
+    "pendingJumps": [],
+    "labels": {},
+    "upvalueDescs": [
+      {
+        "index": 1,
+        "isLocal": true
+      },
+      {
+        "index": 3,
+        "isLocal": true
+      }
+    ],
+    "constantPool": [],
+    "code": [
+      {
+        "args": [
+          3,
+          0
+        ],
+        "op": "GET_UPVALUE"
+      },
+      {
+        "args": [
+          2,
+          3
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          4,
+          1
+        ],
+        "op": "GET_UPVALUE"
+      },
+      {
+        "args": [
+          5,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          6,
+          4
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          7,
+          5
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          1,
+          2,
+          6,
+          2
+        ],
+        "op": "CALL"
+      },
+      {
+        "args": [
+          1
+        ],
+        "op": "RETURN"
+      }
+    ],
+    "sourceName": "@isdigit_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow_21",
+    "numRegisters": 8,
+    "numUpvalues": 2,
+    "id": 142
+  },
+  "@isalpha_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow_17": {
+    "pendingJumps": [],
+    "labels": {},
+    "upvalueDescs": [
+      {
+        "index": 1,
+        "isLocal": true
+      },
+      {
+        "index": 7,
+        "isLocal": true
+      }
+    ],
+    "constantPool": [],
+    "code": [
+      {
+        "args": [
+          3,
+          0
+        ],
+        "op": "GET_UPVALUE"
+      },
+      {
+        "args": [
+          2,
+          3
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          4,
+          1
+        ],
+        "op": "GET_UPVALUE"
+      },
+      {
+        "args": [
+          5,
+          0
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          6,
+          4
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          7,
+          5
+        ],
+        "op": "MOVE"
+      },
+      {
+        "args": [
+          1,
+          2,
+          6,
+          2
+        ],
+        "op": "CALL"
+      },
+      {
+        "args": [
+          1
+        ],
+        "op": "RETURN"
+      }
+    ],
+    "sourceName": "@isalpha_/home/lazycat/Shared/Projects/MeowScript/trangmeo-backup/./src//./backend//../frontend//./checkType.meow_17",
+    "numRegisters": 8,
+    "numUpvalues": 2,
+    "id": 141
+  }
+}
