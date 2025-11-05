@@ -12,10 +12,10 @@ export class Symbol {
 // Bảng scope để tìm kiếm
 export class ScopedSymbolTable {
     fn init(scopeName, scopeLevel, enclosingScope) {
-        this.symbols = {}; // Nhưng symbol trong scope
-        this.scopeName = scopeName; // Scope này tên là gì?
-        this.scopeLevel = scopeLevel; // Scope ở cấp mấy: 1 hay 2?
-        this.enclosingScope = enclosingScope || null; // Pham vị bao quanh, kiểu như là scope cha ấy
+        this.symbols = {}; // Những symbol có trong scope
+        this.scopeName = scopeName; // Scope này tên là gì, cho debug
+        this.scopeLevel = scopeLevel; // Scope ở cấp mấy: 1 hay 2,..
+        this.enclosingScope = enclosingScope || null; // Có scope cha không?
     }
 
     fn define(symbol) {
