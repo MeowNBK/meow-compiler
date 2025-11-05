@@ -1,0 +1,279 @@
+import { ScopedSymbolTable, Symbol } from "./symbolTable.meow";
+import { Diagnostic, ErrorCodes } from "../frontend/diagnostic.meow";
+import * as System from "system";
+
+// Hai kiểu là giống nhau khi tên và cấp con trỏ giống nhau
+fn typesAreEqual(typeA, typeB) {
+    if (!typeA || !typeB) return false;
+    return typeA.name == typeB.name && typeA.pointerLevel == typeB.pointerLevel;
+}
+
+fn typeToString(typeNode) { 
+    return typeNode.name + "*".repeat(typeNode.pointerLevel);
+}
+
+fn getLiteralType(node) {
+    if (node.type == "IntegerLiteral") return { name: "int32", pointerLevel: 0, isConst: true };
+    if (node.type == "RealLiteral") return { name: "float32", pointerLevel: 0, isConst: true };
+    if (node.type == "BooleanLiteral") return { name: "bool", pointerLevel: 0, isConst: true };
+    if (node.type == "NullLiteral") return { name: "null", pointerLevel: 0, isConst: true };
+
+    // Chuỗi kí tự hằng, ta cân nhắc thêm CharLiteral
+    if (node.type == "CharLiteral") return { name: "char", pointerLevel: 0, isConst: true };
+    if (node.type == "StringLiteral") return { name: "char", pointerLevel: 1, isConst: true };
+    return null;
+}
+
+export class SemanticAnalyzer {
+    fn init(ast) {
+        this.ast = ast;
+        this.currentScope = null; // Scope hiện tại là?
+
+        // Các kiểu cơ bản
+        this.validBaseTypes = { "int32": true, "char": true, "float32": true, "bool": true, "null": true };
+    }
+    
+    fn analyze() {
+        // Khởi tạo scope toàn cục (global scope)
+        try {
+            this.currentScope = new ScopedSymbolTable("global", 1, null);
+            this.visit(this.ast);
+        } catch (e) {
+            print(e);
+            System.exit(42);
+        }
+    }
+    
+    fn throwSemanticError(code, node, replacements) {
+        throw (Diagnostic.SemanticErr(code, node, replacements));
+    }
+
+    fn visit(node) {
+        if (node == null) return null;
+        let visitorFn = this["visit" + node.type];
+        if (visitorFn) {
+            return visitorFn(node);
+        }
+        
+        for (childKey in node.keys()) {
+            let child = node[childKey];
+            if (typeof(child) == "object" && child != null && child.type) {
+                this.visit(child);
+            } else if (typeof(child) == "array") {
+                for (item in child) this.visit(item);
+            }
+        }
+        
+        return null;
+    }
+
+    fn visitProgram(node) {
+        for (statement in node.body) {
+            this.visit(statement);
+        }
+    }
+
+    // Khai báo biến let @type name = value;
+    fn visitLetStatement(node) {
+        let valueType = null;
+        if (node.value) {
+            valueType = this.visit(node.value);
+        }
+        
+        // Nếu đây không phải kiểu con trỏ và cũng không phải kiểu cơ sở thì lỗi (vì chưa hỗ trợ class, struct,..)
+        if (node.typeAnnotation.pointerLevel == 0 && !this.validBaseTypes[node.typeAnnotation.name]) {
+            this.throwSemanticError(ErrorCodes.ERR_INVALID_BASE_TYPE, node, {
+                typeName: node.typeAnnotation.name,
+                validTypes: this.validBaseTypes.keys().join(", ")
+            });
+        }
+
+        // Nếu kiểu khai báo với kiểu của dữ liệu khác nhau thì cũng lỗi
+        if (valueType && !typesAreEqual(node.typeAnnotation, valueType)) {
+            let declaredTypeStr = typeToString(node.typeAnnotation); // Lấy tên của kiểu đã khai báo (là cái @type)
+            let valueTypeStr = typeToString(valueType); // Lấy tên của kiểu dược gán
+            this.throwSemanticError(ErrorCodes.ERR_TYPE_MISMATCH_DECLARATION, node, {
+                valueType: valueTypeStr,
+                declaredType: declaredTypeStr
+            });
+        }
+
+        // Nếu chuẩn rồi thì cái này mới được phép làm symbol
+
+        // Lấy tên symbol, ví dụ biến, node.name là Identifier
+        // Identifier có trường name nên node.name.name sẽ lấy string
+        let symbolName = node.name.name;
+
+        // Định nghĩa symbol, tên biến, tên kiểu, loại symbol (ở đây là biến), và biến có phải hằng không
+        let symbol = new Symbol(symbolName, node.typeAnnotation, "variable", node.isConstant);
+
+        // Nếu biến đã có trong scope, vì define trả về false khi biến đã có thì sẽ báo lỗi
+        if (!this.currentScope.define(symbol)) {
+            this.throwSemanticError(ErrorCodes.ERR_VARIABLE_REDEFINITION, node, {
+                variableName: symbolName
+            });
+        }
+    }
+
+
+    // Một biểu thức gán
+    fn visitAssignmentExpression(node) {
+        // 1. Kiểm tra L-value (Hằng số)
+        if (node.target.type == "Identifier") {
+            let symbol = this.currentScope.lookup(node.target.name, false);
+            if (symbol && symbol.isConstant) {
+                this.throwSemanticError(ErrorCodes.ERR_ASSIGNMENT_TO_CONST, node, {
+                    variableName: node.target.name
+                });
+            }
+        }
+
+        // 2. Kiểm tra kiểu
+        let targetType = this.visit(node.target);
+        let valueType = this.visit(node.value);
+
+        if (!typesAreEqual(targetType, valueType)) {
+              let targetTypeStr = typeToString(targetType);
+              let valueTypeStr = typeToString(valueType);
+              this.throwSemanticError(ErrorCodes.ERR_TYPE_MISMATCH_ASSIGNMENT, node, {
+                targetType: targetTypeStr,
+                valueType: valueTypeStr
+              });
+        }
+        return targetType;
+    }
+
+    fn visitBinaryExpression(node) {
+        let leftType = this.visit(node.left);
+        let rightType = this.visit(node.right);
+        
+        if (!typesAreEqual(leftType, rightType)) {
+            this.throwSemanticError(ErrorCodes.ERR_BINARY_OP_TYPE_MISMATCH, node, {});
+        }
+        
+        // Phép toán số học/logic trên con trỏ là không hợp lệ trong subset này
+        if (leftType.pointerLevel > 0) {
+             this.throwSemanticError(ErrorCodes.ERR_OP_ON_POINTER, node, {});
+        }
+        
+        return leftType;
+    }
+
+    fn visitDereferenceExpression(node) {
+        let operandType = this.visit(node.operand);
+        if (operandType.pointerLevel == 0) {
+            let typeStr = typeToString(operandType);
+            this.throwSemanticError(ErrorCodes.ERR_DEREFERENCE_NON_POINTER, node, {
+                typeStr: typeStr
+            });
+        }
+        
+        // Kết quả của dereference là kiểu cơ sở với mức con trỏ giảm đi 1
+        // Lưu ý: Không copy thuộc tính isConst vì kết quả dereference có thể là l-value
+        return { name: operandType.name, pointerLevel: operandType.pointerLevel - 1 }; 
+    }
+
+    /**
+     * Biểu thức AddressOf (&operand)
+     */
+    fn visitAddressOfExpression(node) {
+        let operandType = this.visit(node.operand);
+        // Toán tử '&' chỉ có thể áp dụng cho l-value
+        if (node.operand.type != "Identifier" && node.operand.type != "DereferenceExpression" && node.operand.type != "IndexExpression") {
+            this.throwSemanticError(ErrorCodes.ERR_ADDRESSOF_NON_LVALUE, node, {});
+        }
+        
+        // Kết quả của việc lấy địa chỉ là một con trỏ tới kiểu của toán hạng
+        return { name: operandType.name, pointerLevel: operandType.pointerLevel + 1 };
+    }
+
+
+    // Một biến
+    fn visitIdentifier(node) {
+        let symbol = this.currentScope.lookup(node.name, false);
+        if (!symbol) {
+            this.throwSemanticError(ErrorCodes.ERR_UNDECLARED_VARIABLE, node, {
+                variableName: node.name
+            });
+        }
+        // Trả về kiểu của biến (bao gồm cả isConst của biến nếu cần thiết)
+        // Hiện tại, SymbolTable chỉ lưu TypeNode, nên ta trả về TypeNode của Symbol
+        return symbol.type; 
+    }
+    
+    // --- Xử lý Literal ---
+
+    fn visitIntegerLiteral(node) { return getLiteralType(node); }
+    fn visitRealLiteral(node) { return getLiteralType(node); }
+    fn visitBooleanLiteral(node) { return getLiteralType(node); }
+    fn visitNullLiteral(node) { return getLiteralType(node); }
+    fn visitCharLiteral(node) { return getLiteralType(node); }
+    fn visitStringLiteral(node) { return getLiteralType(node); }
+    // --- Xử lý Phạm vi (Scope) ---
+
+    fn visitBlockStatement(node) {
+        let newScope = new ScopedSymbolTable("block", this.currentScope.scopeLevel + 1, this.currentScope);
+        let savedScope = this.currentScope;
+        this.currentScope = newScope;
+        
+        // Duyệt các statements trong block
+        for (statement in node.statements) {
+            this.visit(statement);
+        }
+        
+        this.currentScope = savedScope;
+        // Khôi phục scope
+        return null;
+    }
+
+    fn visitParameter(node) {
+        if (node.typeAnnotation.pointerLevel == 0 && !this.validBaseTypes[node.typeAnnotation.name]) {
+             this.throwSemanticError(ErrorCodes.ERR_INVALID_BASE_TYPE, node, {
+                typeName: node.typeAnnotation.name,
+                validTypes: this.validBaseTypes.keys().join(", ")
+            });
+        }
+
+        let symbolName = node.name.name;
+        let symbol = new Symbol(symbolName, node.typeAnnotation, "parameter", false); 
+        
+        if (!this.currentScope.define(symbol)) {
+             this.throwSemanticError(ErrorCodes.ERR_VARIABLE_REDEFINITION, node, {
+                variableName: symbolName
+            });
+        }
+        
+        return null; 
+    }
+    
+    fn visitFunctionLiteral(node) {
+        let newScope = new ScopedSymbolTable("function", this.currentScope.scopeLevel + 1, this.currentScope);
+        let savedScope = this.currentScope;
+        this.currentScope = newScope;
+        
+        for (param in node.parameters) {
+            this.visit(param);
+        }
+        
+        this.visit(node.body);
+        
+        this.currentScope = savedScope;
+        
+        return null; 
+    }
+    
+    fn visitFunctionStatement(node) {
+        let symbol = new Symbol(node.name.name, { name: "function", pointerLevel: 0 }, "function", true);
+        if (!this.currentScope.define(symbol)) {
+             this.throwSemanticError(ErrorCodes.ERR_VARIABLE_REDEFINITION, node, {
+                variableName: node.name.name
+            });
+        }
+
+        this.visit(node.func);
+    }
+
+    
+    // Bỏ qua các visitor cho các loại statement/expression phức tạp khác (if, while, call, v.v.)
+    // vì chúng không thêm logic kiểu mới ngoài những gì đã được định nghĩa.
+}

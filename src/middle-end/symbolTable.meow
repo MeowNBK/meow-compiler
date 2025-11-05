@@ -1,0 +1,46 @@
+
+// Đại diện cho một thứ được định nghĩa, biến hàm chẳng hạn
+export class Symbol {
+    fn init(name, type, kind, isConstant) { // Loại: 'variable', 'function',...
+        this.name = name;
+        this.type = type; // TypeNode: { name: string, pointerLevel: int }
+        this.kind = kind;
+        this.isConstant = isConstant;
+    }
+}
+
+// Bảng scope để tìm kiếm
+export class ScopedSymbolTable {
+    fn init(scopeName, scopeLevel, enclosingScope) {
+        this.symbols = {}; // Nhưng symbol trong scope
+        this.scopeName = scopeName; // Scope này tên là gì?
+        this.scopeLevel = scopeLevel; // Scope ở cấp mấy: 1 hay 2?
+        this.enclosingScope = enclosingScope || null; // Pham vị bao quanh, kiểu như là scope cha ấy
+    }
+
+    fn define(symbol) {
+        if (this.symbols[symbol.name]) {
+            return false;
+        }
+        this.symbols[symbol.name] = symbol;
+        return true;
+    }
+
+    // Tìm kiếm lên scope cha hoặc chỉ tìm kiếm ở scope hiện tại
+    fn lookup(name, currentScopeOnly) {
+        let symbol = this.symbols[name];
+        if (symbol) {
+            return symbol;
+        }
+
+        if (currentScopeOnly) {
+            return null;
+        }
+
+        if (this.enclosingScope) {
+            return this.enclosingScope.lookup(name, currentScopeOnly);
+        }
+
+        return null;
+    }
+}
