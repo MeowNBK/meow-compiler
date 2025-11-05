@@ -74,7 +74,7 @@ export class Compiler {
         let absolutePath = this._resolvePath(sourcePath, importerDir);
         if (this.compiledModules[absolutePath]) return this.compiledModules[absolutePath];
 
-        let cachePath = makeCacheFile(absolutePath, this.options.buildDir || "build");
+        let cachePath = makeCacheFile(absolutePath, this.options.buildDir || "builds/build");
         let metaPath = cachePath + ".meta";
         if (this._isCacheValid(absolutePath, cachePath)) {
             let metaText = Io.read(metaPath);
@@ -259,7 +259,7 @@ export class Compiler {
         // Thay vì chỉ check timestamp, ta check xem cache của file con có hợp lệ không
         for (imp in meta.imports) {
             // Tự tính ra đường dẫn cache của file dependency
-            let impCachePath = makeCacheFile(imp, this.options.buildDir || "build");
+            let impCachePath = makeCacheFile(imp, this.options.buildDir || "builds/build");
             // ĐỆ QUY THẦN SẦU ĐÂY RỒI!
             // Nếu cache của thằng con không hợp lệ thì cache của mình cũng vứt đi!
             if (!this._isCacheValid(imp, impCachePath)) {
