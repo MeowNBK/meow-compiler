@@ -112,102 +112,102 @@ export class CodeGenerator {
         return handler(this, node);
     }
     
-    fn findVariable(name) {
-        let localResult = this._findLocalInCurrentState(name);
-        if (localResult != null) {
-            return localResult;
-        }
+    // fn findVariable(name) {
+    //     let localResult = this._findLocalInCurrentState(name);
+    //     if (localResult != null) {
+    //         return localResult;
+    //     }
 
-        if (this.states.length > 1) {
+    //     if (this.states.length > 1) {
 
-            let upvalueResult = this._findUpvalueRecursive(name, this.states.length - 2);
-            if (upvalueResult != null) {
-                return upvalueResult;
-            }
-        }
+    //         let upvalueResult = this._findUpvalueRecursive(name, this.states.length - 2);
+    //         if (upvalueResult != null) {
+    //             return upvalueResult;
+    //         }
+    //     }
 
-        return { "type": "global", "name": name };
-    }
+    //     return { "type": "global", "name": name };
+    // }
 
-    fn _findLocalInCurrentState(name) {
+    // fn _findLocalInCurrentState(name) {
 
-        for (let i = this.currentState.scope.length - 1; i >= 0; --i) {
-            let scope = this.currentState.scope[i];
-            if (scope[name] != null) {
+    //     for (let i = this.currentState.scope.length - 1; i >= 0; --i) {
+    //         let scope = this.currentState.scope[i];
+    //         if (scope[name] != null) {
 
-                let localIndex = scope[name];
+    //             let localIndex = scope[name];
 
-                let reg = this.currentState.localIndexToReg[localIndex];
+    //             let reg = this.currentState.localIndexToReg[localIndex];
 
-                assert(reg != null, `Lỗi nghiêm trọng: Không tìm thấy register cho localIndex=${localIndex} của biến '${name}'`);
-
-
-                return {'type': 'local', 'index': reg, 'localIndex': localIndex};
-            }
-        }
-        return null;
-
-    }
-
-    fn _findUpvalueRecursive(name, parentStateIndex) {
-        if (parentStateIndex < 0) {
-            return null;
-        }
-
-        let parentState = this.states[parentStateIndex];
-        let childState = this.states[parentStateIndex + 1];
+    //             assert(reg != null, `Lỗi nghiêm trọng: Không tìm thấy register cho localIndex=${localIndex} của biến '${name}'`);
 
 
-        for (let i = parentState.scope.length - 1; i >= 0; --i) {
-            let scope = parentState.scope[i];
-            if (scope[name] != null) {
+    //             return {'type': 'local', 'index': reg, 'localIndex': localIndex};
+    //         }
+    //     }
+    //     return null;
 
-                let localIndex = scope[name];
-                let registerToCapture = parentState.localIndexToReg[localIndex];
-                assert(registerToCapture != null, `Lỗi nghiêm trọng: Không tìm thấy thanh ghi cho local '${name}'`);
+    // }
 
-                parentState.capturedLocals[localIndex] = true;
+    // fn _findUpvalueRecursive(name, parentStateIndex) {
+    //     if (parentStateIndex < 0) {
+    //         return null;
+    //     }
 
-
-                return this._addUpvalueToState({'isLocal': true, 'index': registerToCapture}, childState);
-            }
-        }
-
-        if (parentStateIndex > 0) {
-            let resultFromGrandparent = this._findUpvalueRecursive(name, parentStateIndex - 1);
-
-            if (resultFromGrandparent != null) {
+    //     let parentState = this.states[parentStateIndex];
+    //     let childState = this.states[parentStateIndex + 1];
 
 
+    //     for (let i = parentState.scope.length - 1; i >= 0; --i) {
+    //         let scope = parentState.scope[i];
+    //         if (scope[name] != null) {
 
-                return this._addUpvalueToState({'isLocal': false, 'index': resultFromGrandparent.index}, childState);
-            }
-        }
+    //             let localIndex = scope[name];
+    //             let registerToCapture = parentState.localIndexToReg[localIndex];
+    //             assert(registerToCapture != null, `Lỗi nghiêm trọng: Không tìm thấy thanh ghi cho local '${name}'`);
 
-        return null;
-    }
+    //             parentState.capturedLocals[localIndex] = true;
 
-    fn _addUpvalue(desc) {
-        return this._addUpvalueToState(desc, this.currentState);
-    }
+
+    //             return this._addUpvalueToState({'isLocal': true, 'index': registerToCapture}, childState);
+    //         }
+    //     }
+
+    //     if (parentStateIndex > 0) {
+    //         let resultFromGrandparent = this._findUpvalueRecursive(name, parentStateIndex - 1);
+
+    //         if (resultFromGrandparent != null) {
+
+
+
+    //             return this._addUpvalueToState({'isLocal': false, 'index': resultFromGrandparent.index}, childState);
+    //         }
+    //     }
+
+    //     return null;
+    // }
+
+    // fn _addUpvalue(desc) {
+    //     return this._addUpvalueToState(desc, this.currentState);
+    // }
     
-    fn _addUpvalueToState(desc, state) {
+    // fn _addUpvalueToState(desc, state) {
 
-        let proto = state.proto;
-        if (!proto.upvalueDescs) proto.upvalueDescs = [];
+    //     let proto = state.proto;
+    //     if (!proto.upvalueDescs) proto.upvalueDescs = [];
 
-        assert(typeof(desc.isLocal) == 'bool' || typeof(desc.isLocal) == 'boolean', 'upvalue desc phải có isLocal boolean');
-        assert(typeof(desc.index) == 'int' || typeof(desc.index) == 'real' || typeof(desc.index) == 'number', 'upvalue desc.index phải là số (int)');
+    //     assert(typeof(desc.isLocal) == 'bool' || typeof(desc.isLocal) == 'boolean', 'upvalue desc phải có isLocal boolean');
+    //     assert(typeof(desc.index) == 'int' || typeof(desc.index) == 'real' || typeof(desc.index) == 'number', 'upvalue desc.index phải là số (int)');
 
-        for (let i = 0; i < proto.upvalueDescs.length; ++i) {
-            let d = proto.upvalueDescs[i];
-            if (d.index == desc.index && d.isLocal == desc.isLocal) {
-                return {'type': 'upvalue', 'index': i};
-            }
-        }
-        let newIndex = proto.upvalueDescs.length;
-        proto.upvalueDescs.push(desc);
-        return {'type': 'upvalue', 'index': newIndex};
+    //     for (let i = 0; i < proto.upvalueDescs.length; ++i) {
+    //         let d = proto.upvalueDescs[i];
+    //         if (d.index == desc.index && d.isLocal == desc.isLocal) {
+    //             return {'type': 'upvalue', 'index': i};
+    //         }
+    //     }
+    //     let newIndex = proto.upvalueDescs.length;
+    //     proto.upvalueDescs.push(desc);
+    //     return {'type': 'upvalue', 'index': newIndex};
 
-    }
+    // }
 }

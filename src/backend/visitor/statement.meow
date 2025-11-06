@@ -35,8 +35,45 @@ fn _endScopeAndCloseUpvalues(cg) {
     cg.currentState.allocator.endScope();
 }
 
+// export let visitLetStatement = fn(cg, node) {
+//     let name = node.name.name;
+//     let scopeLevel = cg.currentState.scope.length - 1;
+//     let currentScope = cg.currentState.scope[scopeLevel];
+
+//     let destReg;
+//     if (scopeLevel > 0) {
+//         destReg = cg.currentState.allocator.take();
+//     } else {
+//         destReg = cg.currentState.allocator.ralloc();
+//     }
+
+//     let localIdx = cg.currentState.localCount++;
+//     cg.currentState.regToLocalIndex[str(destReg)] = localIdx;
+//     cg.currentState.localIndexToReg[localIdx] = destReg;
+//     currentScope[name] = localIdx;
+
+//     if (node.value != null) {
+//         cg.currentState.allocator.beginScope();
+//         let valueReg = cg.visitExpression(node.value);
+//         Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, valueReg]);
+//         cg.currentState.allocator.endScope();
+//     } else {
+
+//         Emitter.emit(cg.currentState.proto, OpCodes.LOAD_NULL, [destReg]);
+//     }
+
+//     if (scopeLevel == 0 && cg.states.length == 1) {
+//         let constIdx = cg.currentState.pool.add(name);
+//         Emitter.emit(cg.currentState.proto, OpCodes.SET_GLOBAL, [constIdx, destReg]);
+//     }
+// };
+
 export let visitLetStatement = fn(cg, node) {
     let name = node.name.name;
+    
+    assert(node.name.resolution && node.name.resolution.type == "local", "Lỗi: LetStatement " + name + " không được resolve là local");
+    let localSlot = node.name.resolution.symbol.index;
+    
     let scopeLevel = cg.currentState.scope.length - 1;
     let currentScope = cg.currentState.scope[scopeLevel];
 
@@ -47,18 +84,16 @@ export let visitLetStatement = fn(cg, node) {
         destReg = cg.currentState.allocator.ralloc();
     }
 
-    let localIdx = cg.currentState.localCount++;
-    cg.currentState.regToLocalIndex[str(destReg)] = localIdx;
-    cg.currentState.localIndexToReg[localIdx] = destReg;
-    currentScope[name] = localIdx;
-
+    cg.currentState.regToLocalIndex[str(destReg)] = localSlot;
+    cg.currentState.localIndexToReg[localSlot] = destReg;
+    currentScope[name] = localSlot;
+    
     if (node.value != null) {
         cg.currentState.allocator.beginScope();
         let valueReg = cg.visitExpression(node.value);
         Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, valueReg]);
         cg.currentState.allocator.endScope();
     } else {
-
         Emitter.emit(cg.currentState.proto, OpCodes.LOAD_NULL, [destReg]);
     }
 
@@ -68,11 +103,45 @@ export let visitLetStatement = fn(cg, node) {
     }
 };
 
+// export let visitFunctionStatement = fn(cg, node) {
+//     let name = node.name.name;
+//     node.func.name = name;
+
+//     let valueReg = cg.visitExpression(node.func);
+
+//     let scopeLevel = cg.currentState.scope.length - 1;
+//     let currentScope = cg.currentState.scope[scopeLevel];
+
+//     let destReg;
+//     if (scopeLevel > 0) {
+//         destReg = cg.currentState.allocator.take();
+//     } else {
+//         destReg = cg.currentState.allocator.ralloc();
+//     }
+
+//     let localIdx = cg.currentState.localCount++;
+//     cg.currentState.regToLocalIndex[str(destReg)] = localIdx;
+//     cg.currentState.localIndexToReg[localIdx] = destReg;
+//     currentScope[name] = localIdx;
+    
+//     // Di chuyển closure đã được tạo vào thanh ghi của biến
+//     Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, valueReg]);
+
+//     // Nếu ở scope toàn cục, set global
+//     if (scopeLevel == 0 && cg.states.length == 1) {
+//         let constIdx = cg.currentState.pool.add(name);
+//         Emitter.emit(cg.currentState.proto, OpCodes.SET_GLOBAL, [constIdx, destReg]);
+//     }
+// };
+
 export let visitFunctionStatement = fn(cg, node) {
     let name = node.name.name;
     node.func.name = name;
 
     let valueReg = cg.visitExpression(node.func);
+
+    assert(node.name.resolution && node.name.resolution.type == "local", "Lỗi: FunctionStatement " + name + " không được resolve là local");
+    let localSlot = node.name.resolution.symbol.index;
 
     let scopeLevel = cg.currentState.scope.length - 1;
     let currentScope = cg.currentState.scope[scopeLevel];
@@ -83,16 +152,13 @@ export let visitFunctionStatement = fn(cg, node) {
     } else {
         destReg = cg.currentState.allocator.ralloc();
     }
-
-    let localIdx = cg.currentState.localCount++;
-    cg.currentState.regToLocalIndex[str(destReg)] = localIdx;
-    cg.currentState.localIndexToReg[localIdx] = destReg;
-    currentScope[name] = localIdx;
     
-    // Di chuyển closure đã được tạo vào thanh ghi của biến
-    Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, valueReg]);
+    cg.currentState.regToLocalIndex[str(destReg)] = localSlot;
+    cg.currentState.localIndexToReg[localSlot] = destReg;
+    currentScope[name] = localSlot;
 
-    // Nếu ở scope toàn cục, set global
+    Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, valueReg]);
+    
     if (scopeLevel == 0 && cg.states.length == 1) {
         let constIdx = cg.currentState.pool.add(name);
         Emitter.emit(cg.currentState.proto, OpCodes.SET_GLOBAL, [constIdx, destReg]);
@@ -100,18 +166,58 @@ export let visitFunctionStatement = fn(cg, node) {
 };
 
 
+// export fn visitClassStatement(cg, node) {
+//     let className = node.name.name;
+//     let classNameIdx = cg.currentState.pool.add(className);
+
+//     let classReg = cg.currentState.allocator.take();
+//     let localIdx = cg.currentState.localCount++;
+    
+//     cg.currentState.regToLocalIndex[str(classReg)] = localIdx;
+//     cg.currentState.localIndexToReg[localIdx] = classReg;
+//     let currentScope = cg.currentState.scope[cg.currentState.scope.length - 1];
+//     currentScope[className] = localIdx;
+
+//     Emitter.emit(cg.currentState.proto, OpCodes.NEW_CLASS, [classReg, classNameIdx]);
+    
+//     cg.currentState.allocator.beginScope();
+//     if (node.superclass != null) {
+//         let parentClassReg = cg.visitExpression(node.superclass);
+//         Emitter.emit(cg.currentState.proto, OpCodes.INHERIT, [classReg, parentClassReg]);
+//     }
+
+//     cg.isInsideClass = true;
+//     for (methodNode in node.methods) {
+//         // methodNode giờ là một FunctionStatement
+//         let methodName = methodNode.name.name;
+//         // Gán tên phương thức vào FunctionLiteral
+//         methodNode.func.name = className + "." + methodName;
+//         let methodClosureReg = cg.visitExpression(methodNode.func);
+//         let methodNameIdx = cg.currentState.pool.add(methodName);
+//         Emitter.emit(cg.currentState.proto, OpCodes.SET_METHOD, [classReg, methodNameIdx, methodClosureReg]);
+//     }
+//     cg.isInsideClass = false;
+//     cg.currentState.allocator.endScope();
+
+//     if (cg.currentState.scope.length == 1) {
+//         Emitter.emit(cg.currentState.proto, OpCodes.SET_GLOBAL, [classNameIdx, classReg]);
+//     }
+// }
+
 export fn visitClassStatement(cg, node) {
     let className = node.name.name;
     let classNameIdx = cg.currentState.pool.add(className);
 
-    let classReg = cg.currentState.allocator.take();
-    let localIdx = cg.currentState.localCount++;
-    
-    cg.currentState.regToLocalIndex[str(classReg)] = localIdx;
-    cg.currentState.localIndexToReg[localIdx] = classReg;
-    let currentScope = cg.currentState.scope[cg.currentState.scope.length - 1];
-    currentScope[className] = localIdx;
+    assert(node.name.resolution && node.name.resolution.type == "local", "Lỗi: ClassStatement " + className + " không được resolve là local");
+    let localSlot = node.name.resolution.symbol.index;
 
+    let classReg = cg.currentState.allocator.take();
+    
+    cg.currentState.regToLocalIndex[str(classReg)] = localSlot;
+    cg.currentState.localIndexToReg[localSlot] = classReg;
+    let currentScope = cg.currentState.scope[cg.currentState.scope.length - 1];
+    currentScope[className] = localSlot;
+    
     Emitter.emit(cg.currentState.proto, OpCodes.NEW_CLASS, [classReg, classNameIdx]);
     
     cg.currentState.allocator.beginScope();
@@ -122,9 +228,7 @@ export fn visitClassStatement(cg, node) {
 
     cg.isInsideClass = true;
     for (methodNode in node.methods) {
-        // methodNode giờ là một FunctionStatement
         let methodName = methodNode.name.name;
-        // Gán tên phương thức vào FunctionLiteral
         methodNode.func.name = className + "." + methodName;
         let methodClosureReg = cg.visitExpression(methodNode.func);
         let methodNameIdx = cg.currentState.pool.add(methodName);
@@ -264,6 +368,82 @@ export fn visitForStatement(cg, node) {
     _endScopeAndCloseUpvalues(cg);
 }
 
+// export fn visitForInStatement(cg, node) {
+//     cg.currentState.allocator.beginScope();
+//     cg.currentState.scope.push({});
+
+//     let collectionReg = cg.visitExpression(node.collection);
+//     let keysArrayReg = cg.currentState.allocator.take();
+//     Emitter.emit(cg.currentState.proto, OpCodes.GET_VALUES, [keysArrayReg, collectionReg]);
+
+//     let indexReg = cg.currentState.allocator.take();
+//     Emitter.emit(cg.currentState.proto, OpCodes.LOAD_INT, [indexReg, 0]);
+
+//     let lengthReg = cg.currentState.allocator.take();
+//     let lengthNameIdx = cg.currentState.pool.add("length");
+//     Emitter.emit(cg.currentState.proto, OpCodes.GET_PROP, [lengthReg, keysArrayReg, lengthNameIdx]);
+    
+//     let startLabel = Emitter.createLabel("L_FORIN_START");
+//     let endLabel = Emitter.createLabel("L_FORIN_END");
+    
+//     cg.currentState.loopLabels.push({ "continueTarget": startLabel, "breakTarget": endLabel });
+//     Emitter.defineLabel(cg.currentState.proto, startLabel);
+    
+//     let condReg = cg.currentState.allocator.take();
+//     Emitter.emit(cg.currentState.proto, OpCodes.LT, [condReg, indexReg, lengthReg]);
+//     Emitter.emit(cg.currentState.proto, OpCodes.JUMP_IF_FALSE, [condReg, {"label": endLabel}]);
+
+//     let keyReg = cg.currentState.allocator.take();
+//     Emitter.emit(cg.currentState.proto, OpCodes.GET_INDEX, [keyReg, keysArrayReg, indexReg]);
+
+//     let varName = node.variable.name;
+//     let localIdx = cg.currentState.localCount++;
+//     cg.currentState.regToLocalIndex[str(keyReg)] = localIdx;
+//     cg.currentState.localIndexToReg[localIdx] = keyReg;
+//     cg.currentState.scope[cg.currentState.scope.length - 1][varName] = localIdx;
+    
+//     cg.visitStatement(node.body);
+    
+//     cg.currentState.allocator.withTemp(fn(oneReg) {
+//         Emitter.emit(cg.currentState.proto, OpCodes.LOAD_INT, [oneReg, 1]);
+//         Emitter.emit(cg.currentState.proto, OpCodes.ADD, [indexReg, indexReg, oneReg]);
+//     });
+    
+//     Emitter.emit(cg.currentState.proto, OpCodes.JUMP, [{"label": startLabel}]);
+//     Emitter.defineLabel(cg.currentState.proto, endLabel);
+    
+//     cg.currentState.loopLabels.pop();
+
+//     let scopeToEnd = cg.currentState.scope[cg.currentState.scope.length - 1];
+//     let lowestRegisterToClose = -1;
+
+//     for (varName in scopeToEnd.keys()) {
+//         let localIndex = scopeToEnd[varName];
+//         if (localIndex != null) {
+//             if (cg.currentState.capturedLocals[localIndex]) {
+//                 let register = cg.currentState.localIndexToReg[localIndex];
+//                 if (register != null) {
+//                     if (lowestRegisterToClose == -1 || register < lowestRegisterToClose) {
+//                         lowestRegisterToClose = register;
+//                     }
+//                 }
+//             }
+//             let register = cg.currentState.localIndexToReg[localIndex];
+//             if (register != null) {
+//                 cg.currentState.localIndexToReg[localIndex] = null;
+//                 cg.currentState.regToLocalIndex[str(register)] = null;
+//             }
+//         }
+//     }
+    
+//     if (lowestRegisterToClose != -1) {
+//         Emitter.emit(cg.currentState.proto, OpCodes.CLOSE_UPVALUES, [lowestRegisterToClose]);
+//     }
+    
+//     cg.currentState.scope.pop();
+//     cg.currentState.allocator.endScope(); 
+// }
+
 export fn visitForInStatement(cg, node) {
     cg.currentState.allocator.beginScope();
     cg.currentState.scope.push({});
@@ -293,10 +473,13 @@ export fn visitForInStatement(cg, node) {
     Emitter.emit(cg.currentState.proto, OpCodes.GET_INDEX, [keyReg, keysArrayReg, indexReg]);
 
     let varName = node.variable.name;
-    let localIdx = cg.currentState.localCount++;
-    cg.currentState.regToLocalIndex[str(keyReg)] = localIdx;
-    cg.currentState.localIndexToReg[localIdx] = keyReg;
-    cg.currentState.scope[cg.currentState.scope.length - 1][varName] = localIdx;
+    
+    assert(node.variable.resolution && node.variable.resolution.type == "local", "Lỗi: Biến ForIn " + varName + " không được resolve là local");
+    let localSlot = node.variable.resolution.symbol.index;
+    
+    cg.currentState.regToLocalIndex[str(keyReg)] = localSlot;
+    cg.currentState.localIndexToReg[localSlot] = keyReg;
+    cg.currentState.scope[cg.currentState.scope.length - 1][varName] = localSlot;
     
     cg.visitStatement(node.body);
     
@@ -304,40 +487,12 @@ export fn visitForInStatement(cg, node) {
         Emitter.emit(cg.currentState.proto, OpCodes.LOAD_INT, [oneReg, 1]);
         Emitter.emit(cg.currentState.proto, OpCodes.ADD, [indexReg, indexReg, oneReg]);
     });
-    
     Emitter.emit(cg.currentState.proto, OpCodes.JUMP, [{"label": startLabel}]);
     Emitter.defineLabel(cg.currentState.proto, endLabel);
     
     cg.currentState.loopLabels.pop();
 
-    let scopeToEnd = cg.currentState.scope[cg.currentState.scope.length - 1];
-    let lowestRegisterToClose = -1;
-
-    for (varName in scopeToEnd.keys()) {
-        let localIndex = scopeToEnd[varName];
-        if (localIndex != null) {
-            if (cg.currentState.capturedLocals[localIndex]) {
-                let register = cg.currentState.localIndexToReg[localIndex];
-                if (register != null) {
-                    if (lowestRegisterToClose == -1 || register < lowestRegisterToClose) {
-                        lowestRegisterToClose = register;
-                    }
-                }
-            }
-            let register = cg.currentState.localIndexToReg[localIndex];
-            if (register != null) {
-                cg.currentState.localIndexToReg[localIndex] = null;
-                cg.currentState.regToLocalIndex[str(register)] = null;
-            }
-        }
-    }
-    
-    if (lowestRegisterToClose != -1) {
-        Emitter.emit(cg.currentState.proto, OpCodes.CLOSE_UPVALUES, [lowestRegisterToClose]);
-    }
-    
-    cg.currentState.scope.pop();
-    cg.currentState.allocator.endScope(); 
+    _endScopeAndCloseUpvalues(cg);
 }
 
 export fn visitThrowStatement(cg, node) {
@@ -346,6 +501,37 @@ export fn visitThrowStatement(cg, node) {
     Emitter.emit(cg.currentState.proto, OpCodes.THROW, [errorReg]);
     cg.currentState.allocator.endScope();
 }
+
+// export fn visitTryStatement(cg, node) {
+//     let catchLabel = Emitter.createLabel("L_CATCH");
+//     let endLabel = Emitter.createLabel("L_END_TRY");
+
+//     Emitter.emit(cg.currentState.proto, OpCodes.SETUP_TRY, [{"label": catchLabel}]);
+//     cg.visitStatement(node.tryBlock);
+//     Emitter.emit(cg.currentState.proto, OpCodes.POP_TRY, []);
+//     Emitter.emit(cg.currentState.proto, OpCodes.JUMP, [{"label": endLabel}]);
+
+//     Emitter.defineLabel(cg.currentState.proto, catchLabel);
+    
+
+//     cg.currentState.allocator.beginScope();
+//     cg.currentState.scope.push({});
+    
+//     if (node.catchVariable != null) {
+//         let errorVarName = node.catchVariable.name;
+
+//         let errorReg = 0;
+//         let localIdx = cg.currentState.localCount++;
+//         cg.currentState.regToLocalIndex[str(errorReg)] = localIdx;
+//         cg.currentState.localIndexToReg[localIdx] = errorReg;
+//         cg.currentState.scope[cg.currentState.scope.length - 1][errorVarName] = localIdx;
+//     }
+    
+//     cg.visitStatement(node.catchBlock);
+
+//     _endScopeAndCloseUpvalues(cg);
+//     Emitter.defineLabel(cg.currentState.proto, endLabel);
+// }
 
 export fn visitTryStatement(cg, node) {
     let catchLabel = Emitter.createLabel("L_CATCH");
@@ -358,18 +544,20 @@ export fn visitTryStatement(cg, node) {
 
     Emitter.defineLabel(cg.currentState.proto, catchLabel);
     
-
     cg.currentState.allocator.beginScope();
     cg.currentState.scope.push({});
     
     if (node.catchVariable != null) {
         let errorVarName = node.catchVariable.name;
+        
+        assert(node.catchVariable.resolution && node.catchVariable.resolution.type == "local", "Lỗi: Biến Catch " + errorVarName + " không được resolve là local");
+        let localSlot = node.catchVariable.resolution.symbol.index;
 
-        let errorReg = 0;
-        let localIdx = cg.currentState.localCount++;
-        cg.currentState.regToLocalIndex[str(errorReg)] = localIdx;
-        cg.currentState.localIndexToReg[localIdx] = errorReg;
-        cg.currentState.scope[cg.currentState.scope.length - 1][errorVarName] = localIdx;
+        let errorReg = 0; 
+        
+        cg.currentState.regToLocalIndex[str(errorReg)] = localSlot;
+        cg.currentState.localIndexToReg[localSlot] = errorReg;
+        cg.currentState.scope[cg.currentState.scope.length - 1][errorVarName] = localSlot;
     }
     
     cg.visitStatement(node.catchBlock);

@@ -47,18 +47,44 @@ fn handleUnary(node) {
 }
 
 
+// export fn visitIdentifier(cg, node) {
+//     let resolution = cg.findVariable(node.name);
+//     let destReg = cg.currentState.allocator.ralloc();
+
+//     if (resolution.type == "local") {
+//         Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, resolution.index]);
+//     } else if (resolution.type == "upvalue") {
+//         Emitter.emit(cg.currentState.proto, OpCodes.GET_UPVALUE, [destReg, resolution.index]);
+//     } else {
+//         let constIdx = cg.currentState.pool.add(resolution.name);
+//         Emitter.emit(cg.currentState.proto, OpCodes.GET_GLOBAL, [destReg, constIdx]);
+//     }
+//     return destReg;
+// }
+
 export fn visitIdentifier(cg, node) {
-    let resolution = cg.findVariable(node.name);
+    assert(node.resolution, "Lỗi: visitIdentifier không tìm thấy 'resolution' cho '" + node.name + "'!");
+    let resolution = node.resolution;
+    
     let destReg = cg.currentState.allocator.ralloc();
 
     if (resolution.type == "local") {
-        Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, resolution.index]);
+        let localSlot = resolution.symbol.index;
+        
+        let reg = cg.currentState.localIndexToReg[localSlot];
+        
+        assert(reg != null, "Lỗi CodeGen: Không tìm thấy thanh ghi cho local slot " + str(localSlot) + " (biến '" + node.name + "')");
+        
+        Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, reg]);
+        
     } else if (resolution.type == "upvalue") {
         Emitter.emit(cg.currentState.proto, OpCodes.GET_UPVALUE, [destReg, resolution.index]);
-    } else {
+        
+    } else { 
         let constIdx = cg.currentState.pool.add(resolution.name);
         Emitter.emit(cg.currentState.proto, OpCodes.GET_GLOBAL, [destReg, constIdx]);
     }
+    
     return destReg;
 }
 
@@ -193,61 +219,115 @@ export fn visitCallExpression(cg, node) {
 }
 
 
+// export fn visitAssignmentExpression(cg, node) {
+//     let targetNode = node.target;
+//     cg.currentState.allocator.beginScope();
+
+
+
+//     if (targetNode.type == "Identifier") {
+
+
+//         let valueReg = cg.visitExpression(node.value);
+//         let resolution = cg.findVariable(targetNode.name);
+
+//         if (resolution.type == "local") {
+//             Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [resolution.index, valueReg]);
+//         } else if (resolution.type == "upvalue") {
+//             Emitter.emit(cg.currentState.proto, OpCodes.SET_UPVALUE, [resolution.index, valueReg]);
+//         } else {
+//             let constIdx = cg.currentState.pool.add(resolution.name);
+//             Emitter.emit(cg.currentState.proto, OpCodes.SET_GLOBAL, [constIdx, valueReg]);
+//         }
+//         cg.currentState.allocator.endScope();
+//         return valueReg;
+
+//     } else if (targetNode.type == "PropertyAccess") {
+
+//         let objReg = cg.visitExpression(targetNode.object);
+        
+
+//         let valueReg = cg.visitExpression(node.value);
+
+//         let propNameIdx = cg.currentState.pool.add(targetNode.property.name);
+//         Emitter.emit(cg.currentState.proto, OpCodes.SET_PROP, [objReg, propNameIdx, valueReg]);
+        
+//         cg.currentState.allocator.endScope();
+//         return valueReg;
+
+//     } else if (targetNode.type == "IndexExpression") {
+
+//         let objReg = cg.visitExpression(targetNode.object);
+//         let indexReg = cg.visitExpression(targetNode.index);
+
+//         let valueReg = cg.visitExpression(node.value);
+
+//         Emitter.emit(cg.currentState.proto, OpCodes.SET_INDEX, [objReg, indexReg, valueReg]);
+        
+//         cg.currentState.allocator.endScope();
+//         return valueReg;
+
+//     } else {
+//         assert(false, "Lỗi: Đích của phép gán không được hỗ trợ: " + targetNode.type);
+//     }
+    
+
+//     cg.currentState.allocator.endScope();
+//     return -1; 
+// }
+
 export fn visitAssignmentExpression(cg, node) {
     let targetNode = node.target;
     cg.currentState.allocator.beginScope();
-
-
-
+    
     if (targetNode.type == "Identifier") {
-
-
+        
+        assert(targetNode.resolution, "Lỗi: visitAssignment không tìm thấy 'resolution' cho '" + targetNode.name + "'!");
+        let resolution = targetNode.resolution;
+        
         let valueReg = cg.visitExpression(node.value);
-        let resolution = cg.findVariable(targetNode.name);
 
         if (resolution.type == "local") {
-            Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [resolution.index, valueReg]);
+            let localSlot = resolution.symbol.index;
+            
+            let reg = cg.currentState.localIndexToReg[localSlot];
+            assert(reg != null, "Lỗi CodeGen: Gán cho local slot " + str(localSlot) + " không tìm thấy thanh ghi");
+            
+            Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [reg, valueReg]);
+            
         } else if (resolution.type == "upvalue") {
             Emitter.emit(cg.currentState.proto, OpCodes.SET_UPVALUE, [resolution.index, valueReg]);
-        } else {
+            
+        } else { 
             let constIdx = cg.currentState.pool.add(resolution.name);
             Emitter.emit(cg.currentState.proto, OpCodes.SET_GLOBAL, [constIdx, valueReg]);
         }
+        
         cg.currentState.allocator.endScope();
         return valueReg;
-
-    } else if (targetNode.type == "PropertyAccess") {
-
-        let objReg = cg.visitExpression(targetNode.object);
         
-
+    } else if (targetNode.type == "PropertyAccess") {
+        let objReg = cg.visitExpression(targetNode.object);
         let valueReg = cg.visitExpression(node.value);
-
         let propNameIdx = cg.currentState.pool.add(targetNode.property.name);
         Emitter.emit(cg.currentState.proto, OpCodes.SET_PROP, [objReg, propNameIdx, valueReg]);
-        
         cg.currentState.allocator.endScope();
         return valueReg;
-
+        
     } else if (targetNode.type == "IndexExpression") {
-
         let objReg = cg.visitExpression(targetNode.object);
         let indexReg = cg.visitExpression(targetNode.index);
-
         let valueReg = cg.visitExpression(node.value);
-
         Emitter.emit(cg.currentState.proto, OpCodes.SET_INDEX, [objReg, indexReg, valueReg]);
-        
         cg.currentState.allocator.endScope();
         return valueReg;
-
+        
     } else {
         assert(false, "Lỗi: Đích của phép gán không được hỗ trợ: " + targetNode.type);
     }
     
-
     cg.currentState.allocator.endScope();
-    return -1; 
+    return -1;
 }
 
 export fn visitPrefixUpdateExpression(cg, node) {

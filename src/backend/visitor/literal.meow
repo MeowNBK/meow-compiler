@@ -121,6 +121,53 @@ export let visitObjectLiteral = fn(cg, node) {
     return dstReg;
 };
 
+// export let visitFunctionLiteral = fn(cg, node) {
+//     let descriptiveName;
+//     if (node.name) { 
+//         let safeName = String.replace(node.name, "@", "_");
+//         safeName = String.replace(safeName, " ", "_");
+//         descriptiveName = safeName;
+//     } else { 
+//         descriptiveName = Emitter.createAnonymousFunctionName();
+//     }
+    
+//     let parentSource = (cg.currentState && cg.currentState.proto && cg.currentState.proto.sourceName) ? cg.currentState.proto.sourceName : "anon_parent";
+//     let funcName = '@' + descriptiveName + '_' + parentSource + '_' + str(cg.currentState ? cg.currentState.proto.code.length : 0);
+
+//     cg.enterState(funcName);
+//     let paramScope = cg.currentState.scope[0];
+//     if (cg.isInsideClass) {
+//         cg.currentState.allocator.ralloc();
+//     }
+
+//     let wasInsideClass = cg.isInsideClass;
+//     cg.isInsideClass = false;
+//     for (param in node.parameters) {
+//         let reg = cg.currentState.allocator.ralloc();
+//         let localIdx = cg.currentState.localCount;
+//         cg.currentState.localCount = localIdx + 1;
+//         cg.currentState.regToLocalIndex[str(reg)] = localIdx;
+//         cg.currentState.localIndexToReg[localIdx] = reg;
+//         paramScope[param.name] = localIdx;
+//     }
+
+//     cg.visitStatement(node.body);
+//     let childProto = cg.exitState();
+
+//     cg.isInsideClass = wasInsideClass;
+
+//     assert(childProto.sourceName && childProto.sourceName.length > 3, "Bad childProto.sourceName after visitFunctionLiteral");
+
+//     cg.protos[childProto.sourceName] = childProto;
+//     let parentPool = cg.currentState.pool;
+//     let protoIdx = parentPool.add(childProto);
+
+//     let destReg = cg.currentState.allocator.ralloc();
+//     Emitter.emit(cg.currentState.proto, OpCodes.CLOSURE, [destReg, protoIdx]);
+
+//     return destReg;
+// };
+
 export let visitFunctionLiteral = fn(cg, node) {
     let descriptiveName;
     if (node.name) { 
@@ -132,32 +179,48 @@ export let visitFunctionLiteral = fn(cg, node) {
     }
     
     let parentSource = (cg.currentState && cg.currentState.proto && cg.currentState.proto.sourceName) ? cg.currentState.proto.sourceName : "anon_parent";
-    
-    // **Sửa lỗi quan trọng:** Luôn bắt đầu tên proto bằng '@' để VM có thể phân tích cú pháp.
-    // Tên mới sẽ có dạng @<tên_hàm>_<tên_file_cha>_<vị_trí>
     let funcName = '@' + descriptiveName + '_' + parentSource + '_' + str(cg.currentState ? cg.currentState.proto.code.length : 0);
-
+    
     cg.enterState(funcName);
     let paramScope = cg.currentState.scope[0];
+    
     if (cg.isInsideClass) {
-        cg.currentState.allocator.ralloc();
+        cg.currentState.allocator.ralloc(); 
     }
 
     let wasInsideClass = cg.isInsideClass;
     cg.isInsideClass = false;
-    for (param in node.parameters) {
+
+    for (paramNode in node.parameters) {
+        assert(paramNode.resolution && paramNode.resolution.type == "local", "Lỗi: Tham số " + paramNode.name + " không được resolve là local");
+        
+        let localSlot = paramNode.resolution.symbol.index;
+        
         let reg = cg.currentState.allocator.ralloc();
-        let localIdx = cg.currentState.localCount;
-        cg.currentState.localCount = localIdx + 1;
-        cg.currentState.regToLocalIndex[str(reg)] = localIdx;
-        cg.currentState.localIndexToReg[localIdx] = reg;
-        paramScope[param.name] = localIdx;
+        
+        cg.currentState.localIndexToReg[localSlot] = reg;
+        cg.currentState.regToLocalIndex[str(reg)] = localSlot;
+        
+        paramScope[paramNode.name] = localSlot;
     }
 
     cg.visitStatement(node.body);
+    
     let childProto = cg.exitState();
 
     cg.isInsideClass = wasInsideClass;
+
+    let upvalues = node.resolved_upvalues;
+    if (upvalues && upvalues.length > 0) {
+        childProto.upvalueDescs = upvalues;
+        childProto.numUpvalues = upvalues.length;
+        
+        for (up in upvalues) {
+            if (up.isLocal) {
+                cg.currentState.capturedLocals[up.index] = true;
+            }
+        }
+    }
 
     assert(childProto.sourceName && childProto.sourceName.length > 3, "Bad childProto.sourceName after visitFunctionLiteral");
 
@@ -170,7 +233,6 @@ export let visitFunctionLiteral = fn(cg, node) {
 
     return destReg;
 };
-
 
 export fn visitTemplateLiteral(cg, node) {
     if (node.parts.length == 0) {
