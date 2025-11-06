@@ -587,10 +587,79 @@ fn _getDirectoryPath(fullPath) {
     return fullPath.slice(0, fullPath.length - filename.length);
 }
 
+// export fn visitImportStatement(cg, node) {
+//     let sourcePath = node.path.value;
+//     let pathIdx;
+
+//     if (stdlib[sourcePath] != null || sourcePath.endsWith(".meowb")) {
+//         pathIdx = cg.currentState.pool.add(sourcePath);
+//     } else if (sourcePath.endsWith(".meow")) {
+//         let currentFileDir = _getDirectoryPath(cg.currentState.proto.sourceName);
+//         let importAbsolutePath = Io.getAbsolutePath(currentFileDir + "/" + sourcePath);
+//         let cachePath = cg.compiler.compiledModules[importAbsolutePath];
+//         assert(cachePath, "Lỗi logic: Module " + importAbsolutePath + " lẽ ra phải được biên dịch rồi!");
+//         pathIdx = cg.currentState.pool.add(cachePath);
+//     } else {
+
+//         pathIdx = cg.currentState.pool.add(sourcePath);
+//     }
+
+//     if (node.namespaceImport != null) {
+
+//         let moduleName = node.namespaceImport.name;
+//         let moduleReg = cg.currentState.allocator.ralloc();
+//         Emitter.emit(cg.currentState.proto, OpCodes.IMPORT_MODULE, [moduleReg, pathIdx]);
+
+//         let localIdx = cg.currentState.localCount++;
+//         cg.currentState.regToLocalIndex[str(moduleReg)] = localIdx;
+//         cg.currentState.localIndexToReg[localIdx] = moduleReg;
+//         cg.currentState.scope[cg.currentState.scope.length - 1][moduleName] = localIdx;
+
+//         if (cg.currentState.scope.length == 1 && cg.states.length == 1) {
+//             let nameIdx = cg.currentState.pool.add(moduleName);
+//             Emitter.emit(cg.currentState.proto, OpCodes.SET_GLOBAL, [nameIdx, moduleReg]);
+//         }
+
+//         cg.currentState.moduleVariables[moduleName] = true;
+
+//     } else if (node.namedImports.length > 0) {
+
+//         cg.currentState.allocator.withTemp(fn(tempModuleReg) {
+//             Emitter.emit(cg.currentState.proto, OpCodes.IMPORT_MODULE, [tempModuleReg, pathIdx]);
+            
+//             for (importId in node.namedImports) {
+//                 let importName = importId.name;
+//                 let nameIdx = cg.currentState.pool.add(importName);
+                
+
+//                 let localReg = cg.currentState.allocator.ralloc(); 
+//                 Emitter.emit(cg.currentState.proto, OpCodes.GET_EXPORT, [localReg, tempModuleReg, nameIdx]);
+
+//                 let localIdx = cg.currentState.localCount++;
+//                 cg.currentState.regToLocalIndex[str(localReg)] = localIdx;
+//                 cg.currentState.localIndexToReg[localIdx] = localReg;
+
+//                 cg.currentState.scope[cg.currentState.scope.length - 1][importName] = localIdx;
+
+//                 if (cg.currentState.scope.length == 1 && cg.states.length == 1) {
+//                     Emitter.emit(cg.currentState.proto, OpCodes.SET_GLOBAL, [nameIdx, localReg]);
+//                 }
+                
+//                 cg.currentState.importedVariables[importName] = true;
+//             }
+//         });
+
+//     } else {
+
+//         cg.currentState.allocator.withTemp(fn(tempModuleReg) {
+//             Emitter.emit(cg.currentState.proto, OpCodes.IMPORT_MODULE, [tempModuleReg, pathIdx]);
+//         });
+//     }
+// }
+
 export fn visitImportStatement(cg, node) {
     let sourcePath = node.path.value;
     let pathIdx;
-
     if (stdlib[sourcePath] != null || sourcePath.endsWith(".meowb")) {
         pathIdx = cg.currentState.pool.add(sourcePath);
     } else if (sourcePath.endsWith(".meow")) {
@@ -600,20 +669,24 @@ export fn visitImportStatement(cg, node) {
         assert(cachePath, "Lỗi logic: Module " + importAbsolutePath + " lẽ ra phải được biên dịch rồi!");
         pathIdx = cg.currentState.pool.add(cachePath);
     } else {
-
         pathIdx = cg.currentState.pool.add(sourcePath);
     }
 
     if (node.namespaceImport != null) {
-
+        // Xử lý: import * as Name from ...
         let moduleName = node.namespaceImport.name;
+        
+        // === SỬA ĐỔI BẮT ĐẦU ===
+        assert(node.namespaceImport.resolution && node.namespaceImport.resolution.type == "local", "Lỗi: Import namespace " + moduleName + " không được resolve là local");
+        let localSlot = node.namespaceImport.resolution.symbol.index;
+        
         let moduleReg = cg.currentState.allocator.ralloc();
         Emitter.emit(cg.currentState.proto, OpCodes.IMPORT_MODULE, [moduleReg, pathIdx]);
 
-        let localIdx = cg.currentState.localCount++;
-        cg.currentState.regToLocalIndex[str(moduleReg)] = localIdx;
-        cg.currentState.localIndexToReg[localIdx] = moduleReg;
-        cg.currentState.scope[cg.currentState.scope.length - 1][moduleName] = localIdx;
+        cg.currentState.regToLocalIndex[str(moduleReg)] = localSlot;
+        cg.currentState.localIndexToReg[localSlot] = moduleReg;
+        cg.currentState.scope[cg.currentState.scope.length - 1][moduleName] = localSlot;
+        // === SỬA ĐỔI KẾT THÚC ===
 
         if (cg.currentState.scope.length == 1 && cg.states.length == 1) {
             let nameIdx = cg.currentState.pool.add(moduleName);
@@ -621,25 +694,27 @@ export fn visitImportStatement(cg, node) {
         }
 
         cg.currentState.moduleVariables[moduleName] = true;
-
+        
     } else if (node.namedImports.length > 0) {
-
+        // Xử lý: import { Var1, Var2 } from ...
         cg.currentState.allocator.withTemp(fn(tempModuleReg) {
             Emitter.emit(cg.currentState.proto, OpCodes.IMPORT_MODULE, [tempModuleReg, pathIdx]);
             
-            for (importId in node.namedImports) {
+            for (importId in node.namedImports) { // importId là một Identifier node
                 let importName = importId.name;
                 let nameIdx = cg.currentState.pool.add(importName);
-                
+    
+                // === SỬA ĐỔI BẮT ĐẦU ===
+                assert(importId.resolution && importId.resolution.type == "local", "Lỗi: Import " + importName + " không được resolve là local");
+                let localSlot = importId.resolution.symbol.index;
 
                 let localReg = cg.currentState.allocator.ralloc(); 
                 Emitter.emit(cg.currentState.proto, OpCodes.GET_EXPORT, [localReg, tempModuleReg, nameIdx]);
 
-                let localIdx = cg.currentState.localCount++;
-                cg.currentState.regToLocalIndex[str(localReg)] = localIdx;
-                cg.currentState.localIndexToReg[localIdx] = localReg;
-
-                cg.currentState.scope[cg.currentState.scope.length - 1][importName] = localIdx;
+                cg.currentState.regToLocalIndex[str(localReg)] = localSlot;
+                cg.currentState.localIndexToReg[localSlot] = localReg;
+                cg.currentState.scope[cg.currentState.scope.length - 1][importName] = localSlot;
+                // === SỬA ĐỔI KẾT THÚC ===
 
                 if (cg.currentState.scope.length == 1 && cg.states.length == 1) {
                     Emitter.emit(cg.currentState.proto, OpCodes.SET_GLOBAL, [nameIdx, localReg]);
@@ -650,7 +725,7 @@ export fn visitImportStatement(cg, node) {
         });
 
     } else {
-
+        // Xử lý: import "..." (chỉ chạy module)
         cg.currentState.allocator.withTemp(fn(tempModuleReg) {
             Emitter.emit(cg.currentState.proto, OpCodes.IMPORT_MODULE, [tempModuleReg, pathIdx]);
         });

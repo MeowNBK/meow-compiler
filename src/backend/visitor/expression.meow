@@ -330,6 +330,67 @@ export fn visitAssignmentExpression(cg, node) {
     return -1;
 }
 
+// export fn visitPrefixUpdateExpression(cg, node) {
+//     if (typeof(node.op) == "string") {
+//         node.op = stringToTokenType(node.op);
+//     }
+//     let destReg = cg.currentState.allocator.ralloc();
+//     cg.currentState.allocator.beginScope();
+//     let targetNode = node.operand;
+//     let op = (node.op == TokenType.OP_INCREMENT) ? OpCodes.ADD : OpCodes.SUB;
+
+//     cg.currentState.allocator.withTemp(fn(oneReg) {
+//         Emitter.emit(cg.currentState.proto, OpCodes.LOAD_INT, [oneReg, 1]);
+//         if (targetNode.type == "Identifier") {
+//             let resolution = cg.findVariable(targetNode.name);
+//             assert(resolution.type == "local", "Toán tử ++/-- chỉ hỗ trợ biến local.");
+//             let targetReg = resolution.index;
+//             Emitter.emit(cg.currentState.proto, op, [targetReg, targetReg, oneReg]);
+//             Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, targetReg]);
+//         } else if (targetNode.type == "PropertyAccess") {
+//             let objReg = cg.visitExpression(targetNode.object);
+//             let propNameIdx = cg.currentState.pool.add(targetNode.property.name);
+//             let currentValReg = cg.currentState.allocator.ralloc();
+//             Emitter.emit(cg.currentState.proto, OpCodes.GET_PROP, [currentValReg, objReg, propNameIdx]);
+//             Emitter.emit(cg.currentState.proto, op, [currentValReg, currentValReg, oneReg]);
+//             Emitter.emit(cg.currentState.proto, OpCodes.SET_PROP, [objReg, propNameIdx, currentValReg]);
+//             Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, currentValReg]);
+//         }
+//     });
+//     cg.currentState.allocator.endScope();
+//     return destReg;
+// }
+
+// export fn visitPostfixUpdateExpression(cg, node) {
+//     if (typeof(node.op) == "string") {
+//         node.op = stringToTokenType(node.op);
+//     }
+//     let destReg = cg.currentState.allocator.ralloc();
+//     cg.currentState.allocator.beginScope();
+//     let targetNode = node.operand;
+//     let op = (node.op == TokenType.OP_INCREMENT) ? OpCodes.ADD : OpCodes.SUB;
+
+//     cg.currentState.allocator.withTemp(fn(oneReg) {
+//         Emitter.emit(cg.currentState.proto, OpCodes.LOAD_INT, [oneReg, 1]);
+//         if (targetNode.type == "Identifier") {
+//             let resolution = cg.findVariable(targetNode.name);
+//             assert(resolution.type == "local", "Toán tử ++/-- chỉ hỗ trợ biến local.");
+//             let targetReg = resolution.index;
+//             Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, targetReg]);
+//             Emitter.emit(cg.currentState.proto, op, [targetReg, targetReg, oneReg]);
+//         } else if (targetNode.type == "PropertyAccess") {
+//             let objReg = cg.visitExpression(targetNode.object);
+//             let propNameIdx = cg.currentState.pool.add(targetNode.property.name);
+//             Emitter.emit(cg.currentState.proto, OpCodes.GET_PROP, [destReg, objReg, propNameIdx]);
+//             let newValReg = cg.currentState.allocator.ralloc();
+//             Emitter.emit(cg.currentState.proto, op, [newValReg, destReg, oneReg]);
+//             Emitter.emit(cg.currentState.proto, OpCodes.SET_PROP, [objReg, propNameIdx, newValReg]);
+//         }
+//     });
+//     cg.currentState.allocator.endScope();
+//     return destReg;
+// }
+
 export fn visitPrefixUpdateExpression(cg, node) {
     if (typeof(node.op) == "string") {
         node.op = stringToTokenType(node.op);

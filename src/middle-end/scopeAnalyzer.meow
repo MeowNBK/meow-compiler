@@ -314,7 +314,7 @@ export class ScopeAnalyzer {
         this.visit(node.func);
     }
     
-fn visitClassStatement(node) {
+    fn visitClassStatement(node) {
         // 1. Định nghĩa tên class trong scope HIỆN TẠI
         this._defineAndAnnotate(node.name, true, "class");
 
@@ -518,10 +518,20 @@ fn visitClassStatement(node) {
     }
     
     fn visitImportStatement(node) {
-        this.visit(node.path);
-        // (Import phức tạp hơn, nó nên định nghĩa biến
-        // trong scope global/module)
-        // Tạm thời bỏ qua định nghĩa, chỉ visit path
+        this.visit(node.path); // Phân tích đường dẫn (dự phòng)
+        
+        if (node.namespaceImport != null) {
+            // Xử lý: import * as Name from ...
+            // node.namespaceImport là một Identifier node
+            this._defineAndAnnotate(node.namespaceImport, true, "module");
+        } else if (node.namedImports.length > 0) {
+            // Xử lý: import { Var1, Var2 } from ...
+            for (importId in node.namedImports) {
+                // importId là một Identifier node
+                this._defineAndAnnotate(importId, true, "import");
+            }
+        }
+        // (Không cần xử lý `import "..."` vì nó không định nghĩa biến)
     }
 
     fn visitExportStatement(node) {
