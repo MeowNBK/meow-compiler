@@ -8,6 +8,7 @@ import { BytecodeStringifier } from "./bytecodeStringifier.meow";
 import { Lexer } from "../frontend/lexer.meow";
 import { Parser } from "../frontend/parser.meow";
 import { Preprocessor } from "../frontend/preprocessor.meow";
+import { ScopeAnalyzer } from "../middle-end/scopeAnalyzer.meow";
 
 fn _getDirectoryPath(fullPath) {
     let filename = Io.getFileName(fullPath);
@@ -118,7 +119,8 @@ export class Compiler {
             print("[ERROR] Meta.compile trả về null/undefined cho: " + absolutePath);
             System.exit(1);
         }
-
+        let analyzer = new ScopeAnalyzer(ast);
+        analyzer.analyze();
         let sourceDir = _getDirectoryPath(absolutePath);
         let imports = this._extractImportsFromAST(ast, sourceDir);
         for (imp in imports) {

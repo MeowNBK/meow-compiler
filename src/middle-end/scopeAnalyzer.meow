@@ -45,6 +45,7 @@ export class ScopeAnalyzer {
         this.ast = ast;
         this.states = []; // Stack các AnalyzerState (cho các hàm lồng nhau)
         this.currentState = null;
+        this.currentClassScope = null;
     }
 
     fn throwError(code, node, replacements) {
@@ -313,17 +314,51 @@ export class ScopeAnalyzer {
         this.visit(node.func);
     }
     
-    fn visitClassStatement(node) {
-        // Class cũng được đưa vào scope
+fn visitClassStatement(node) {
+        // 1. Định nghĩa tên class trong scope HIỆN TẠI
         this._defineAndAnnotate(node.name, true, "class");
-        
+
+        // 2. Xử lý superclass (nếu có)
         if (node.superclass) {
             this.visit(node.superclass);
         }
+
+        // 3. --- LOGIC MỚI ---
+        // Tạo một scope MỚI cho class (để chứa các phương thức/thuộc tính)
+        let classScope = new ScopedSymbolTable(
+            "class:" + node.name.name,
+            this.currentState.current_scope.scopeLevel + 1,
+            this.currentState.current_scope 
+        );
+        
+        // 4. Lưu và thay đổi scope
+        let savedScope = this.currentState.current_scope;
+        let savedClassScope = this.currentClassScope;
+
+        this.currentState.current_scope = classScope;
+        this.currentClassScope = classScope; // Đặt class scope hiện tại
+
+        // 5. --- BẮT ĐẦU 2-PASS ---
+        
+        // LƯỢT 1: Định nghĩa TẤT CẢ các phương thức (chỉ tên)
         for (method in node.methods) {
-            this.visit(method); // Đây là các FunctionStatement
+            // method là một FunctionStatement
+            // Chỉ gọi _defineAndAnnotate cho tên của nó.
+            // Việc này sẽ đưa 'init', 'compileProject', '_compileFile', v.v.
+            // vào classScope TRƯỚC KHI phân tích bất kỳ thân hàm nào.
+            this._defineAndAnnotate(method.name, true, "function");
         }
-        // (Bỏ qua static_fields vì nó không có trong AST cũ)
+        
+        // LƯỢT 2: Duyệt thân (body) của các phương thức
+        for (method in node.methods) {
+            // Bây giờ ta visit FunctionLiteral (method.func)
+            // (Không visit 'method' nữa vì nó sẽ cố định nghĩa lại tên hàm)
+            this.visit(method.func); 
+        }
+
+        // 6. Khôi phục scope cũ
+        this.currentState.current_scope = savedScope;
+        this.currentClassScope = savedClassScope;
     }
 
     fn visitFunctionLiteral(node) {
@@ -529,9 +564,42 @@ export class ScopeAnalyzer {
     }
     
     fn visitPropertyAccess(node) {
+        // node.object là 'this', node.property là 'something'
+        if (node.object.type == "ThisExpression") {
+            if (this.currentClassScope) {
+                let propName = node.property.name;
+                
+                // 1. Tra cứu property trong class scope
+                let symbol = this.currentClassScope.lookup(propName, false);
+                
+                // 2. --- THAY ĐỔI LOGIC Ở ĐÂY ---
+                if (!symbol) {
+                    // Không tìm thấy? 
+                    // Đây có thể là lần đầu tiên ta thấy thuộc tính này (lúc gán)
+                    // => Tự động ĐỊNH NGHĨA nó.
+                    print("ScopeAnalyzer: Tự động định nghĩa thuộc tính class: " + propName);
+                    
+                    // (Chúng ta chưa biết kiểu, nên tạm gán là 'null' hoặc 'any')
+                    symbol = new Symbol(propName, null, "property", false); 
+                    
+                    this.currentClassScope.define(symbol);
+                }
+                
+                // 3. Trang trí nút property (không phải nút 'this')
+                node.property.resolution = {
+                    "type": "class_member",
+                    "symbol": symbol
+                };
+                
+                // Không cần visit 'object' (là 'this')
+                return; // Đã xử lý xong
+            }
+        }
+
+        // --- Logic cũ ---
+        // Nếu không phải 'this.something', chỉ visit 'object'
         this.visit(node.object);
-        // Không visit(node.property) vì nó là 'lá' (Identifier)
-        // và không phải là một biến cần resolve.
+        // Không visit(node.property) vì nó là 'lá'
     }
 
     fn visitNewExpression(node) {

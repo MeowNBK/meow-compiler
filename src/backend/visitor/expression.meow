@@ -342,13 +342,19 @@ export fn visitPrefixUpdateExpression(cg, node) {
     cg.currentState.allocator.withTemp(fn(oneReg) {
         Emitter.emit(cg.currentState.proto, OpCodes.LOAD_INT, [oneReg, 1]);
         if (targetNode.type == "Identifier") {
-            let resolution = cg.findVariable(targetNode.name);
+            // === SỬA TỪ ĐÂY ===
+            assert(targetNode.resolution, "Lỗi: visitPrefixUpdateExpression không tìm thấy 'resolution' cho '" + targetNode.name + "'!");
+            let resolution = targetNode.resolution;
             assert(resolution.type == "local", "Toán tử ++/-- chỉ hỗ trợ biến local.");
-            let targetReg = resolution.index;
+            
+            let localSlot = resolution.symbol.index;
+            let targetReg = cg.currentState.localIndexToReg[localSlot];
+            assert(targetReg != null, "Lỗi CodeGen: Không tìm thấy thanh ghi cho local slot " + str(localSlot));
+            // === ĐẾN ĐÂY ===
+
             Emitter.emit(cg.currentState.proto, op, [targetReg, targetReg, oneReg]);
             Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, targetReg]);
-        } else if (targetNode.type == "PropertyAccess") {
-            let objReg = cg.visitExpression(targetNode.object);
+        } else if (targetNode.type == "PropertyAccess") {            let objReg = cg.visitExpression(targetNode.object);
             let propNameIdx = cg.currentState.pool.add(targetNode.property.name);
             let currentValReg = cg.currentState.allocator.ralloc();
             Emitter.emit(cg.currentState.proto, OpCodes.GET_PROP, [currentValReg, objReg, propNameIdx]);
@@ -373,13 +379,19 @@ export fn visitPostfixUpdateExpression(cg, node) {
     cg.currentState.allocator.withTemp(fn(oneReg) {
         Emitter.emit(cg.currentState.proto, OpCodes.LOAD_INT, [oneReg, 1]);
         if (targetNode.type == "Identifier") {
-            let resolution = cg.findVariable(targetNode.name);
+            // === SỬA TỪ ĐÂY ===
+            assert(targetNode.resolution, "Lỗi: visitPostfixUpdateExpression không tìm thấy 'resolution' cho '" + targetNode.name + "'!");
+            let resolution = targetNode.resolution;
             assert(resolution.type == "local", "Toán tử ++/-- chỉ hỗ trợ biến local.");
-            let targetReg = resolution.index;
+            
+            let localSlot = resolution.symbol.index;
+            let targetReg = cg.currentState.localIndexToReg[localSlot];
+            assert(targetReg != null, "Lỗi CodeGen: Không tìm thấy thanh ghi cho local slot " + str(localSlot));
+            // === ĐẾN ĐÂY ===
+
             Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, targetReg]);
             Emitter.emit(cg.currentState.proto, op, [targetReg, targetReg, oneReg]);
-        } else if (targetNode.type == "PropertyAccess") {
-            let objReg = cg.visitExpression(targetNode.object);
+        } else if (targetNode.type == "PropertyAccess") {            let objReg = cg.visitExpression(targetNode.object);
             let propNameIdx = cg.currentState.pool.add(targetNode.property.name);
             Emitter.emit(cg.currentState.proto, OpCodes.GET_PROP, [destReg, objReg, propNameIdx]);
             let newValReg = cg.currentState.allocator.ralloc();

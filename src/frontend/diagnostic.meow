@@ -188,7 +188,7 @@ fn getSemanticErrorMessage(code, node, replacements) {
 
     if (replacements) {
         for (key in replacements.keys()) {
-            msg = String.replace(msg, "%{" + key + "}", str(key));
+            msg = String.replace(msg, "%{" + key + "}", str(replacements[key]));
         }
     }
 
