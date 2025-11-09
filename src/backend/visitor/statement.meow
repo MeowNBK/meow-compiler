@@ -137,16 +137,15 @@ export let visitLetStatement = fn(cg, node) {
 export let visitFunctionStatement = fn(cg, node) {
     let name = node.name.name;
     node.func.name = name;
-
-    let valueReg = cg.visitExpression(node.func);
-
+    
+    // === ĐẢO LÊN TRÊN ===
     assert(node.name.resolution && node.name.resolution.type == "local", "Lỗi: FunctionStatement " + name + " không được resolve là local");
-    let localSlot = node.name.resolution.symbol.index;
+    let localSlot = node.name.resolution.symbol.index; //
 
     let scopeLevel = cg.currentState.scope.length - 1;
     let currentScope = cg.currentState.scope[scopeLevel];
 
-    let destReg;
+    let destReg; //
     if (scopeLevel > 0) {
         destReg = cg.currentState.allocator.take();
     } else {
@@ -154,9 +153,12 @@ export let visitFunctionStatement = fn(cg, node) {
     }
     
     cg.currentState.regToLocalIndex[str(destReg)] = localSlot;
-    cg.currentState.localIndexToReg[localSlot] = destReg;
+    cg.currentState.localIndexToReg[localSlot] = destReg; // <--- (B) Gán mapping TRƯỚC
     currentScope[name] = localSlot;
+    // === HẾT ĐẢO ===
 
+    let valueReg = cg.visitExpression(node.func); // <--- (A) Chạy cái này SAU
+    
     Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, valueReg]);
     
     if (scopeLevel == 0 && cg.states.length == 1) {
@@ -164,7 +166,6 @@ export let visitFunctionStatement = fn(cg, node) {
         Emitter.emit(cg.currentState.proto, OpCodes.SET_GLOBAL, [constIdx, destReg]);
     }
 };
-
 
 // export fn visitClassStatement(cg, node) {
 //     let className = node.name.name;
