@@ -64,6 +64,63 @@ export fn visitArrayLiteral(cg, node) {
     return dstReg;
 }
 
+// export let visitObjectLiteral = fn(cg, node) {
+//     let count = node.properties.length;
+//     if (count == 0) {
+//         let dst = cg.currentState.allocator.ralloc();
+//         Emitter.emit(cg.currentState.proto, OpCodes.NEW_HASH, [dst, 0, 0]);
+//         return dst;
+//     }
+
+//     cg.currentState.allocator.beginScope();
+
+//     let startReg = cg.currentState.allocator.rallocBlock(count * 2);
+
+//     for (let i = 0; i < count; ++i) {
+//         let pair = node.properties[i];
+//         let keyNode = pair.key;
+//         let valNode = pair.value;
+
+//         let targetKeyReg = startReg + i * 2;
+//         let targetValReg = startReg + i * 2 + 1;
+
+
+//         if (keyNode.type == 'StringLiteral') {
+//             let constIdx = cg.currentState.pool.add(keyNode.value);
+//             cg.currentState.allocator.withTemp(fn(tempReg) {
+//                 Emitter.emit(cg.currentState.proto, OpCodes.LOAD_CONST, [tempReg, constIdx]);
+//                 if (tempReg != targetKeyReg) {
+//                     Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [targetKeyReg, tempReg]);
+//                 }
+//             });
+//         } else if (keyNode.type == 'Identifier') {
+//             let constIdx = cg.currentState.pool.add(keyNode.name);
+//             cg.currentState.allocator.withTemp(fn(tempReg) {
+//                 Emitter.emit(cg.currentState.proto, OpCodes.LOAD_CONST, [tempReg, constIdx]);
+//                 if (tempReg != targetKeyReg) {
+//                     Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [targetKeyReg, tempReg]);
+//                 }
+//             });
+//         } else {
+
+//             let keyReg = cg.visitExpression(keyNode);
+//             if (keyReg != targetKeyReg) {
+//                 Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [targetKeyReg, keyReg]);
+//             }
+//         }
+
+//         let valReg = cg.visitExpression(valNode);
+//         if (valReg != targetValReg) {
+//             Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [targetValReg, valReg]);
+//         }
+//     }
+
+//     let dstReg = cg.currentState.allocator.ralloc();
+//     Emitter.emit(cg.currentState.proto, OpCodes.NEW_HASH, [dstReg, startReg, count]);
+//     cg.currentState.allocator.endScope();
+//     return dstReg;
+// };
+
 export let visitObjectLiteral = fn(cg, node) {
     let count = node.properties.length;
     if (count == 0) {
@@ -76,18 +133,25 @@ export let visitObjectLiteral = fn(cg, node) {
 
     let startReg = cg.currentState.allocator.rallocBlock(count * 2);
 
+    // === SỬA LỖI Ở ĐÂY ===
+    // Khai báo biến ở phạm vi hàm (function scope) thay vì phạm vi vòng lặp (loop scope)
+    // để ScopeAnalyzer có thể "thấy" chúng trước khi closure được định nghĩa.
+    let targetKeyReg = 0;
+    let targetValReg = 0;
+    // === KẾT THÚC SỬA LỖI ===
+
     for (let i = 0; i < count; ++i) {
         let pair = node.properties[i];
         let keyNode = pair.key;
         let valNode = pair.value;
 
-        let targetKeyReg = startReg + i * 2;
-        let targetValReg = startReg + i * 2 + 1;
-
+        // Bỏ 'let' đi, vì chúng ta đã khai báo bên trên rồi
+        targetKeyReg = startReg + i * 2;
+        targetValReg = startReg + i * 2 + 1;
 
         if (keyNode.type == 'StringLiteral') {
             let constIdx = cg.currentState.pool.add(keyNode.value);
-            cg.currentState.allocator.withTemp(fn(tempReg) {
+            cg.currentState.allocator.withTemp(fn(tempReg) { // <-- Giờ thì bắt biến 'targetKeyReg' ở scope ngoài an toàn
                 Emitter.emit(cg.currentState.proto, OpCodes.LOAD_CONST, [tempReg, constIdx]);
                 if (tempReg != targetKeyReg) {
                     Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [targetKeyReg, tempReg]);
@@ -102,7 +166,6 @@ export let visitObjectLiteral = fn(cg, node) {
                 }
             });
         } else {
-
             let keyReg = cg.visitExpression(keyNode);
             if (keyReg != targetKeyReg) {
                 Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [targetKeyReg, keyReg]);
@@ -212,14 +275,34 @@ export let visitFunctionLiteral = fn(cg, node) {
 
     let upvalues = node.resolved_upvalues;
     if (upvalues && upvalues.length > 0) {
-        childProto.upvalueDescs = upvalues;
-        childProto.numUpvalues = upvalues.length;
+        // === BẮT ĐẦU SỬA LỖI ===
         
+        // 1. Tạo mảng upvalue descriptor mới
+        childProto.upvalueDescs = []; 
+        childProto.numUpvalues = upvalues.length;
+
         for (up in upvalues) {
             if (up.isLocal) {
-                cg.currentState.capturedLocals[up.index] = true;
+                // 'up.index' là LOGICAL SLOT (ví dụ: 0 cho TokenType)
+                let localSlot = up.index; 
+                
+                // 2. Dịch nó sang PHYSICAL REGISTER (ví dụ: 1 cho TokenType)
+                let registerToCapture = cg.currentState.localIndexToReg[localSlot];
+                
+                assert(registerToCapture != null, "Lỗi CodeGen: Không thể map upvalue local slot " + str(localSlot) + " sang register.");
+                
+                // 3. Đánh dấu slot này đã bị 'capture' (cái này đúng)
+                cg.currentState.capturedLocals[localSlot] = true;
+                
+                // 4. Lưu REGISTER INDEX vào descriptor, KHÔNG PHẢI SLOT INDEX
+                childProto.upvalueDescs.push({ "isLocal": true, "index": registerToCapture });
+            } else {
+                // Nếu nó là upvalue của upvalue (isLocal = false),
+                // thì 'up.index' đã là upvalue index của cha, cứ giữ nguyên
+                childProto.upvalueDescs.push({ "isLocal": false, "index": up.index });
             }
         }
+        // === KẾT THÚC SỬA LỖI ===
     }
 
     assert(childProto.sourceName && childProto.sourceName.length > 3, "Bad childProto.sourceName after visitFunctionLiteral");

@@ -128,6 +128,10 @@ export class Parser {
             infix: null,
             precedence: Precedence.NONE
         };
+        assert(TokenType, "Not unary: " + str(TokenType));
+        // assert(!TokenType, "Unary: " + str(TokenType));
+
+        assert(TokenType._TOTAL_TOKENS, "Total: " + str(TokenType._TOTAL_TOKENS));
         for (let i = 0; i < TokenType._TOTAL_TOKENS; ++i) {
             rules[i] = defaultRule;
         }

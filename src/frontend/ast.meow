@@ -31,7 +31,7 @@ export fn FunctionLiteral(parameters, body, restParam, token) {
         parameters: parameters,
         body: body,
         restParam: restParam,
-        returnType: returnType,
+        // returnType: returnType,
         token: token
     };
 }
