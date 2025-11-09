@@ -280,10 +280,13 @@ export class Compiler {
         let bundledResult = this._bundleAst(entryPath, ".", visited);
         let bundledAst = { type: "Program", body: bundledResult.body };
 
-        if (!Io.fileExists("asts")) {
-            Io.createDir("asts");
-        }
-        Io.write("asts/" + "bundle" + ".json", str(Json.stringify(bundledAst)));
+        let analyzer = new ScopeAnalyzer(bundledAst);
+        analyzer.analyze();
+
+        // if (!Io.fileExists("asts")) {
+        //     Io.createDir("asts");
+        // }
+        // Io.write("asts/" + "bundle" + ".json", str(Json.stringify(bundledAst)));
 
         let outPath = this.options.out || "bundle.meowb";
         let generator = CodeGenerator.CodeGenerator(bundledAst, this, outPath);

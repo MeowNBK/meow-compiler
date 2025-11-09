@@ -587,7 +587,7 @@ export class ScopeAnalyzer {
                     // Không tìm thấy? 
                     // Đây có thể là lần đầu tiên ta thấy thuộc tính này (lúc gán)
                     // => Tự động ĐỊNH NGHĨA nó.
-                    print("ScopeAnalyzer: Tự động định nghĩa thuộc tính class: " + propName);
+                    // print("ScopeAnalyzer: Tự động định nghĩa thuộc tính class: " + propName);
                     
                     // (Chúng ta chưa biết kiểu, nên tạm gán là 'null' hoặc 'any')
                     symbol = new Symbol(propName, null, "property", false); 
