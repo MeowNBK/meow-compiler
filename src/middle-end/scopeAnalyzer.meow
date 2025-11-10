@@ -43,7 +43,7 @@ class AnalyzerState {
 export class ScopeAnalyzer {
     fn init(ast) {
         this.ast = ast;
-        this.states = []; // Stack các AnalyzerState (cho các hàm lồng nhau)
+        this.states = [];
         this.currentState = null;
         this.currentClassScope = null;
     }
@@ -54,7 +54,6 @@ export class ScopeAnalyzer {
         System.exit(42);
     }
 
-    // --- Quản lý Trạng thái (Function) ---
 
     fn enterState() {
         let newState = new AnalyzerState();
@@ -69,12 +68,8 @@ export class ScopeAnalyzer {
         } else {
             this.currentState = null;
         }
-        // Trả về các upvalue mà hàm con này cần
         return finishedState.upvalues;
     }
-
-    // --- Quản lý Scope (Block) ---
-
     fn enterScope() {
         let parentScope = null;
         if (this.currentState.scope_stack.length > 0) {
@@ -82,8 +77,8 @@ export class ScopeAnalyzer {
         }
         let newScope = new ScopedSymbolTable(
             "block", // Tên scope (chỉ để debug)
-            parentScope ? parentScope.scopeLevel + 1 : 1, // Cấp độ
-            parentScope // Scope cha
+            parentScope ? parentScope.scopeLevel + 1 : 1,
+            parentScope
         );
         this.currentState.scope_stack.push(newScope);
         this.currentState.current_scope = newScope;
@@ -99,16 +94,10 @@ export class ScopeAnalyzer {
         }
     }
 
-    // --- Logic Giải quyết Biến (Trái tim của Analyzer) ---
-
-    /**
-     * Tìm một biến local chỉ trong CÁC SCOPE CỦA HÀM HIỆN TẠI.
-     * (Giống hệt _findLocalInCurrentState trong CodeGen cũ)
-     */
     fn _findLocalInCurrentState(name) {
         for (let i = this.currentState.scope_stack.length - 1; i >= 0; --i) {
             let scope = this.currentState.scope_stack[i];
-            let symbol = scope.lookup(name, true); // true = currentScopeOnly
+            let symbol = scope.lookup(name, true);
             if (symbol) {
                 return {
                     "type": "local",
@@ -119,30 +108,18 @@ export class ScopeAnalyzer {
         return null;
     }
 
-    /**
-     * Tìm một biến ở các hàm BÊN NGOÀI (đệ quy).
-     * (Logic y hệt _findUpvalueRecursive trong CodeGen cũ)
-     */
     fn _findUpvalueRecursive(name, parentStateIndex) {
         if (parentStateIndex < 0) {
-            return null; // Không tìm thấy (global)
+            return null;
         }
 
         let parentState = this.states[parentStateIndex];
-        let childState = this.states[parentStateIndex + 1]; // Là hàm GỌI (this.currentState)
-
-        // 1. Kiểm tra xem nó có phải là LOCAL của hàm cha không
-        // (Đây là logic của _findLocalInCurrentState nhưng áp dụng cho parentState)
+        let childState = this.states[parentStateIndex + 1];
         for (let i = parentState.scope_stack.length - 1; i >= 0; --i) {
             let scope = parentState.scope_stack[i];
             let symbol = scope.lookup(name, true);
             if (symbol) {
-                // A-ha! Nó là local của hàm cha.
-                // Đánh dấu là 'bị bắt' (captured)
                 symbol.isCaptured = true;
-                
-                // Thêm vào danh sách upvalue của hàm CON
-                // (nói rằng: "Tôi cần 'bắt' biến local của cha")
                 return this._addUpvalueToState(
                     { "isLocal": true, "index": symbol.index, "name": symbol.name }, 
                     childState
@@ -150,13 +127,9 @@ export class ScopeAnalyzer {
             }
         }
 
-        // 2. Nếu không, kiểm tra xem nó có phải là UPVALUE của hàm cha không
         if (parentStateIndex > 0) {
             let resultFromGrandparent = this._findUpvalueRecursive(name, parentStateIndex - 1);
             if (resultFromGrandparent != null) {
-                // A-ha! Nó là một upvalue của cha (cha cũng đi 'bắt' của ông)
-                // Thêm vào danh sách upvalue của hàm CON
-                // (nói rằng: "Tôi cần 'bắt' upvalue của cha")
                 return this._addUpvalueToState(
                     { "isLocal": false, "index": resultFromGrandparent.index, "name": name }, 
                     childState
@@ -167,13 +140,7 @@ export class ScopeAnalyzer {
         return null;
     }
 
-    /**
-     * Thêm một (hoặc tìm lại) upvalue vào danh sách của state hiện tại
-     * và trả về chỉ số (index) của nó.
-     * (Logic y hệt _addUpvalueToState trong CodeGen cũ)
-     */
     fn _addUpvalueToState(desc, state) {
-        // Kiểm tra xem đã bắt upvalue này chưa
         for (let i = 0; i < state.upvalues.length; ++i) {
             let d = state.upvalues[i];
             if (d.index == desc.index && d.isLocal == desc.isLocal) {
@@ -181,38 +148,25 @@ export class ScopeAnalyzer {
             }
         }
         
-        // Thêm mới nếu chưa có
         let newIndex = state.upvalues.length;
-        // 'desc' đã chứa 'isLocal' và 'index' (của cha)
         state.upvalues.push(desc); 
         return { "type": "upvalue", "index": newIndex, "name": desc.name };
     }
 
-
-    /**
-     * Hàm 'chốt': tìm xem một cái tên (name) là local, upvalue hay global
-     * (Logic y hệt findVariable trong CodeGen cũ)
-     */
     fn _resolveVariable(name) {
-        // 1. Tìm trong các scope của hàm HIỆN TẠI (local)
         let localResult = this._findLocalInCurrentState(name);
         if (localResult) {
             return localResult;
         }
 
-        // 2. Nếu không, tìm ở các hàm BÊN NGOÀI (upvalue)
-        if (this.states.length > 1) { // Chỉ tìm khi có hàm cha
+        if (this.states.length > 1) {
             let upvalueResult = this._findUpvalueRecursive(name, this.states.length - 2);
             if (upvalueResult) {
                 return upvalueResult;
             }
         }
-
-        // 3. Không thấy? Vậy nó là GLOBAL
         return { "type": "global", "name": name };
     }
-
-    // --- Các hàm Visitor ---
 
     fn analyze() {
         this.visit(this.ast);
@@ -220,18 +174,12 @@ export class ScopeAnalyzer {
 
     fn visit(node) {
         if (node == null) return;
-        
-        // Dùng tên hàm dựa trên 'type' của nút AST
-        // Ví dụ: "LetStatement" -> "visitLetStatement"
         let visitorFnName = "visit" + node.type; 
         let visitorFn = this[visitorFnName];
         
         if (visitorFn) {
             return visitorFn(node);
         }
-
-        // Tự động 'dạo' qua các node con nếu không có hàm visit cụ thể
-        // (Code này 'lấy cắp' từ SemanticAnalyzer của cậu)
         for (childKey in node.keys()) {
             let child = node[childKey];
             if (typeof(child) == "object" && child != null && child.type) {
@@ -244,7 +192,7 @@ export class ScopeAnalyzer {
 
     fn visitProgram(node) {
         this.enterState();
-        this.enterScope(); // Global scope (scope 0)
+        this.enterScope();
         
         for (statement in node.body) {
             this.visit(statement);
@@ -262,33 +210,22 @@ export class ScopeAnalyzer {
         this.exitScope();
     }
 
-    // --- Định nghĩa Biến ---
-
-    /**
-     * Hàm helper: Định nghĩa một biến trong scope hiện tại
-     * và "trang trí" (annotate) nút AST của nó.
-     */
     fn _defineAndAnnotate(nameNode, isConstant, kind) {
         let name = nameNode.name;
         
-        // Kiểm tra xem có bị trùng tên trong *cùng một block* không
-        if (this.currentState.current_scope.lookup(name, true)) { // true = currentScopeOnly
+        if (this.currentState.current_scope.lookup(name, true)) {
             this.throwError(ErrorCodes.ERR_VARIABLE_REDEFINITION, nameNode, {
                 variableName: name
             });
         }
         
-        // (Kiểu tĩnh sẽ điền 'typeAnnotation' ở đây)
         let symbol = new Symbol(name, null, kind, isConstant);
         
-        // Gán "slot" (chỉ số local) cho nó
         symbol.index = this.currentState.local_count;
         this.currentState.local_count = this.currentState.local_count + 1;
         
         this.currentState.current_scope.define(symbol);
         
-        // ** Quan trọng: Trang trí nút IDENTIFIER (của biến) **
-        // CodeGen sẽ đọc 'resolution' này
         nameNode.resolution = {
             "type": "local",
             "symbol": symbol
@@ -296,130 +233,76 @@ export class ScopeAnalyzer {
     }
 
     fn visitLetStatement(node) {
-        // 1. Phân tích giá trị GÁN (nếu có) TRƯỚC
-        // Để đảm bảo 'let a = a' (trong scope con) là lỗi
         if (node.value) {
             this.visit(node.value);
         }
         
-        // 2. Đưa biến vào scope
         this._defineAndAnnotate(node.name, node.isConstant, "variable");
     }
 
     fn visitFunctionStatement(node) {
-        // Hàm (function) được đưa vào scope ngay lập tức (hoisting)
         this._defineAndAnnotate(node.name, true, "function");
         
-        // Phân tích thân hàm
         this.visit(node.func);
     }
     
     fn visitClassStatement(node) {
-        // 1. Định nghĩa tên class trong scope HIỆN TẠI
         this._defineAndAnnotate(node.name, true, "class");
 
-        // 2. Xử lý superclass (nếu có)
         if (node.superclass) {
             this.visit(node.superclass);
         }
-
-        // 3. --- LOGIC MỚI ---
-        // Tạo một scope MỚI cho class (để chứa các phương thức/thuộc tính)
         let classScope = new ScopedSymbolTable(
             "class:" + node.name.name,
             this.currentState.current_scope.scopeLevel + 1,
             this.currentState.current_scope 
         );
-        
-        // 4. Lưu và thay đổi scope
         let savedScope = this.currentState.current_scope;
         let savedClassScope = this.currentClassScope;
 
         this.currentState.current_scope = classScope;
-        this.currentClassScope = classScope; // Đặt class scope hiện tại
-
-        // 5. --- BẮT ĐẦU 2-PASS ---
-        
-        // LƯỢT 1: Định nghĩa TẤT CẢ các phương thức (chỉ tên)
+        this.currentClassScope = classScope;
         for (method in node.methods) {
-            // method là một FunctionStatement
-            // Chỉ gọi _defineAndAnnotate cho tên của nó.
-            // Việc này sẽ đưa 'init', 'compileProject', '_compileFile', v.v.
-            // vào classScope TRƯỚC KHI phân tích bất kỳ thân hàm nào.
             this._defineAndAnnotate(method.name, true, "function");
         }
         
-        // LƯỢT 2: Duyệt thân (body) của các phương thức
         for (method in node.methods) {
-            // Bây giờ ta visit FunctionLiteral (method.func)
-            // (Không visit 'method' nữa vì nó sẽ cố định nghĩa lại tên hàm)
             this.visit(method.func); 
         }
 
-        // 6. Khôi phục scope cũ
         this.currentState.current_scope = savedScope;
         this.currentClassScope = savedClassScope;
     }
 
     fn visitFunctionLiteral(node) {
-        this.enterState(); // ** Bắt đầu một hàm MỚI **
-        let paramScope = this.enterScope(); // Scope cho tham số
-        
-        // 1. Định nghĩa các tham số trong scope mới
-        // (AST cũ lưu param là list các Identifier)
+        this.enterState();
+        let paramScope = this.enterScope();
         for (paramNode in node.parameters) {
             this._defineAndAnnotate(paramNode, false, "parameter");
         }
-
-        // 2. Phân tích thân hàm (phải là BlockStatement)
         this.visit(node.body);
+        this.exitScope();
         
-        // (Không cần exitScope() vì visit(node.body) là BlockStatement
-        //  đã tự enter/exit scope rồi... 
-        //  À không, thân hàm BẮT BUỘC là BlockStatement,
-        //  nhưng parser lại gọi this.declaration(), 
-        //  có thể nó là một BlockStatement.
-        //  Logic của `visitFunctionLiteral` là `visitStatement(node.body)`.
-        //  Để an toàn, ta nên giả định `node.body` là một BlockStatement
-        //  và `visit` nó sẽ tự xử lý scope của nó.)
-        
-        // À, tớ nhầm. `visitFunctionLiteral` cũ
-        // KHÔNG `exitScope`... Nó chỉ `exitState`.
-        // Ta phải `exitScope` của tham số.
-        this.exitScope(); // Đóng scope của tham số
-        
-        let upvalues = this.exitState(); // ** Kết thúc hàm **
-        
-        // 3. ** Quan trọng: Trang trí nút FunctionLiteral **
-        // CodeGen sẽ đọc cái này để tạo CLOSURE
+        let upvalues = this.exitState();
         node.resolved_upvalues = upvalues;
     }
-    
-    // --- Sử dụng Biến ---
-    
+
     fn visitIdentifier(node) {
-        // Chỉ resolve nếu nó chưa được resolve (ví dụ: lúc define)
         if (node.resolution != null) {
             return;
         }
         
-        // ** Quan trọng: Trang trí nút IDENTIFIER (lúc sử dụng) **
         node.resolution = this._resolveVariable(node.name);
     }
     
     fn visitAssignmentExpression(node) {
-        // Phân tích giá trị (value) trước
         this.visit(node.value);
         
-        // Phân tích đích (target)
         this.visit(node.target);
         
-        // Kiểm tra gán vào hằng số 'const'
         let target = node.target;
         if (target.type == "Identifier") {
-            // Phải đảm bảo nó đã được resolve
             if (target.resolution == null) {
-                 // Lỗi này không nên xảy ra nếu visit(target) chạy đúng
                 this.throwError(ErrorCodes.ERR_UNDECLARED_VARIABLE, target, {
                     variableName: target.name
                 });
@@ -432,27 +315,21 @@ export class ScopeAnalyzer {
             }
         }
     }
-
-    // Các hàm 'bao' scope khác
     
     fn visitForStatement(node) {
-        this.enterScope(); // Scope cho 'init'
+        this.enterScope();
         if (node.init) this.visit(node.init);
         if (node.condition) this.visit(node.condition);
         if (node.update) this.visit(node.update);
-        
-        // Thân (body) có thể là một statement đơn lẻ hoặc 1 block
-        // Nó KHÔNG nằm trong scope của 'init'.
         this.visit(node.body); 
         
         this.exitScope();
     }
     
     fn visitForInStatement(node) {
-        this.visit(node.collection); // Phân tích collection trước
+        this.visit(node.collection);
         
-        this.enterScope(); // Scope cho biến 'variable'
-        // 'variable' là một Identifier
+        this.enterScope();
         this._defineAndAnnotate(node.variable, false, "variable");
         
         this.visit(node.body);
@@ -478,7 +355,6 @@ export class ScopeAnalyzer {
     fn visitTryStatement(node) {
         this.visit(node.tryBlock);
         
-        // Catch block tạo scope riêng cho biến lỗi
         this.enterScope();
         if (node.catchVariable) {
             this._defineAndAnnotate(node.catchVariable, false, "variable");
@@ -490,10 +366,9 @@ export class ScopeAnalyzer {
     fn visitSwitchStatement(node) {
         this.visit(node.value);
         
-        // Switch tạo một scope
         this.enterScope();
         for (cas in node.cases) {
-            this.visit(cas); // visitSwitchCase
+            this.visit(cas);
         }
         this.exitScope();
     }
@@ -506,9 +381,7 @@ export class ScopeAnalyzer {
             this.visit(stmt);
         }
     }
-    
-    // ----- Các hàm còn lại chỉ cần 'visit' con của chúng -----
-    
+        
     fn visitReturnStatement(node) {
         if (node.value) this.visit(node.value);
     }
@@ -518,20 +391,15 @@ export class ScopeAnalyzer {
     }
     
     fn visitImportStatement(node) {
-        this.visit(node.path); // Phân tích đường dẫn (dự phòng)
+        this.visit(node.path);
         
         if (node.namespaceImport != null) {
-            // Xử lý: import * as Name from ...
-            // node.namespaceImport là một Identifier node
             this._defineAndAnnotate(node.namespaceImport, true, "module");
         } else if (node.namedImports.length > 0) {
-            // Xử lý: import { Var1, Var2 } from ...
             for (importId in node.namedImports) {
-                // importId là một Identifier node
                 this._defineAndAnnotate(importId, true, "import");
             }
         }
-        // (Không cần xử lý `import "..."` vì nó không định nghĩa biến)
     }
 
     fn visitExportStatement(node) {
@@ -574,35 +442,25 @@ export class ScopeAnalyzer {
     }
     
     fn visitPropertyAccess(node) {
-        // node.object là 'this', node.property là 'something'
         if (node.object.type == "ThisExpression") {
             if (this.currentClassScope) {
                 let propName = node.property.name;
                 
-                // 1. Tra cứu property trong class scope
                 let symbol = this.currentClassScope.lookup(propName, false);
                 
-                // 2. --- THAY ĐỔI LOGIC Ở ĐÂY ---
                 if (!symbol) {
-                    // Không tìm thấy? 
-                    // Đây có thể là lần đầu tiên ta thấy thuộc tính này (lúc gán)
-                    // => Tự động ĐỊNH NGHĨA nó.
-                    // print("ScopeAnalyzer: Tự động định nghĩa thuộc tính class: " + propName);
-                    
-                    // (Chúng ta chưa biết kiểu, nên tạm gán là 'null' hoặc 'any')
                     symbol = new Symbol(propName, null, "property", false); 
                     
                     this.currentClassScope.define(symbol);
                 }
                 
-                // 3. Trang trí nút property (không phải nút 'this')
                 node.property.resolution = {
                     "type": "class_member",
                     "symbol": symbol
                 };
                 
                 // Không cần visit 'object' (là 'this')
-                return; // Đã xử lý xong
+                return;
             }
         }
 
@@ -647,11 +505,10 @@ export class ScopeAnalyzer {
     
     fn visitTemplateLiteral(node) {
         for (part in node.parts) {
-            this.visit(part); // (Phần lớn là StringLiteral)
+            this.visit(part);
         }
     }
     
-    // Các hàm visit 'lá' (không làm gì)
     fn visitIntegerLiteral(node) {}
     fn visitRealLiteral(node) {}
     fn visitStringLiteral(node) {}

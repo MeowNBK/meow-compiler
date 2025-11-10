@@ -2,7 +2,6 @@ import * as CodeGenerator from "./codeGenerator.meow";
 import * as Io from "io";
 import * as Json from "json";
 import * as System from "system";
-// import * as Meta from "meta";
 import { makeCacheFile } from "./utils/makeCacheFile.meow";
 import { BytecodeStringifier } from "./bytecodeStringifier.meow";
 import { Lexer } from "../frontend/lexer.meow";
@@ -34,11 +33,8 @@ fn _findExportedNames(ast) {
     for (stmt in ast.body) {
         if (stmt.type == "ExportStatement") {
             if (stmt.declaration && stmt.declaration.name && stmt.declaration.name.name) {
-                // Lấy tên từ `export class Name`, `export function Name`, `export let Name`
                 names.push(stmt.declaration.name.name);
             } else if (stmt.specifiers && stmt.specifiers.length > 0) {
-                // === DÒNG SỬA ĐÂY ===
-                // Lấy tên từ `export { var1, var2 }`
                 for (spec in stmt.specifiers) {
                     names.push(spec.name);
                 }
@@ -65,7 +61,6 @@ export class Compiler {
         }
         if (this.options.out) {
             Io.copyFile(entryCache, this.options.out);
-            // print("✅ Viết output vào: " + this.options.out);
             return Io.getAbsolutePath(this.options.out);
         }
         return entryCache;
@@ -92,7 +87,6 @@ export class Compiler {
             }
 
             this.compiledModules[absolutePath] = Io.getAbsolutePath(cachePath);
-            // print("♻️ Đã dùng lại cache cho: " + absolutePath);
             return Io.getAbsolutePath(cachePath);
         }
 
@@ -107,7 +101,6 @@ export class Compiler {
             System.exit(1);
         }
 
-        // let filename = Io.getFileName(absolutePath);
         let preprocessor = new Preprocessor();
         let processedSource = preprocessor.process(source, absolutePath);
 
@@ -147,7 +140,6 @@ export class Compiler {
 
         this.dependencyGraph[absolutePath] = imports;
         this.compiledModules[absolutePath] = Io.getAbsolutePath(cachePath);
-        // print("✅ Biên dịch xong, tạo file cache mới: " + cachePath);
 
         let dependents = this._gatherDependents(absolutePath, null);
         for (d in dependents) {
@@ -161,37 +153,28 @@ export class Compiler {
     }
 
     fn _resolvePath(p, importerDir) {
-        // 0) absolute -> trả luôn
         if (_isAbsolutePath(p)) return Io.getAbsolutePath(p);
-        // Chuẩn hoá importerDir thành absolute (nếu có)
         let absImporter = null;
         if (importerDir && importerDir.length > 0) {
             absImporter = Io.getAbsolutePath(importerDir);
         }
 
-        // Xác định xem import có phải là explicit-relative (./ or ../)
         let isExplicitRelative = false;
         if (p.startsWith("./") || p.startsWith("../")) isExplicitRelative = true;
 
-        // Build candidate list:
         let candidates = [];
-        // 1) nếu import dạng ./... hoặc ../... thì ưu tiên importerDir
         if (isExplicitRelative && absImporter) {
             candidates.push(absImporter + "/" + p);
         }
 
-        // 2) includePaths từ options (nếu có)
         if (this && this.options && this.options.includePaths) {
             for (ip in this.options.includePaths) {
                 candidates.push(Io.getAbsolutePath(ip) + "/" + p);
             }
         }
 
-        // 3) cwd
         candidates.push(Io.getAbsolutePath(".") + "/" + p);
-        // 4) fallback: original p (module name / maybe absolute after Io.getAbsolutePath)
         candidates.push(p);
-        // Thử each candidate; nếu không tìm, thử thêm .meow
         let tryWithExt = !p.endsWith(".meow");
         for (cand in candidates) {
             let absCand = Io.getAbsolutePath(cand);
@@ -202,9 +185,7 @@ export class Compiler {
             }
         }
 
-        // cuối cùng: nếu import là explicit-relative thì trả path relativized importerDir/p
         if (isExplicitRelative && absImporter) return Io.getAbsolutePath(absImporter + "/" + p);
-        // fallback cuối cùng
         if (absImporter && !isExplicitRelative) return Io.getAbsolutePath(absImporter + "/" + p);
         return Io.getAbsolutePath(p);
     }
@@ -238,7 +219,6 @@ export class Compiler {
     }
 
     fn _isCacheValid(absSourcePath, cachePath) {
-        // 1. Giữ lại tất cả các bước kiểm tra ban đầu (file có tồn tại không, v.v...)
         if (this.isNoCache || this.options.force) return false;
         if (!Io.fileExists(cachePath)) return false;
 
@@ -254,39 +234,24 @@ export class Compiler {
         if (!Io.fileExists(absSourcePath)) return false;
         let srcTime = Io.getFileTimestamp(absSourcePath);
         let srcSize = Io.getFileSize(absSourcePath);
-        
-        // 2. Vẫn kiểm tra chính file nguồn, nếu nó thay đổi thì chắc chắn không hợp lệ
         if (meta.srcTime != srcTime || meta.srcSize != srcSize) return false;
-        // 3. --- NÂNG CẤP LOGIC KIỂM TRA ĐỆ QUY ---
-        // Thay vì chỉ check timestamp, ta check xem cache của file con có hợp lệ không
         for (imp in meta.imports) {
-            // Tự tính ra đường dẫn cache của file dependency
             let impCachePath = makeCacheFile(imp, this.options.buildDir || "builds/build");
-            // ĐỆ QUY THẦN SẦU ĐÂY RỒI!
-            // Nếu cache của thằng con không hợp lệ thì cache của mình cũng vứt đi!
             if (!this._isCacheValid(imp, impCachePath)) {
                 return false;
             }
         }
-
-        // 4. Nếu tất cả các file con cháu đều hợp lệ, thì cache này mới thực sự hợp lệ
         return true;
     }
 
     fn _createBundle(entryPath) {
         print("📦 Bắt đầu quá trình bundle từ entrypoint: " + entryPath);
         let visited = {};
-        // Hàm _bundleAst giờ sẽ trả về một object, ta chỉ cần phần body cuối cùng.
         let bundledResult = this._bundleAst(entryPath, ".", visited);
         let bundledAst = { type: "Program", body: bundledResult.body };
 
         let analyzer = new ScopeAnalyzer(bundledAst);
         analyzer.analyze();
-
-        // if (!Io.fileExists("asts")) {
-        //     Io.createDir("asts");
-        // }
-        // Io.write("asts/" + "bundle" + ".json", str(Json.stringify(bundledAst)));
 
         let outPath = this.options.out || "bundle.meowb";
         let generator = CodeGenerator.CodeGenerator(bundledAst, this, outPath);
@@ -295,31 +260,11 @@ export class Compiler {
         let stringifier = BytecodeStringifier();
         let bytecodeText = stringifier.stringify(protos);
         Io.write(outPath, bytecodeText);
-        // if (!Io.fileExists("tokens")) {
-        //     Io.createDir("tokens");
-        // }
-
-        // if (!Io.fileExists("asts")) {
-        //     Io.createDir("asts");
-        // }
-        // if (!Io.fileExists("protos")) {
-        //     Io.createDir("protos");
-        // }
-
-        // Io.write("tokens/" + Io.getFileStem(absolutePath) + ".json", str(Json.stringify(tokens)));
-        // Io.write("asts/" + Io.getFileStem(absolutePath) + ".json", str(Json.stringify(ast)));
-        // Io.write("protos/" + Io.getFileStem(absolutePath) + ".json", str(Json.stringify(protos)));
-
 
         print("📦 Tạo bundle thành công: " + outPath);
         return Io.getAbsolutePath(outPath);
     }
 
-// 
-// =======================================================================
-// HÀM _bundleAst ĐÃ SỬA LỖI "NGOO"
-// =======================================================================
-// 
 fn _bundleAst(sourcePath, importerDir, visited) {
     let absolutePath = this._resolvePath(sourcePath, importerDir);
     if (visited[absolutePath]) {
@@ -351,20 +296,17 @@ fn _bundleAst(sourcePath, importerDir, visited) {
                 let importedResult = this._bundleAst(dependencyPath, sourceDir, visited);
                 let iifeBodyStmts = importedResult.body;
                 
-                // --- PHẦN BẮT BUỘC: Thêm `return` vào IIFE ---
                 let properties = [];
                 for (exportedName in importedResult.exports) {
                     properties.push({
-                        // <<< SỬA LỖI Ở ĐÂY
-                        key: { type: "StringLiteral", value: exportedName }, // Key phải là StringLiteral
-                        value: { type: "Identifier", name: exportedName }  // Value là Identifier
+                        key: { type: "StringLiteral", value: exportedName },
+                        value: { type: "Identifier", name: exportedName }
                     });
                 }
                 let objectLiteral = { type: "ObjectLiteral", properties: properties };
                 let returnStmt = { type: "ReturnStatement", value: objectLiteral };
                 iifeBodyStmts.push(returnStmt);
 
-                // --- Tạo IIFE ---
                 let iifeBlock = { type: "BlockStatement", statements: iifeBodyStmts };
                 let iifeFunc = { 
                     type: "FunctionLiteral", 
@@ -378,10 +320,7 @@ fn _bundleAst(sourcePath, importerDir, visited) {
                     args: [] 
                 };
 
-                // --- PHẦN XỬ LÝ KHÁC NHAU ---
-                
                 if (stmt.namespaceImport != null) {
-                    // `import * as Name from ...`
                     let namespaceName = stmt.namespaceImport.name;
                     let letStmt = {
                         type: "LetStatement",
@@ -392,7 +331,6 @@ fn _bundleAst(sourcePath, importerDir, visited) {
                     newBody.push(letStmt);
                     
                 } else if (stmt.namedImports.length > 0) {
-                    // `import { Var1, Var2 } from ...`
                     let tempModName = "__module_" + str(newBody.length);
                     let tempModIdent = { type: "Identifier", name: tempModName };
                     
@@ -411,7 +349,7 @@ fn _bundleAst(sourcePath, importerDir, visited) {
                             value: { 
                                 type: "PropertyAccess",
                                 object: tempModIdent, 
-                                property: { type: "Identifier", name: importIdentifier.name } // <<< CẬP NHẬT NHỎ: Đảm bảo truy cập đúng `name`
+                                property: { type: "Identifier", name: importIdentifier.name }
                             },
                             isConstant: true 
                         };
@@ -419,12 +357,11 @@ fn _bundleAst(sourcePath, importerDir, visited) {
                     }
                     
                 } else {
-                    // `import '...'`
                     newBody.push({ type: "ExpressionStatement", expression: iifeCall });
                 }
                 
             } else {
-                newBody.push(stmt); // Giữ lại import stdlib
+                newBody.push(stmt);
             }
         } else if (stmt.type == "ExportStatement") {
             if (stmt.declaration) {

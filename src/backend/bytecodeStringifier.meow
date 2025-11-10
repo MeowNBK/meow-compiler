@@ -17,7 +17,6 @@ export class BytecodeStringifier {
     }
 
     fn stringify(protos) {
-        // print(protos);
         this._allProtos = {};
         let initialKeys = protos.keys();
         for (let i = 0; i < initialKeys.length; ++i) {

@@ -1,6 +1,7 @@
 import { TokenType } from "./token.meow";
 import * as Ast from "./ast.meow";
-import { Diagnostic, Precedence, ErrorCodes } from "./diagnostic.meow";
+import { Diagnostic, ErrorCodes } from "./diagnostic.meow";
+import { Precedence } from "./precedence.meow";
 import * as System from "system";
 
 export class Parser {
