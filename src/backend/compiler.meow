@@ -305,7 +305,11 @@ export class Compiler {
                     
                     // MÀ NỐI VÀO ĐUÔI (append)
                     // Để đảm bảo dependency (import) luôn chạy trước.
-                    newBody = newBody + importedResult.body;
+                    // newBody = newBody + importedResult.body;
+
+                    for (stmt in importedResult.body) {
+                        newBody.push(stmt);
+                    }
                     
                 } else {
                     newBody.push(stmt);
