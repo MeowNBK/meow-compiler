@@ -1,7 +1,7 @@
-import * as Emitter from "./emitter.meow";
-import { OpCodes } from "./opCodes.meow";
-import { Visitor } from "./visitor/visitor.meow";
-import { CompilerState } from "./compilerState.meow";
+import * as Emitter from "backend/emitter.meow";
+import { OpCodes } from "backend/opCodes.meow";
+import { Visitor } from "backend/visitor/visitor.meow";
+import { CompilerState } from "backend/compilerState.meow";
 
 export class CodeGenerator {
     fn init(ast, compiler, sourceName) {

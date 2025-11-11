@@ -1,6 +1,6 @@
-import * as RegisterAllocator from "./registerAllocator.meow";
-import * as ConstantPool from "./constantPool.meow";
-import * as Emitter from "./emitter.meow";
+import * as RegisterAllocator from "backend/registerAllocator.meow";
+import * as ConstantPool from "backend/constantPool.meow";
+import * as Emitter from "backend/emitter.meow";
 
 export class CompilerState {
     fn init(name) {

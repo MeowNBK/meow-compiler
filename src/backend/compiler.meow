@@ -1,13 +1,13 @@
 import * as Io from "io";
 import * as Json from "json";
 import * as System from "system";
-import { makeCacheFile } from "./utils/makeCacheFile.meow";
-import { BytecodeStringifier } from "./bytecodeStringifier.meow";
-import { Lexer } from "../frontend/lexer.meow";
-import { Parser } from "../frontend/parser.meow";
-import { Preprocessor } from "../frontend/preprocessor.meow";
-import { ScopeAnalyzer } from "../middle-end/scopeAnalyzer.meow";
-import { CodeGenerator } from "./codeGenerator.meow";
+import { Lexer } from "frontend/lexer.meow";
+import { Parser } from "frontend/parser.meow";
+import { Preprocessor } from "frontend/preprocessor.meow";
+import { ScopeAnalyzer } from "middle-end/scopeAnalyzer.meow";
+import { makeCacheFile } from "backend/utils/makeCacheFile.meow";
+import { BytecodeStringifier } from "backend/bytecodeStringifier.meow";
+import { CodeGenerator } from "backend/codeGenerator.meow";
 
 fn _getDirectoryPath(fullPath) {
     let filename = Io.getFileName(fullPath);

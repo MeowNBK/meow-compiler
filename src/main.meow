@@ -1,7 +1,7 @@
-import { Compiler } from "./backend/compiler.meow";
 import * as System from "system";
 import * as Io from "io";
 import * as String from "string";
+import { Compiler } from "backend/compiler.meow";
 
 let argv = System.argv();
 
@@ -14,7 +14,7 @@ if (argv.size() <= 2) {
 let startIndex = 2;
 let entrypoint = null;
 let isNoCache = false;
-let options = { includePaths: [] };
+let options = { includePaths: ["src"] };
 let runtimeArgs = [];
 let shouldRun = false;
 

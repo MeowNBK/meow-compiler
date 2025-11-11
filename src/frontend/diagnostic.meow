@@ -1,6 +1,6 @@
+import { tokenTypeToString } from "frontend/token.meow";
 import * as String from "string";
 import * as Io from "io";
-import { tokenTypeToString } from "./token.meow";
 
 export let ErrorCodes = {
     ERR_UNEXPECTED_TOKEN: 1001,

@@ -1,6 +1,6 @@
-import * as Emitter from "../emitter.meow";
-import { OpCodes } from "../opCodes.meow";
-import { TokenType, tokenTypeToString, stringToTokenType } from "../../frontend/token.meow";
+import * as Emitter from "backend/emitter.meow";
+import { OpCodes } from "backend/opCodes.meow";
+import { TokenType, tokenTypeToString, stringToTokenType } from "frontend/token.meow";
 
 let binaryOps = {
     [TokenType.OP_PLUS]:      fn(l, r) { return l + r; }, [TokenType.OP_MINUS]:     fn(l, r) { return l - r; },

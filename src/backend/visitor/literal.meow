@@ -1,6 +1,6 @@
-import * as Emitter from "../emitter.meow";
 import * as String from "string";
-import { OpCodes } from "../opCodes.meow";
+import * as Emitter from "backend/emitter.meow";
+import { OpCodes } from "backend/opCodes.meow";
 
 fn _emitConst(cg, value) {
     let constIdx = cg.currentState.pool.add(value);

@@ -1,6 +1,6 @@
-import { ScopedSymbolTable, Symbol } from "./symbolTable.meow";
-import { Diagnostic, ErrorCodes } from "../frontend/diagnostic.meow";
 import * as System from "system";
+import { ScopedSymbolTable, Symbol } from "frontend/symbolTable.meow";
+import { Diagnostic, ErrorCodes } from "frontend/diagnostic.meow";
 
 fn typesAreEqual(typeA, typeB) {
     if (!typeA || !typeB) return false;

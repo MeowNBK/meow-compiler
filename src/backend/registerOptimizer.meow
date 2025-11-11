@@ -1,5 +1,5 @@
-import * as Emitter from "./emitter.meow";
-import { OpCodes } from "./opCodes.meow";
+import * as Emitter from "backend/emitter.meow";
+import { OpCodes } from "backend/opCodes.meow";
 
 fn getRegArgIndices(opcode) {
     return Emitter.getRegArgIndices(opcode);

@@ -1,5 +1,5 @@
-import { ScopedSymbolTable, Symbol } from "./symbolTable.meow";
-import { Diagnostic, ErrorCodes } from "../frontend/diagnostic.meow";
+import { ScopedSymbolTable, Symbol } from "middle-end/symbolTable.meow";
+import { Diagnostic, ErrorCodes } from "frontend/diagnostic.meow";
 import * as System from "system"; // Để exit khi có lỗi
 
 /**

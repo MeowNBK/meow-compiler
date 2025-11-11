@@ -1,6 +1,6 @@
-import * as Expression from "./expression.meow";
-import * as Statement from "./statement.meow";
-import * as Literal from "./literal.meow";
+import * as Expression from "backend/visitor/expression.meow";
+import * as Statement from "backend/visitor/statement.meow";
+import * as Literal from "backend/visitor/literal.meow";
 
 export let Visitor = {
     statements: {

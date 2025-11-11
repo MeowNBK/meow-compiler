@@ -1,7 +1,7 @@
-import * as Emitter from "../emitter.meow";
-import { OpCodes } from "../opCodes.meow";
 import * as Io from "io";
 import * as Json from "json";
+import * as Emitter from "backend/emitter.meow";
+import { OpCodes } from "backend/opCodes.meow";
 
 fn _endScopeAndCloseUpvalues(cg) {
     let scopeToEnd = cg.currentState.scope[cg.currentState.scope.length - 1];

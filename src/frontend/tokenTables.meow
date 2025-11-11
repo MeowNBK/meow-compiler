@@ -1,4 +1,4 @@
-import { TokenType } from "./token.meow";
+import { TokenType } from "frontend/token.meow";
 
 export let keywords = {
     "let": TokenType.KEYWORD_LET,

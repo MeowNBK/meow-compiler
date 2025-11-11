@@ -1,7 +1,6 @@
 import * as String from "string";
 import * as Json from "json";
-
-import { OpCodes } from "./opCodes.meow";
+import { OpCodes } from "backend/opCodes.meow";
 
 let JUMP_INSTRUCTIONS = {
     [OpCodes.JUMP]:          { targetArgIndex: 0 },
