@@ -8,41 +8,7 @@ import { ScopeAnalyzer } from "middle-end/scopeAnalyzer.meow";
 import { makeCacheFile } from "backend/utils/makeCacheFile.meow";
 import { BytecodeStringifier } from "backend/bytecodeStringifier.meow";
 import { CodeGenerator } from "backend/codeGenerator.meow";
-
-fn _getDirectoryPath(fullPath) {
-    let filename = Io.getFileName(fullPath);
-    if (filename.length >= fullPath.length) return "";
-    return fullPath.slice(0, fullPath.length - filename.length);
-}
-
-fn _isAbsolutePath(path) {
-    if (path.length == 0) return false;
-    if (path[0] == "/" || path[0] == "\\") return true;
-    if (path.length >= 3 && path[1] == ":") {
-        let driveLetter = path[0];
-        if ((driveLetter >= "a" && driveLetter <= "z") || (driveLetter >= "A" && driveLetter <= "Z")) {
-            if (path[2] == "/" || path[2] == "\\") return true;
-        }
-    }
-    return false;
-}
-
-fn _findExportedNames(ast) {
-    let names = [];
-    if (!ast || !ast.body) return names;
-    for (stmt in ast.body) {
-        if (stmt.type == "ExportStatement") {
-            if (stmt.declaration && stmt.declaration.name && stmt.declaration.name.name) {
-                names.push(stmt.declaration.name.name);
-            } else if (stmt.specifiers && stmt.specifiers.length > 0) {
-                for (spec in stmt.specifiers) {
-                    names.push(spec.name);
-                }
-            }
-        }
-    }
-    return names;
-}
+import { getDirectoryPath, isAbsolutePath } from "backend/utils/pathUtils.meow"
 
 export class Compiler {
     fn init(isNoCache, options) {
@@ -114,7 +80,7 @@ export class Compiler {
         }
         let analyzer = new ScopeAnalyzer(ast);
         analyzer.analyze();
-        let sourceDir = _getDirectoryPath(absolutePath);
+        let sourceDir = getDirectoryPath(absolutePath);
         let imports = this._extractImportsFromAST(ast, sourceDir);
         for (imp in imports) {
             this._compileFile(imp, sourceDir);
@@ -144,7 +110,7 @@ export class Compiler {
         let dependents = this._gatherDependents(absolutePath, null);
         for (d in dependents) {
             if (!this.compiledModules[d]) {
-                let dd = _getDirectoryPath(d);
+                let dd = getDirectoryPath(d);
                 this._compileFile(d, dd);
             }
         }
@@ -153,7 +119,7 @@ export class Compiler {
     }
 
     fn _resolvePath(p, importerDir) {
-        if (_isAbsolutePath(p)) return Io.getAbsolutePath(p);
+        if (isAbsolutePath(p)) return Io.getAbsolutePath(p);
         let absImporter = null;
         if (importerDir && importerDir.length > 0) {
             absImporter = Io.getAbsolutePath(importerDir);
@@ -290,7 +256,7 @@ export class Compiler {
         let ast = parser.parseProgram();
 
         let newBody = [];
-        let sourceDir = _getDirectoryPath(absolutePath);
+        let sourceDir = getDirectoryPath(absolutePath);
         
         for (stmt in ast.body) {
             if (stmt.type == "ImportStatement") {
