@@ -383,12 +383,18 @@ export fn visitImportStatement(cg, node) {
     if (stdlib[sourcePath] != null || sourcePath.endsWith(".meowb")) {
         pathIdx = cg.currentState.pool.add(sourcePath);
     } else if (sourcePath.endsWith(".meow")) {
-        let currentFileDir = _getDirectoryPath(cg.currentState.proto.sourceName);
-        let importAbsolutePath = Io.getAbsolutePath(currentFileDir + "/" + sourcePath);
-        let cachePath = cg.compiler.compiledModules[importAbsolutePath];
-        assert(cachePath, "Lỗi logic: Module " + importAbsolutePath + " lẽ ra phải được biên dịch rồi!");
-        pathIdx = cg.currentState.pool.add(cachePath);
-    } else {
+            let currentFileDir = _getDirectoryPath(cg.currentState.proto.sourceName);
+            
+            // === SỬA Ở ĐÂY ===
+            // Phải dùng hàm _resolvePath của compiler (giống hệt _compileFile)
+            // để nó tìm đúng file (có xài includePaths)
+            let importAbsolutePath = cg.compiler._resolvePath(sourcePath, currentFileDir);
+            // === HẾT SỬA ===
+
+            let cachePath = cg.compiler.compiledModules[importAbsolutePath];
+    assert(cachePath, "Lỗi logic: Module " + importAbsolutePath + " lẽ ra phải được biên dịch rồi!");
+            pathIdx = cg.currentState.pool.add(cachePath);
+        } else {
         pathIdx = cg.currentState.pool.add(sourcePath);
     }
 
