@@ -247,11 +247,17 @@ export class Compiler {
     fn _createBundle(entryPath) {
         print("📦 Bắt đầu quá trình bundle từ entrypoint: " + entryPath);
         let visited = {};
+        
+        // _bundleAst giờ trả về một body đã được gộp
         let bundledResult = this._bundleAst(entryPath, ".", visited);
         let bundledAst = { type: "Program", body: bundledResult.body };
 
+        // !! MẤU CHỐT NẰM Ở ĐÂY !!
+        // ScopeAnalyzer sẽ chạy trên toàn bộ AST đã gộp
+        print("🔬 Chạy ScopeAnalyzer trên AST đã gộp...");
         let analyzer = new ScopeAnalyzer(bundledAst);
         analyzer.analyze();
+        print("🔬 ScopeAnalyzer hoàn tất!");
 
         let outPath = this.options.out || "bundle.meowb";
         let generator = CodeGenerator.CodeGenerator(bundledAst, this, outPath);
@@ -260,119 +266,70 @@ export class Compiler {
         let stringifier = BytecodeStringifier();
         let bytecodeText = stringifier.stringify(protos);
         Io.write(outPath, bytecodeText);
-
         print("📦 Tạo bundle thành công: " + outPath);
         return Io.getAbsolutePath(outPath);
     }
 
-fn _bundleAst(sourcePath, importerDir, visited) {
-    let absolutePath = this._resolvePath(sourcePath, importerDir);
-    if (visited[absolutePath]) {
-        return { type: "Program", body: [], exports: [] };
-    }
-    visited[absolutePath] = true;
+    // === HÀM ĐƯỢC REFACTOR CHÍNH ===
+    fn _bundleAst(sourcePath, importerDir, visited) {
+        let absolutePath = this._resolvePath(sourcePath, importerDir);
+        if (visited[absolutePath]) {
+            return { type: "Program", body: [] }; // Đã thăm, trả về body rỗng
+        }
+        visited[absolutePath] = true;
 
-    let source = Io.read(absolutePath);
-    if (source == null) {
-        print("[ERROR] Bundle: Không thể đọc file nguồn: " + absolutePath);
-        System.exit(1);
-    }
+        let source = Io.read(absolutePath);
+        if (source == null) {
+            print("[ERROR] Bundle: Không thể đọc file nguồn: " + absolutePath);
+            System.exit(1);
+        }
 
-    let lexer = new Lexer(source, absolutePath);
-    let tokens = lexer.tokenize();
-    let parser = new Parser(tokens);
-    let ast = parser.parseProgram();
+        let lexer = new Lexer(source, absolutePath);
+        let tokens = lexer.tokenize();
+        let parser = new Parser(tokens);
+        let ast = parser.parseProgram();
 
-    let exportedNames = _findExportedNames(ast); 
-    let newBody = [];
-    let sourceDir = _getDirectoryPath(absolutePath);
-    
-    for (stmt in ast.body) {
-        if (stmt.type == "ImportStatement") {
-            let dependencyPath = stmt.path.value;
-            
-            if (dependencyPath.endsWith(".meow")) {
-                
-                let importedResult = this._bundleAst(dependencyPath, sourceDir, visited);
-                let iifeBodyStmts = importedResult.body;
-                
-                let properties = [];
-                for (exportedName in importedResult.exports) {
-                    properties.push({
-                        key: { type: "StringLiteral", value: exportedName },
-                        value: { type: "Identifier", name: exportedName }
-                    });
-                }
-                let objectLiteral = { type: "ObjectLiteral", properties: properties };
-                let returnStmt = { type: "ReturnStatement", value: objectLiteral };
-                iifeBodyStmts.push(returnStmt);
-
-                let iifeBlock = { type: "BlockStatement", statements: iifeBodyStmts };
-                let iifeFunc = { 
-                    type: "FunctionLiteral", 
-                    parameters: [], 
-                    body: iifeBlock, 
-                    restParam: null 
-                };
-                let iifeCall = { 
-                    type: "CallExpression", 
-                    callee: iifeFunc, 
-                    args: [] 
-                };
-
-                if (stmt.namespaceImport != null) {
-                    let namespaceName = stmt.namespaceImport.name;
-                    let letStmt = {
-                        type: "LetStatement",
-                        name: { type: "Identifier", name: namespaceName },
-                        value: iifeCall,
-                        isConstant: true 
-                    };
-                    newBody.push(letStmt);
+        let newBody = [];
+        let sourceDir = _getDirectoryPath(absolutePath);
+        
+        for (stmt in ast.body) {
+            if (stmt.type == "ImportStatement") {
+                let dependencyPath = stmt.path.value;
+                if (dependencyPath.endsWith(".meow")) {
                     
-                } else if (stmt.namedImports.length > 0) {
-                    let tempModName = "__module_" + str(newBody.length);
-                    let tempModIdent = { type: "Identifier", name: tempModName };
+                    let importedResult = this._bundleAst(dependencyPath, sourceDir, visited);
                     
-                    let tempLetStmt = {
-                        type: "LetStatement",
-                        name: { type: "Identifier", name: tempModName },
-                        value: iifeCall,
-                        isConstant: true
-                    };
-                    newBody.push(tempLetStmt); 
-
-                    for (importIdentifier in stmt.namedImports) {
-                        let letStmt = {
-                            type: "LetStatement",
-                            name: importIdentifier, 
-                            value: { 
-                                type: "PropertyAccess",
-                                object: tempModIdent, 
-                                property: { type: "Identifier", name: importIdentifier.name }
-                            },
-                            isConstant: true 
-                        };
-                        newBody.push(letStmt); 
-                    }
+                    // === THAY ĐỔI CHÍNH NẰM Ở ĐÂY ===
+                    // KHÔNG NỐI VÀO ĐẦU (prepend)
+                    // newBody = importedResult.body + newBody; // <-- BUG Ở ĐÂY
+                    
+                    // MÀ NỐI VÀO ĐUÔI (append)
+                    // Để đảm bảo dependency (import) luôn chạy trước.
+                    newBody = newBody + importedResult.body;
                     
                 } else {
-                    newBody.push({ type: "ExpressionStatement", expression: iifeCall });
+                    newBody.push(stmt);
                 }
-                
+            } else if (stmt.type == "ExportStatement") {
+                if (stmt.declaration) {
+                    newBody.push(stmt.declaration);
+                }
             } else {
+                // Giữ lại tất cả các statement khác
+                // *** LƯU Ý: Tạm thời chưa thêm vào newBody vội ***
+                // Chúng ta sẽ thêm ở cuối
+            }
+        }
+        
+        // *** THAY ĐỔI THỨ 2: ***
+        // Thêm các câu lệnh của file *hiện tại* (trừ import/export)
+        // VÀO SAU CÙNG, sau khi tất cả import đã được gộp.
+        for (stmt in ast.body) {
+            if (stmt.type != "ImportStatement" && stmt.type != "ExportStatement") {
                 newBody.push(stmt);
             }
-        } else if (stmt.type == "ExportStatement") {
-            if (stmt.declaration) {
-                newBody.push(stmt.declaration);
-            }
-        } else {
-            newBody.push(stmt);
         }
-    }
 
-    ast.body = newBody;
-    return { type: "Program", body: ast.body, exports: exportedNames };
-}
+        return { type: "Program", body: newBody };
+    }
 }
