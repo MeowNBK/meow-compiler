@@ -45,7 +45,6 @@ export fn visitArrayLiteral(cg, node) {
         return dst;
     }
 
-    cg.currentState.allocator.beginScope();
     let startReg = cg.currentState.allocator.rallocBlock(count);
     
     for (let i = 0; i < count; ++i) {
@@ -58,9 +57,7 @@ export fn visitArrayLiteral(cg, node) {
 
     let dstReg = cg.currentState.allocator.ralloc();
     Emitter.emit(cg.currentState.proto, OpCodes.NEW_ARRAY, [dstReg, startReg, count]);
-
     
-    cg.currentState.allocator.endScope();
     return dstReg;
 }
 
@@ -71,8 +68,6 @@ export let visitObjectLiteral = fn(cg, node) {
         Emitter.emit(cg.currentState.proto, OpCodes.NEW_HASH, [dst, 0, 0]);
         return dst;
     }
-
-    cg.currentState.allocator.beginScope();
 
     let startReg = cg.currentState.allocator.rallocBlock(count * 2);
     let targetKeyReg = 0;
@@ -117,7 +112,6 @@ export let visitObjectLiteral = fn(cg, node) {
 
     let dstReg = cg.currentState.allocator.ralloc();
     Emitter.emit(cg.currentState.proto, OpCodes.NEW_HASH, [dstReg, startReg, count]);
-    cg.currentState.allocator.endScope();
     return dstReg;
 };
 
@@ -204,13 +198,11 @@ export fn visitTemplateLiteral(cg, node) {
 
     let resultReg = cg.visitExpression(node.parts[0]);
 
-    cg.currentState.allocator.beginScope();
     for (let i = 1; i < node.parts.length; ++i) {
         let partReg = cg.visitExpression(node.parts[i]);
         Emitter.emit(cg.currentState.proto, OpCodes.ADD, [resultReg, resultReg, partReg]);
 
     }
-    cg.currentState.allocator.endScope();
 
     return resultReg;
 }

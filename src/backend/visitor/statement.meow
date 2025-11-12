@@ -32,7 +32,6 @@ fn _endScopeAndCloseUpvalues(cg) {
     }
 
     cg.currentState.scope.pop();
-    cg.currentState.allocator.endScope();
 }
 
 export let visitLetStatement = fn(cg, node) {
@@ -44,22 +43,15 @@ export let visitLetStatement = fn(cg, node) {
     let scopeLevel = cg.currentState.scope.length - 1;
     let currentScope = cg.currentState.scope[scopeLevel];
 
-    let destReg;
-    if (scopeLevel > 0) {
-        destReg = cg.currentState.allocator.take();
-    } else {
-        destReg = cg.currentState.allocator.ralloc();
-    }
+    let destReg = cg.currentState.allocator.ralloc();
 
     cg.currentState.regToLocalIndex[str(destReg)] = localSlot;
     cg.currentState.localIndexToReg[localSlot] = destReg;
     currentScope[name] = localSlot;
     
     if (node.value != null) {
-        cg.currentState.allocator.beginScope();
         let valueReg = cg.visitExpression(node.value);
         Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, valueReg]);
-        cg.currentState.allocator.endScope();
     } else {
         Emitter.emit(cg.currentState.proto, OpCodes.LOAD_NULL, [destReg]);
     }
@@ -80,12 +72,7 @@ export let visitFunctionStatement = fn(cg, node) {
     let scopeLevel = cg.currentState.scope.length - 1;
     let currentScope = cg.currentState.scope[scopeLevel];
 
-    let destReg;
-    if (scopeLevel > 0) {
-        destReg = cg.currentState.allocator.take();
-    } else {
-        destReg = cg.currentState.allocator.ralloc();
-    }
+    let destReg = cg.currentState.allocator.ralloc();
     
     cg.currentState.regToLocalIndex[str(destReg)] = localSlot;
     cg.currentState.localIndexToReg[localSlot] = destReg;
@@ -108,7 +95,7 @@ export fn visitClassStatement(cg, node) {
     assert(node.name.resolution && node.name.resolution.type == "local", "Lỗi: ClassStatement " + className + " không được resolve là local");
     let localSlot = node.name.resolution.symbol.index;
 
-    let classReg = cg.currentState.allocator.take();
+    let classReg = cg.currentState.allocator.ralloc();
     
     cg.currentState.regToLocalIndex[str(classReg)] = localSlot;
     cg.currentState.localIndexToReg[localSlot] = classReg;
@@ -117,7 +104,6 @@ export fn visitClassStatement(cg, node) {
     
     Emitter.emit(cg.currentState.proto, OpCodes.NEW_CLASS, [classReg, classNameIdx]);
     
-    cg.currentState.allocator.beginScope();
     if (node.superclass != null) {
         let parentClassReg = cg.visitExpression(node.superclass);
         Emitter.emit(cg.currentState.proto, OpCodes.INHERIT, [classReg, parentClassReg]);
@@ -132,7 +118,6 @@ export fn visitClassStatement(cg, node) {
         Emitter.emit(cg.currentState.proto, OpCodes.SET_METHOD, [classReg, methodNameIdx, methodClosureReg]);
     }
     cg.isInsideClass = false;
-    cg.currentState.allocator.endScope();
 
     if (cg.currentState.scope.length == 1) {
         Emitter.emit(cg.currentState.proto, OpCodes.SET_GLOBAL, [classNameIdx, classReg]);
@@ -145,7 +130,7 @@ export fn visitReturnStatement(cg, node) {
     if (node.value != null) {
         reg = cg.visitExpression(node.value);
     } else {
-        reg = cg.currentState.allocator.take();
+        reg = cg.currentState.allocator.ralloc();
         Emitter.emit(cg.currentState.proto, OpCodes.LOAD_NULL, [reg]);
     }
     Emitter.emit(cg.currentState.proto, OpCodes.RETURN, [reg]);
@@ -155,10 +140,8 @@ export fn visitIfStatement(cg, node) {
     let elseLabel = Emitter.createLabel("L_ELSE");
     let endLabel = Emitter.createLabel("L_ENDIF");
 
-    cg.currentState.allocator.beginScope();
     let condReg = cg.visitExpression(node.condition);
     Emitter.emit(cg.currentState.proto, OpCodes.JUMP_IF_FALSE, [condReg, {"label": node.elseBranch ? elseLabel : endLabel}]);
-    cg.currentState.allocator.endScope();
 
     cg.visitStatement(node.thenBranch);
 
@@ -179,10 +162,8 @@ export fn visitWhileStatement(cg, node) {
 
     Emitter.defineLabel(cg.currentState.proto, startLabel);
 
-    cg.currentState.allocator.beginScope();
     let condReg = cg.visitExpression(node.condition);
     Emitter.emit(cg.currentState.proto, OpCodes.JUMP_IF_FALSE, [condReg, {"label": endLabel}]);
-    cg.currentState.allocator.endScope();
 
     cg.visitStatement(node.body);
     Emitter.emit(cg.currentState.proto, OpCodes.JUMP, [{"label": startLabel}]);
@@ -208,7 +189,6 @@ export fn visitContinueStatement(cg, node) {
 }
 
 export fn visitBlockStatement(cg, node) {
-    cg.currentState.allocator.beginScope();
     cg.currentState.scope.push({});
 
     for (statement in node.statements) {
@@ -219,14 +199,10 @@ export fn visitBlockStatement(cg, node) {
 }
 
 export fn visitExpressionStatement(cg, node) {
-    cg.currentState.allocator.beginScope();
     cg.visitExpression(node.expression);
-    cg.currentState.allocator.endScope();
 }
 
 export fn visitForStatement(cg, node) {
-
-    cg.currentState.allocator.beginScope();
     cg.currentState.scope.push({});
     
     if (node.init != null) {
@@ -252,9 +228,7 @@ export fn visitForStatement(cg, node) {
 
     Emitter.defineLabel(cg.currentState.proto, updateLabel);
     if (node.update != null) {
-        cg.currentState.allocator.beginScope();
         cg.visitExpression(node.update);
-        cg.currentState.allocator.endScope();
     }
 
     Emitter.emit(cg.currentState.proto, OpCodes.JUMP, [{"label": conditionLabel}]);
@@ -266,17 +240,16 @@ export fn visitForStatement(cg, node) {
 }
 
 export fn visitForInStatement(cg, node) {
-    cg.currentState.allocator.beginScope();
     cg.currentState.scope.push({});
 
     let collectionReg = cg.visitExpression(node.collection);
-    let keysArrayReg = cg.currentState.allocator.take();
+    let keysArrayReg = cg.currentState.allocator.ralloc();
     Emitter.emit(cg.currentState.proto, OpCodes.GET_VALUES, [keysArrayReg, collectionReg]);
 
-    let indexReg = cg.currentState.allocator.take();
+    let indexReg = cg.currentState.allocator.ralloc();
     Emitter.emit(cg.currentState.proto, OpCodes.LOAD_INT, [indexReg, 0]);
 
-    let lengthReg = cg.currentState.allocator.take();
+    let lengthReg = cg.currentState.allocator.ralloc();
     let lengthNameIdx = cg.currentState.pool.add("length");
     Emitter.emit(cg.currentState.proto, OpCodes.GET_PROP, [lengthReg, keysArrayReg, lengthNameIdx]);
     
@@ -286,11 +259,11 @@ export fn visitForInStatement(cg, node) {
     cg.currentState.loopLabels.push({ "continueTarget": startLabel, "breakTarget": endLabel });
     Emitter.defineLabel(cg.currentState.proto, startLabel);
     
-    let condReg = cg.currentState.allocator.take();
+    let condReg = cg.currentState.allocator.ralloc();
     Emitter.emit(cg.currentState.proto, OpCodes.LT, [condReg, indexReg, lengthReg]);
     Emitter.emit(cg.currentState.proto, OpCodes.JUMP_IF_FALSE, [condReg, {"label": endLabel}]);
 
-    let keyReg = cg.currentState.allocator.take();
+    let keyReg = cg.currentState.allocator.ralloc();
     Emitter.emit(cg.currentState.proto, OpCodes.GET_INDEX, [keyReg, keysArrayReg, indexReg]);
 
     let varName = node.variable.name;
@@ -317,10 +290,8 @@ export fn visitForInStatement(cg, node) {
 }
 
 export fn visitThrowStatement(cg, node) {
-    cg.currentState.allocator.beginScope();
     let errorReg = cg.visitExpression(node.argument);
     Emitter.emit(cg.currentState.proto, OpCodes.THROW, [errorReg]);
-    cg.currentState.allocator.endScope();
 }
 
 export fn visitTryStatement(cg, node) {
@@ -334,7 +305,6 @@ export fn visitTryStatement(cg, node) {
 
     Emitter.defineLabel(cg.currentState.proto, catchLabel);
     
-    cg.currentState.allocator.beginScope();
     cg.currentState.scope.push({});
     
     if (node.catchVariable != null) {
@@ -453,17 +423,14 @@ export fn visitDoWhileStatement(cg, node) {
     
     cg.visitStatement(node.body);
 
-    cg.currentState.allocator.beginScope();
     let condReg = cg.visitExpression(node.condition);
     Emitter.emit(cg.currentState.proto, OpCodes.JUMP_IF_TRUE, [condReg, {"label": startLabel}]);
-    cg.currentState.allocator.endScope();
 
     Emitter.defineLabel(cg.currentState.proto, endLabel);
     cg.currentState.loopLabels.pop();
 }
 
 export fn visitSwitchStatement(cg, node) {
-    cg.currentState.allocator.beginScope();
     cg.currentState.scope.push({});
 
     let switchValueReg = cg.visitExpression(node.value);
@@ -486,7 +453,7 @@ export fn visitSwitchStatement(cg, node) {
 
         if (cas.value != null) {
             let caseValueReg = cg.visitExpression(cas.value);
-            let eqReg = cg.currentState.allocator.take();
+            let eqReg = cg.currentState.allocator.ralloc();
             Emitter.emit(cg.currentState.proto, OpCodes.EQ, [eqReg, switchValueReg, caseValueReg]);
             Emitter.emit(cg.currentState.proto, OpCodes.JUMP_IF_FALSE, [eqReg, {"label": testChainLabels[i]}]);
             Emitter.emit(cg.currentState.proto, OpCodes.JUMP, [{"label": bodyLabels[i]}]);

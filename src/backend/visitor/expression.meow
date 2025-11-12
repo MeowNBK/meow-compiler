@@ -2,50 +2,6 @@ import * as Emitter from "backend/emitter.meow";
 import { OpCodes } from "backend/opCodes.meow";
 import { TokenType, tokenTypeToString, stringToTokenType } from "frontend/token.meow";
 
-let binaryOps = {
-    [TokenType.OP_PLUS]:      fn(l, r) { return l + r; }, [TokenType.OP_MINUS]:     fn(l, r) { return l - r; },
-    [TokenType.OP_MULTIPLY]:  fn(l, r) { return l * r; }, [TokenType.OP_DIVIDE]:    fn(l, r) { return l / r; },
-    [TokenType.OP_MODULO]:    fn(l, r) { return l % r; }, [TokenType.OP_EXPONENT]:  fn(l, r) { return l ** r; },
-    [TokenType.OP_EQ]:        fn(l, r) { return l == r; }, [TokenType.OP_NEQ]:      fn(l, r) { return l != r; },
-    [TokenType.OP_LT]:        fn(l, r) { return l < r; }, [TokenType.OP_GT]:       fn(l, r) { return l > r; },
-    [TokenType.OP_LE]:        fn(l, r) { return l <= r; }, [TokenType.OP_GE]:      fn(l, r) { return l >= r; },
-    [TokenType.OP_BIT_AND]:   fn(l, r) { return l & r; }, [TokenType.OP_BIT_OR]:    fn(l, r) { return l | r; },
-    [TokenType.OP_BIT_XOR]:   fn(l, r) { return l ^ r; }, [TokenType.OP_LSHIFT]:    fn(l, r) { return l << r; },
-    [TokenType.OP_RSHIFT]:    fn(l, r) { return l >> r; },
-};
-let unaryOps = {
-    [TokenType.OP_MINUS]:       fn(r) { return -r; }, [TokenType.OP_LOGICAL_NOT]: fn(r) { return !r; },
-    [TokenType.OP_BIT_NOT]:     fn(r) { return ~r; },
-};
-fn isLiteral(type) { return type == "IntegerLiteral" || type == "RealLiteral" || type == "StringLiteral" || type == "BooleanLiteral" || type == "NullLiteral"; }
-fn toNode(value) {
-    let t = typeof(value);
-    if (t == "int") return { "type": "IntegerLiteral", "value": value };
-    if (t == "real") return { "type": "RealLiteral", "value": value };
-    if (t == "string") return { "type": "StringLiteral", "value": value };
-    if (t == "bool") return { "type": "BooleanLiteral", "value": value };
-    if (t == "null") return { "type": "NullLiteral" };
-    return null;
-}
-fn handleBinary(node) {
-    if (!node || node.type != "BinaryExpression") return node;
-    node.left = handleBinary(node.left); node.right = handleBinary(node.right);
-    if (isLiteral(node.left.type) && isLiteral(node.right.type)) {
-        let func = binaryOps[node.op];
-        if (func) return toNode(func(node.left.value, node.right.value));
-    }
-    return node;
-}
-fn handleUnary(node) {
-    if (!node || node.type != "UnaryExpression") return node;
-    node.right = handleUnary(node.right);
-    if (isLiteral(node.right.type)) {
-        let func = unaryOps[node.op];
-        if (func) return toNode(func(node.right.value));
-    }
-    return node;
-}
-
 export fn visitIdentifier(cg, node) {
     assert(node.resolution, "Lỗi: visitIdentifier không tìm thấy 'resolution' cho '" + node.name + "'!");
     let resolution = node.resolution;
@@ -79,13 +35,11 @@ export fn visitBinaryExpression(cg, node) {
     if (node.op == TokenType.OP_LOGICAL_AND) {
         let endLabel = Emitter.createLabel("L_AND_END");
         let destReg = cg.currentState.allocator.ralloc();
-        cg.currentState.allocator.beginScope();
         let leftReg = cg.visitExpression(node.left);
         Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, leftReg]);
         Emitter.emit(cg.currentState.proto, OpCodes.JUMP_IF_FALSE, [leftReg, {"label": endLabel}]);
         let rightReg = cg.visitExpression(node.right);
         Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, rightReg]);
-        cg.currentState.allocator.endScope();
         Emitter.defineLabel(cg.currentState.proto, endLabel);
         return destReg;
     }
@@ -93,34 +47,41 @@ export fn visitBinaryExpression(cg, node) {
     if (node.op == TokenType.OP_LOGICAL_OR) {
         let endLabel = Emitter.createLabel("L_OR_END");
         let destReg = cg.currentState.allocator.ralloc();
-        cg.currentState.allocator.beginScope();
         let leftReg = cg.visitExpression(node.left);
         Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, leftReg]);
         Emitter.emit(cg.currentState.proto, OpCodes.JUMP_IF_TRUE, [leftReg, {"label": endLabel}]);
         let rightReg = cg.visitExpression(node.right);
         Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, rightReg]);
-        cg.currentState.allocator.endScope();
         Emitter.defineLabel(cg.currentState.proto, endLabel);
         return destReg;
     }
     
     let opMap = {
-        [TokenType.OP_PLUS]: OpCodes.ADD, [TokenType.OP_MINUS]: OpCodes.SUB, [TokenType.OP_MULTIPLY]: OpCodes.MUL,
-        [TokenType.OP_DIVIDE]: OpCodes.DIV, [TokenType.OP_MODULO]: OpCodes.MOD, [TokenType.OP_EXPONENT]: OpCodes.POW,
-        [TokenType.OP_EQ]: OpCodes.EQ, [TokenType.OP_NEQ]: OpCodes.NEQ, [TokenType.OP_LT]: OpCodes.LT,
-        [TokenType.OP_GT]: OpCodes.GT, [TokenType.OP_LE]: OpCodes.LE, [TokenType.OP_GE]: OpCodes.GE,
-        [TokenType.OP_BIT_AND]: OpCodes.BIT_AND, [TokenType.OP_BIT_OR]: OpCodes.BIT_OR,
-        [TokenType.OP_BIT_XOR]: OpCodes.BIT_XOR, [TokenType.OP_LSHIFT]: OpCodes.LSHIFT, [TokenType.OP_RSHIFT]: OpCodes.RSHIFT
+        [TokenType.OP_PLUS]: OpCodes.ADD,
+        [TokenType.OP_MINUS]: OpCodes.SUB,
+        [TokenType.OP_MULTIPLY]: OpCodes.MUL,
+        [TokenType.OP_DIVIDE]: OpCodes.DIV,
+        [TokenType.OP_MODULO]: OpCodes.MOD,
+        [TokenType.OP_EXPONENT]: OpCodes.POW,
+        [TokenType.OP_EQ]: OpCodes.EQ,
+        [TokenType.OP_NEQ]: OpCodes.NEQ,
+        [TokenType.OP_LT]: OpCodes.LT,
+        [TokenType.OP_GT]: OpCodes.GT,
+        [TokenType.OP_LE]: OpCodes.LE,
+        [TokenType.OP_GE]: OpCodes.GE,
+        [TokenType.OP_BIT_AND]: OpCodes.BIT_AND,
+        [TokenType.OP_BIT_OR]: OpCodes.BIT_OR,
+        [TokenType.OP_BIT_XOR]: OpCodes.BIT_XOR,
+        [TokenType.OP_LSHIFT]: OpCodes.LSHIFT,
+        [TokenType.OP_RSHIFT]: OpCodes.RSHIFT
     };
     let opcode = opMap[node.op];
     assert(opcode, "Lỗi: Toán tử nhị phân không được hỗ trợ: " + node.op);
 
     let destReg = cg.currentState.allocator.ralloc();
-    cg.currentState.allocator.beginScope();
     let leftReg = cg.visitExpression(node.left);
     let rightReg = cg.visitExpression(node.right);
     Emitter.emit(cg.currentState.proto, opcode, [destReg, leftReg, rightReg]);
-    cg.currentState.allocator.endScope();
     return destReg;
 }
 
@@ -128,15 +89,17 @@ export fn visitUnaryExpression(cg, node) {
     if (typeof(node.op) == "string") {
         node.op = stringToTokenType(node.op);
     }
-    let opMap = { [TokenType.OP_MINUS]: OpCodes.NEG, [TokenType.OP_LOGICAL_NOT]: OpCodes.NOT, [TokenType.OP_BIT_NOT]: OpCodes.BIT_NOT };
+    let opMap = { 
+        [TokenType.OP_MINUS]: OpCodes.NEG,
+        [TokenType.OP_LOGICAL_NOT]: OpCodes.NOT,
+        [TokenType.OP_BIT_NOT]: OpCodes.BIT_NOT
+    };
     let opcode = opMap[node.op];
     assert(opcode, "Lỗi: Toán tử một ngôi không được hỗ trợ: " + node.op);
 
     let destReg = cg.currentState.allocator.ralloc();
-    cg.currentState.allocator.beginScope();
     let operandReg = cg.visitExpression(node.operand);
     Emitter.emit(cg.currentState.proto, opcode, [destReg, operandReg]);
-    cg.currentState.allocator.endScope();
     return destReg;
 }
 
@@ -146,8 +109,6 @@ export fn visitCallExpression(cg, node) {
 
 
     let savedCalleeReg = cg.currentState.allocator.ralloc();
-
-    cg.currentState.allocator.beginScope();
 
     let calleeTempReg = cg.visitExpression(node.callee);
     Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [savedCalleeReg, calleeTempReg]);
@@ -195,16 +156,11 @@ export fn visitCallExpression(cg, node) {
 
     Emitter.emit(cg.currentState.proto, OpCodes.CALL, [destReg, savedCalleeReg, argStartReg, argc]);
 
-    cg.currentState.allocator.endScope();
-
-    cg.currentState.allocator.free(savedCalleeReg);
-
     return destReg;
 }
 
 export fn visitAssignmentExpression(cg, node) {
     let targetNode = node.target;
-    cg.currentState.allocator.beginScope();
     
     if (targetNode.type == "Identifier") {
         
@@ -229,7 +185,6 @@ export fn visitAssignmentExpression(cg, node) {
             Emitter.emit(cg.currentState.proto, OpCodes.SET_GLOBAL, [constIdx, valueReg]);
         }
         
-        cg.currentState.allocator.endScope();
         return valueReg;
         
     } else if (targetNode.type == "PropertyAccess") {
@@ -237,7 +192,6 @@ export fn visitAssignmentExpression(cg, node) {
         let valueReg = cg.visitExpression(node.value);
         let propNameIdx = cg.currentState.pool.add(targetNode.property.name);
         Emitter.emit(cg.currentState.proto, OpCodes.SET_PROP, [objReg, propNameIdx, valueReg]);
-        cg.currentState.allocator.endScope();
         return valueReg;
         
     } else if (targetNode.type == "IndexExpression") {
@@ -245,14 +199,12 @@ export fn visitAssignmentExpression(cg, node) {
         let indexReg = cg.visitExpression(targetNode.index);
         let valueReg = cg.visitExpression(node.value);
         Emitter.emit(cg.currentState.proto, OpCodes.SET_INDEX, [objReg, indexReg, valueReg]);
-        cg.currentState.allocator.endScope();
         return valueReg;
         
     } else {
         assert(false, "Lỗi: Đích của phép gán không được hỗ trợ: " + targetNode.type);
     }
     
-    cg.currentState.allocator.endScope();
     return -1;
 }
 
@@ -261,7 +213,6 @@ export fn visitPrefixUpdateExpression(cg, node) {
         node.op = stringToTokenType(node.op);
     }
     let destReg = cg.currentState.allocator.ralloc();
-    cg.currentState.allocator.beginScope();
     let targetNode = node.operand;
     let op = (node.op == TokenType.OP_INCREMENT) ? OpCodes.ADD : OpCodes.SUB;
 
@@ -287,7 +238,6 @@ export fn visitPrefixUpdateExpression(cg, node) {
             Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, currentValReg]);
         }
     });
-    cg.currentState.allocator.endScope();
     return destReg;
 }
 
@@ -296,7 +246,6 @@ export fn visitPostfixUpdateExpression(cg, node) {
         node.op = stringToTokenType(node.op);
     }
     let destReg = cg.currentState.allocator.ralloc();
-    cg.currentState.allocator.beginScope();
     let targetNode = node.operand;
     let op = (node.op == TokenType.OP_INCREMENT) ? OpCodes.ADD : OpCodes.SUB;
 
@@ -321,17 +270,14 @@ export fn visitPostfixUpdateExpression(cg, node) {
             Emitter.emit(cg.currentState.proto, OpCodes.SET_PROP, [objReg, propNameIdx, newValReg]);
         }
     });
-    cg.currentState.allocator.endScope();
     return destReg;
 }
 
 export fn visitIndexExpression(cg, node) {
     let destReg = cg.currentState.allocator.ralloc();
-    cg.currentState.allocator.beginScope();
     let objReg = cg.visitExpression(node.object);
     let indexReg = cg.visitExpression(node.index);
     Emitter.emit(cg.currentState.proto, OpCodes.GET_INDEX, [destReg, objReg, indexReg]);
-    cg.currentState.allocator.endScope();
     return destReg;
 }
 
@@ -339,11 +285,8 @@ export fn visitPropertyAccess(cg, node) {
 
     let savedObjReg = cg.currentState.allocator.ralloc();
 
-
-    cg.currentState.allocator.beginScope();
     let objTempReg = cg.visitExpression(node.object);
     Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [savedObjReg, objTempReg]);
-    cg.currentState.allocator.endScope();
 
 
     let destReg = cg.currentState.allocator.ralloc();
@@ -355,7 +298,6 @@ export fn visitPropertyAccess(cg, node) {
 
     Emitter.emit(cg.currentState.proto, opcode, [destReg, savedObjReg, propNameIdx]);
 
-    cg.currentState.allocator.free(savedObjReg);
 
     return destReg;
 }
@@ -383,22 +325,16 @@ export fn visitTernaryExpression(cg, node) {
     let elseLabel = Emitter.createLabel("L_TERNARY_ELSE");
     let endLabel = Emitter.createLabel("L_TERNARY_END");
 
-    cg.currentState.allocator.beginScope();
     let condReg = cg.visitExpression(node.condition);
     Emitter.emit(cg.currentState.proto, OpCodes.JUMP_IF_FALSE, [condReg, {"label": elseLabel}]);
-    cg.currentState.allocator.endScope();
 
-    cg.currentState.allocator.beginScope();
     let thenReg = cg.visitExpression(node.thenBranch);
     Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, thenReg]);
-    cg.currentState.allocator.endScope();
     Emitter.emit(cg.currentState.proto, OpCodes.JUMP, [{"label": endLabel}]);
 
     Emitter.defineLabel(cg.currentState.proto, elseLabel);
-    cg.currentState.allocator.beginScope();
     let elseReg = cg.visitExpression(node.elseBranch);
     Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, elseReg]);
-    cg.currentState.allocator.endScope();
 
     Emitter.defineLabel(cg.currentState.proto, endLabel);
     return destReg;
@@ -406,16 +342,12 @@ export fn visitTernaryExpression(cg, node) {
 
 export fn visitPropertyAssignment(cg, node) {
     let valueReg = cg.visitExpression(node.value);
-    
-    cg.currentState.allocator.beginScope();
-    
+        
     let objReg = cg.visitExpression(node.targetObj);
     
     let propNameIdx = cg.currentState.pool.add(node.property.name);
     
     Emitter.emit(cg.currentState.proto, OpCodes.SET_PROP, [objReg, propNameIdx, valueReg]);
-    
-    cg.currentState.allocator.endScope(); 
-    
+        
     return valueReg;
 }
