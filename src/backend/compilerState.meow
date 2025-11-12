@@ -1,12 +1,12 @@
-import * as RegisterAllocator from "backend/registerAllocator.meow";
-import * as ConstantPool from "backend/constantPool.meow";
 import * as Emitter from "backend/emitter.meow";
+import { RegisterAllocator } from "backend/registerAllocator.meow";
+import { ConstantPool } from "backend/constantPool.meow";
 
 export class CompilerState {
     fn init(name) {
         this.proto = Emitter.createProto(name, 256);
-        this.pool = ConstantPool.ConstantPool(this.proto.constantPool);
-        this.allocator = RegisterAllocator.RegisterAllocator(256);
+        this.pool = ConstantPool(this.proto.constantPool);
+        this.allocator = RegisterAllocator(256);
         this.scope = [{}];
         this.loopLabels = [];
         this.moduleVariables = {};
