@@ -375,7 +375,6 @@ fn _getDirectoryPath(fullPath) {
     return fullPath.slice(0, fullPath.length - filename.length);
 }
 
-// Hàm visitImportStatement đã được sửa lỗi
 export fn visitImportStatement(cg, node) {
     let sourcePath = node.path.value;
     let pathIdx;
@@ -384,10 +383,8 @@ export fn visitImportStatement(cg, node) {
     } else if (sourcePath.endsWith(".meow")) {
         let currentFileDir = _getDirectoryPath(cg.currentState.proto.sourceName);
         
-        // Dùng "lính" (compiler) để resolve path
         let importAbsolutePath = cg.compiler._resolvePath(sourcePath, currentFileDir);
 
-        // SỬA LỖI Ở ĐÂY: Dùng "sếp tổng" (cacheManager) để lấy module
         let cachePath = cg.cacheManager.compiledModules[importAbsolutePath];
         
         assert(cachePath, "Lỗi logic: Module " + importAbsolutePath + " lẽ ra phải được biên dịch rồi!");
