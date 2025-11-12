@@ -4,15 +4,15 @@ import { Visitor } from "backend/visitor/visitor.meow";
 import { CompilerState } from "backend/compilerState.meow";
 
 export class CodeGenerator {
-    fn init(ast, compiler, sourceName) {
+    fn init(ast, compiler, cacheManager, sourceName) {
         this.ast = ast;
         this.compiler = compiler;
+        this.cacheManager = cacheManager;
         this.sourceName = sourceName;
         this.protos = {};
         this.states = [];
         this.currentState = null;
         this.isInsideClass = false;
-
     }
 
     fn compile() {

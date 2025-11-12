@@ -44,7 +44,6 @@ export let OpCodes = {
     GET_VALUES: "GET_VALUES",
 
     NEW_CLASS: "NEW_CLASS", 
-    // NEW_INSTANCE: "NEW_INSTANCE", 
     GET_PROP: "GET_PROP", 
     SET_PROP: "SET_PROP",
     SET_METHOD: "SET_METHOD", 
@@ -65,6 +64,5 @@ export let OpCodes = {
     
     EXPORT: "EXPORT", 
     GET_EXPORT: "GET_EXPORT",
-    // GET_MODULE_EXPORT: "GET_MODULE_EXPORT",
     IMPORT_ALL: "IMPORT_ALL",
 };

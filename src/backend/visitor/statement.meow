@@ -361,11 +361,9 @@ export fn visitExportStatement(cg, node) {
     let name = node.declaration.name.name;
     let currentScope = cg.currentState.scope[cg.currentState.scope.length - 1];
     assert(currentScope[name] != null, "Lỗi logic: Biến '" + name + "' không có trong scope sau khi khai báo.");
-
     let localIndex = currentScope[name];
     let regIndex = cg.currentState.localIndexToReg[localIndex];
     assert(regIndex != null, "Lỗi nghiêm trọng: Không tìm thấy thanh ghi cho biến được export '" + name + "'");
-
     let nameIdx = cg.currentState.pool.add(name);
     Emitter.emit(cg.currentState.proto, OpCodes.EXPORT, [nameIdx, regIndex]);
 }
@@ -377,30 +375,29 @@ fn _getDirectoryPath(fullPath) {
     return fullPath.slice(0, fullPath.length - filename.length);
 }
 
+// Hàm visitImportStatement đã được sửa lỗi
 export fn visitImportStatement(cg, node) {
     let sourcePath = node.path.value;
     let pathIdx;
     if (stdlib[sourcePath] != null || sourcePath.endsWith(".meowb")) {
         pathIdx = cg.currentState.pool.add(sourcePath);
     } else if (sourcePath.endsWith(".meow")) {
-            let currentFileDir = _getDirectoryPath(cg.currentState.proto.sourceName);
-            
-            // === SỬA Ở ĐÂY ===
-            // Phải dùng hàm _resolvePath của compiler (giống hệt _compileFile)
-            // để nó tìm đúng file (có xài includePaths)
-            let importAbsolutePath = cg.compiler._resolvePath(sourcePath, currentFileDir);
-            // === HẾT SỬA ===
+        let currentFileDir = _getDirectoryPath(cg.currentState.proto.sourceName);
+        
+        // Dùng "lính" (compiler) để resolve path
+        let importAbsolutePath = cg.compiler._resolvePath(sourcePath, currentFileDir);
 
-            let cachePath = cg.compiler.compiledModules[importAbsolutePath];
-    assert(cachePath, "Lỗi logic: Module " + importAbsolutePath + " lẽ ra phải được biên dịch rồi!");
-            pathIdx = cg.currentState.pool.add(cachePath);
-        } else {
+        // SỬA LỖI Ở ĐÂY: Dùng "sếp tổng" (cacheManager) để lấy module
+        let cachePath = cg.cacheManager.compiledModules[importAbsolutePath];
+        
+        assert(cachePath, "Lỗi logic: Module " + importAbsolutePath + " lẽ ra phải được biên dịch rồi!");
+        pathIdx = cg.currentState.pool.add(cachePath);
+    } else {
         pathIdx = cg.currentState.pool.add(sourcePath);
     }
 
     if (node.namespaceImport != null) {
         let moduleName = node.namespaceImport.name;
-        
         assert(node.namespaceImport.resolution && node.namespaceImport.resolution.type == "local", "Lỗi: Import namespace " + moduleName + " không được resolve là local");
         let localSlot = node.namespaceImport.resolution.symbol.index;
         
@@ -417,7 +414,6 @@ export fn visitImportStatement(cg, node) {
         }
 
         cg.currentState.moduleVariables[moduleName] = true;
-        
     } else if (node.namedImports.length > 0) {
         cg.currentState.allocator.withTemp(fn(tempModuleReg) {
             Emitter.emit(cg.currentState.proto, OpCodes.IMPORT_MODULE, [tempModuleReg, pathIdx]);
@@ -429,13 +425,13 @@ export fn visitImportStatement(cg, node) {
                 assert(importId.resolution && importId.resolution.type == "local", "Lỗi: Import " + importName + " không được resolve là local");
                 let localSlot = importId.resolution.symbol.index;
 
-                let localReg = cg.currentState.allocator.ralloc(); 
+                let localReg = cg.currentState.allocator.ralloc();
                 Emitter.emit(cg.currentState.proto, OpCodes.GET_EXPORT, [localReg, tempModuleReg, nameIdx]);
 
+         
                 cg.currentState.regToLocalIndex[str(localReg)] = localSlot;
                 cg.currentState.localIndexToReg[localSlot] = localReg;
                 cg.currentState.scope[cg.currentState.scope.length - 1][importName] = localSlot;
-
                 if (cg.currentState.scope.length == 1 && cg.states.length == 1) {
                     Emitter.emit(cg.currentState.proto, OpCodes.SET_GLOBAL, [nameIdx, localReg]);
                 }

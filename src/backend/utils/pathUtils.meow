@@ -1,3 +1,5 @@
+import * as Io from "io";
+
 export fn getDirectoryPath(fullPath) {
     let filename = Io.getFileName(fullPath);
     if (filename.length >= fullPath.length) return "";

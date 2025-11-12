@@ -2,12 +2,12 @@ import * as System from "system";
 import * as Io from "io";
 import * as String from "string";
 import { Compiler } from "backend/compiler.meow";
+import { CacheManager } from "backend/cacheManager.meow";
 
 let argv = System.argv();
-
 if (argv.size() <= 2) {
     print("Usage: meow-alpha.exe <launcher-script> <entry.meow> [flags] [-- runtime-args]");
-    print("Flags: --nocache --out <path> --bundle --force --run --vm <vm-path>");
+    print("Flags: --nocache --out <path> --force --run --vm <vm-path>");
     System.exit(42);
 }
 
@@ -17,7 +17,6 @@ let isNoCache = false;
 let options = { includePaths: ["src"] };
 let runtimeArgs = [];
 let shouldRun = false;
-
 for (let i = startIndex; i < argv.size(); ++i) {
     let a = argv[i];
     if (a == "--") {
@@ -29,7 +28,6 @@ for (let i = startIndex; i < argv.size(); ++i) {
         continue;
     }
     if (a == "--nocache") isNoCache = true;
-    else if (a == "--bundle") options.bundle = true;
     else if (a == "--force") options.force = true;
     else if (a == "--out" && i + 1 < argv.size()) { options.out = argv[i + 1]; ++i; }
     else if (a == "--include" && i + 1 < argv.size()) { options.includePaths.push(argv[i + 1]); ++i; }
@@ -46,8 +44,10 @@ if (entrypoint == null) {
     System.exit(43);
 }
 
-let compiler = Compiler(isNoCache, options);
-let entryCachePath = compiler.compileProject(entrypoint);
+let compiler = Compiler(options); 
+let cacheManager = CacheManager(compiler, isNoCache, options);
+
+let entryCachePath = cacheManager.compileProject(entrypoint);
 
 if (shouldRun) {
     let vmPath = options.vm || "./bin/meow-vm";

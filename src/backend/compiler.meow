@@ -5,57 +5,44 @@ import { Lexer } from "frontend/lexer.meow";
 import { Parser } from "frontend/parser.meow";
 import { Preprocessor } from "frontend/preprocessor.meow";
 import { ScopeAnalyzer } from "middle-end/scopeAnalyzer.meow";
-import { makeCacheFile } from "backend/utils/makeCacheFile.meow";
 import { BytecodeStringifier } from "backend/bytecodeStringifier.meow";
 import { CodeGenerator } from "backend/codeGenerator.meow";
-import { getDirectoryPath, isAbsolutePath } from "backend/utils/pathUtils.meow"
+import { getDirectoryPath, isAbsolutePath } from "backend/utils/pathUtils.meow";
 
 export class Compiler {
-    fn init(isNoCache, options) {
-        this.compiledModules = {};
-        this.isNoCache = isNoCache;
-        this.dependencyGraph = {};
-        this.reverseGraph = {};
+    fn init(options) {
         this.options = options || {};
     }
 
-    fn compileProject(entryPath) {
-        let initialDir = ".";
-        let entryCache = this._compileFile(entryPath, initialDir);
-        if (this.options.bundle) {
-            return this._createBundle(entryPath);
+    fn getImportsOnly(absolutePath) {
+        if (!Io.fileExists(absolutePath)) {
+            print("[ERROR] getImportsOnly: File nguồn không tồn tại: " + absolutePath);
+            return [];
         }
-        if (this.options.out) {
-            Io.copyFile(entryCache, this.options.out);
-            return Io.getAbsolutePath(this.options.out);
+        let source = Io.read(absolutePath);
+        if (source == null) {
+            print("[ERROR] getImportsOnly: Không thể đọc file nguồn: " + absolutePath);
+            return [];
         }
-        return entryCache;
+
+        let preprocessor = new Preprocessor();
+        let processedSource = preprocessor.process(source, absolutePath);
+        let lexer = new Lexer(processedSource, absolutePath);
+        let tokens = lexer.tokenize();
+        let parser = new Parser(tokens);
+        let ast = parser.parseProgram();
+        if (!ast) {
+            print("[ERROR] getImportsOnly: Không thể parse AST: " + absolutePath);
+            return [];
+        }
+        
+        let sourceDir = getDirectoryPath(absolutePath);
+        let imports = this._extractImportsFromAST(ast, sourceDir);
+        return imports;
     }
 
-    fn _compileFile(sourcePath, importerDir) {
-        let absolutePath = this._resolvePath(sourcePath, importerDir);
-        if (this.compiledModules[absolutePath]) return this.compiledModules[absolutePath];
 
-        let cachePath = makeCacheFile(absolutePath, this.options.buildDir || "builds/build");
-        let metaPath = cachePath + ".meta";
-        if (this._isCacheValid(absolutePath, cachePath)) {
-            let metaText = Io.read(metaPath);
-            if (!metaText) {
-                print("[ERROR] Không thể đọc meta file: " + metaPath);
-                System.exit(1);
-            }
-            let meta = Json.parse(metaText);
-            this.dependencyGraph[absolutePath] = meta.imports || [];
-
-            for (imp in this.dependencyGraph[absolutePath]) {
-                if (!this.reverseGraph[imp]) this.reverseGraph[imp] = {};
-                this.reverseGraph[imp][absolutePath] = true;
-            }
-
-            this.compiledModules[absolutePath] = Io.getAbsolutePath(cachePath);
-            return Io.getAbsolutePath(cachePath);
-        }
-
+    fn compileFile(absolutePath, cacheManager) {
         if (!Io.fileExists(absolutePath)) {
             print("[ERROR] File nguồn không tồn tại: " + absolutePath);
             System.exit(1);
@@ -69,7 +56,6 @@ export class Compiler {
 
         let preprocessor = new Preprocessor();
         let processedSource = preprocessor.process(source, absolutePath);
-
         let lexer = new Lexer(processedSource, absolutePath);
         let tokens = lexer.tokenize();
         let parser = new Parser(tokens);
@@ -80,42 +66,20 @@ export class Compiler {
         }
         let analyzer = new ScopeAnalyzer(ast);
         analyzer.analyze();
+        
         let sourceDir = getDirectoryPath(absolutePath);
         let imports = this._extractImportsFromAST(ast, sourceDir);
-        for (imp in imports) {
-            this._compileFile(imp, sourceDir);
-            if (!this.reverseGraph[imp]) this.reverseGraph[imp] = {};
-            this.reverseGraph[imp][absolutePath] = true;
-        }
-
-        let generator = CodeGenerator(ast, this, absolutePath);
+        
+        let generator = CodeGenerator(ast, this, cacheManager, absolutePath);
         let protos = generator.compile();
 
         let stringifier = BytecodeStringifier();
         let bytecodeText = stringifier.stringify(protos);
 
-        Io.write(cachePath, bytecodeText);
-        let metaOut = { imports: imports, srcTime: Io.getFileTimestamp(absolutePath), srcSize: Io.getFileSize(absolutePath) };
-        metaOut.importTimes = {};
-        metaOut.importSizes = {};
-        for (imp in imports) {
-            metaOut.importTimes[imp] = Io.getFileTimestamp(imp);
-            metaOut.importSizes[imp] = Io.getFileSize(imp);
-        }
-        Io.write(metaPath, Json.stringify(metaOut));
-
-        this.dependencyGraph[absolutePath] = imports;
-        this.compiledModules[absolutePath] = Io.getAbsolutePath(cachePath);
-
-        let dependents = this._gatherDependents(absolutePath, null);
-        for (d in dependents) {
-            if (!this.compiledModules[d]) {
-                let dd = getDirectoryPath(d);
-                this._compileFile(d, dd);
-            }
-        }
-
-        return Io.getAbsolutePath(cachePath);
+        return {
+            "bytecodeText": bytecodeText,
+            "imports": imports
+        };
     }
 
     fn _resolvePath(p, importerDir) {
@@ -127,7 +91,6 @@ export class Compiler {
 
         let isExplicitRelative = false;
         if (p.startsWith("./") || p.startsWith("../")) isExplicitRelative = true;
-
         let candidates = [];
         if (isExplicitRelative && absImporter) {
             candidates.push(absImporter + "/" + p);
@@ -156,7 +119,6 @@ export class Compiler {
         return Io.getAbsolutePath(p);
     }
 
-
     fn _extractImportsFromAST(ast, sourceDir) {
         let imports = [];
         if (!ast || !ast.body) return imports;
@@ -169,137 +131,5 @@ export class Compiler {
             }
         }
         return imports;
-    }
-
-    fn _gatherDependents(absSource, accum) {
-        if (!accum) accum = {};
-        let direct = this.reverseGraph[absSource];
-        if (!direct) return accum;
-        for (d in direct) {
-            if (!accum[d]) {
-                accum[d] = true;
-                this._gatherDependents(d, accum);
-            }
-        }
-        return accum;
-    }
-
-    fn _isCacheValid(absSourcePath, cachePath) {
-        if (this.isNoCache || this.options.force) return false;
-        if (!Io.fileExists(cachePath)) return false;
-
-        let metaPath = cachePath + ".meta";
-        if (!Io.fileExists(metaPath)) return false;
-
-        let metaText = Io.read(metaPath);
-        if (!metaText) return false;
-
-        let meta = Json.parse(metaText);
-        if (!meta) return false;
-
-        if (!Io.fileExists(absSourcePath)) return false;
-        let srcTime = Io.getFileTimestamp(absSourcePath);
-        let srcSize = Io.getFileSize(absSourcePath);
-        if (meta.srcTime != srcTime || meta.srcSize != srcSize) return false;
-        for (imp in meta.imports) {
-            let impCachePath = makeCacheFile(imp, this.options.buildDir || "builds/build");
-            if (!this._isCacheValid(imp, impCachePath)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    fn _createBundle(entryPath) {
-        print("📦 Bắt đầu quá trình bundle từ entrypoint: " + entryPath);
-        let visited = {};
-        
-        // _bundleAst giờ trả về một body đã được gộp
-        let bundledResult = this._bundleAst(entryPath, ".", visited);
-        let bundledAst = { type: "Program", body: bundledResult.body };
-
-        // !! MẤU CHỐT NẰM Ở ĐÂY !!
-        // ScopeAnalyzer sẽ chạy trên toàn bộ AST đã gộp
-        print("🔬 Chạy ScopeAnalyzer trên AST đã gộp...");
-        let analyzer = new ScopeAnalyzer(bundledAst);
-        analyzer.analyze();
-        print("🔬 ScopeAnalyzer hoàn tất!");
-
-        let outPath = this.options.out || "bundle.meowb";
-        let generator = CodeGenerator(bundledAst, this, outPath);
-        let protos = generator.compile();
-
-        let stringifier = BytecodeStringifier();
-        let bytecodeText = stringifier.stringify(protos);
-        Io.write(outPath, bytecodeText);
-        print("📦 Tạo bundle thành công: " + outPath);
-        return Io.getAbsolutePath(outPath);
-    }
-
-    // === HÀM ĐƯỢC REFACTOR CHÍNH ===
-    fn _bundleAst(sourcePath, importerDir, visited) {
-        let absolutePath = this._resolvePath(sourcePath, importerDir);
-        if (visited[absolutePath]) {
-            return { type: "Program", body: [] }; // Đã thăm, trả về body rỗng
-        }
-        visited[absolutePath] = true;
-
-        let source = Io.read(absolutePath);
-        if (source == null) {
-            print("[ERROR] Bundle: Không thể đọc file nguồn: " + absolutePath);
-            System.exit(1);
-        }
-
-        let lexer = new Lexer(source, absolutePath);
-        let tokens = lexer.tokenize();
-        let parser = new Parser(tokens);
-        let ast = parser.parseProgram();
-
-        let newBody = [];
-        let sourceDir = getDirectoryPath(absolutePath);
-        
-        for (stmt in ast.body) {
-            if (stmt.type == "ImportStatement") {
-                let dependencyPath = stmt.path.value;
-                if (dependencyPath.endsWith(".meow")) {
-                    
-                    let importedResult = this._bundleAst(dependencyPath, sourceDir, visited);
-                    
-                    // === THAY ĐỔI CHÍNH NẰM Ở ĐÂY ===
-                    // KHÔNG NỐI VÀO ĐẦU (prepend)
-                    // newBody = importedResult.body + newBody; // <-- BUG Ở ĐÂY
-                    
-                    // MÀ NỐI VÀO ĐUÔI (append)
-                    // Để đảm bảo dependency (import) luôn chạy trước.
-                    // newBody = newBody + importedResult.body;
-
-                    for (stmt in importedResult.body) {
-                        newBody.push(stmt);
-                    }
-                    
-                } else {
-                    newBody.push(stmt);
-                }
-            } else if (stmt.type == "ExportStatement") {
-                if (stmt.declaration) {
-                    newBody.push(stmt.declaration);
-                }
-            } else {
-                // Giữ lại tất cả các statement khác
-                // *** LƯU Ý: Tạm thời chưa thêm vào newBody vội ***
-                // Chúng ta sẽ thêm ở cuối
-            }
-        }
-        
-        // *** THAY ĐỔI THỨ 2: ***
-        // Thêm các câu lệnh của file *hiện tại* (trừ import/export)
-        // VÀO SAU CÙNG, sau khi tất cả import đã được gộp.
-        for (stmt in ast.body) {
-            if (stmt.type != "ImportStatement" && stmt.type != "ExportStatement") {
-                newBody.push(stmt);
-            }
-        }
-
-        return { type: "Program", body: newBody };
     }
 }
