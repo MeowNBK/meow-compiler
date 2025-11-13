@@ -773,7 +773,6 @@ export class Parser {
 
     fn parseProgram() {
         let program = Ast.Program([], this.peek());
-        let self = this;
         while (!this.isAtEnd()) {
             try {
                 let decl = this.declaration();
@@ -781,8 +780,8 @@ export class Parser {
                     program.body.push(decl);
                 }
             } catch (e) {
-                self.diagnostics.push(e);
-                self.synchronize();
+                this.diagnostics.push(e);
+                this.synchronize();
             }
         }
         return program;

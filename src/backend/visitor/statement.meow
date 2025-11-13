@@ -298,28 +298,31 @@ export fn visitTryStatement(cg, node) {
     let catchLabel = Emitter.createLabel("L_CATCH");
     let endLabel = Emitter.createLabel("L_END_TRY");
 
-    Emitter.emit(cg.currentState.proto, OpCodes.SETUP_TRY, [{"label": catchLabel}]);
-    cg.visitStatement(node.tryBlock);
-    Emitter.emit(cg.currentState.proto, OpCodes.POP_TRY, []);
-    Emitter.emit(cg.currentState.proto, OpCodes.JUMP, [{"label": endLabel}]);
+    let errorReg = -1;
+    let errorVarName = null;
+    let localSlot = -1;
 
-    Emitter.defineLabel(cg.currentState.proto, catchLabel);
-    
     cg.currentState.scope.push({});
-    
     if (node.catchVariable != null) {
-        let errorVarName = node.catchVariable.name;
-        
+        errorVarName = node.catchVariable.name;
         assert(node.catchVariable.resolution && node.catchVariable.resolution.type == "local", "Lỗi: Biến Catch " + errorVarName + " không được resolve là local");
-        let localSlot = node.catchVariable.resolution.symbol.index;
+        localSlot = node.catchVariable.resolution.symbol.index;
 
-        let errorReg = cg.currentState.allocator.ralloc();
+        errorReg = cg.currentState.allocator.ralloc();
         
         cg.currentState.regToLocalIndex[str(errorReg)] = localSlot;
         cg.currentState.localIndexToReg[localSlot] = errorReg;
         cg.currentState.scope[cg.currentState.scope.length - 1][errorVarName] = localSlot;
     }
-    
+
+    Emitter.emit(cg.currentState.proto, OpCodes.SETUP_TRY, [{"label": catchLabel}, errorReg]);
+
+    cg.visitStatement(node.tryBlock);
+    Emitter.emit(cg.currentState.proto, OpCodes.POP_TRY, []);
+    Emitter.emit(cg.currentState.proto, OpCodes.JUMP, [{"label": endLabel}]);
+
+    Emitter.defineLabel(cg.currentState.proto, catchLabel);
+        
     cg.visitStatement(node.catchBlock);
 
     _endScopeAndCloseUpvalues(cg);

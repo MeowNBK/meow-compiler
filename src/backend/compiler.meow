@@ -31,6 +31,13 @@ export class Compiler {
         let tokens = lexer.tokenize();
         let parser = new Parser(tokens);
         let ast = parser.parseProgram();
+        for (diag in parser.diagnostics) {
+            print(diag);
+        }
+        if (parser.diagnostics.length > 0) {
+            print("[ERROR] compileFile: Dừng biên dịch do có lỗi cú pháp.");
+            System.exit(1);
+        }
         if (!ast) {
             print("[ERROR] getImportsOnly: Không thể parse AST: " + absolutePath);
             return [];
@@ -60,6 +67,13 @@ export class Compiler {
         let tokens = lexer.tokenize();
         let parser = new Parser(tokens);
         let ast = parser.parseProgram();
+        for (diag in parser.diagnostics) {
+            print(diag);
+        }
+        if (parser.diagnostics.length > 0) {
+            print("[ERROR] getImportsOnly: Dừng lại do có lỗi cú pháp.");
+            return [];
+        }
         if (!ast) {
             print("[ERROR] Meta.compile trả về null/undefined cho: " + absolutePath);
             System.exit(1);
