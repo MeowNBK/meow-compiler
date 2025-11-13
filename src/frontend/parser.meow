@@ -9,6 +9,7 @@ export class Parser {
         this.tokens = tokens;
         this.current = 0;
         this.rules = {};
+        this.diagnostics = [];
         this.initRules();
     }
 
@@ -128,11 +129,8 @@ export class Parser {
             prefix: null,
             infix: null,
             precedence: Precedence.NONE
-        };
-        assert(TokenType, "Not unary: " + str(TokenType));
-        // assert(!TokenType, "Unary: " + str(TokenType));
+        }; // immutable object
 
-        assert(TokenType._TOTAL_TOKENS, "Total: " + str(TokenType._TOTAL_TOKENS));
         for (let i = 0; i < TokenType._TOTAL_TOKENS; ++i) {
             rules[i] = defaultRule;
         }
@@ -775,6 +773,7 @@ export class Parser {
 
     fn parseProgram() {
         let program = Ast.Program([], this.peek());
+        let self = this;
         while (!this.isAtEnd()) {
             try {
                 let decl = this.declaration();
@@ -782,12 +781,27 @@ export class Parser {
                     program.body.push(decl);
                 }
             } catch (e) {
-                print(e);
-                System.exit(42);
-                // print(this.synchronize);
-                // this.synchronize();
+                self.diagnostics.push(e);
+                self.synchronize();
             }
         }
         return program;
     }
+    // fn parseProgram() {
+    //     let program = Ast.Program([], this.peek());
+    //     while (!this.isAtEnd()) {
+    //         try {
+    //             let decl = this.declaration();
+    //             if (decl) {
+    //                 program.body.push(decl);
+    //             }
+    //         } catch (e) {
+    //             print(e);
+    //             System.exit(42);
+    //             // print(this.synchronize);
+    //             // this.synchronize();
+    //         }
+    //     }
+    //     return program;
+    // }
 }

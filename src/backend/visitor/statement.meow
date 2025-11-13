@@ -313,7 +313,7 @@ export fn visitTryStatement(cg, node) {
         assert(node.catchVariable.resolution && node.catchVariable.resolution.type == "local", "Lỗi: Biến Catch " + errorVarName + " không được resolve là local");
         let localSlot = node.catchVariable.resolution.symbol.index;
 
-        let errorReg = 0; 
+        let errorReg = cg.currentState.allocator.ralloc();
         
         cg.currentState.regToLocalIndex[str(errorReg)] = localSlot;
         cg.currentState.localIndexToReg[localSlot] = errorReg;
