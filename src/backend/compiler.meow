@@ -31,10 +31,10 @@ export class Compiler {
         let tokens = lexer.tokenize();
         let parser = new Parser(tokens);
         let ast = parser.parseProgram();
-        for (diag in parser.diagnostics) {
-            print(diag);
-        }
         if (parser.diagnostics.length > 0) {
+            for (diagnostic in parser.diagnostics) {
+                print(diagnostic);
+            }
             print("[ERROR] compileFile: Dừng biên dịch do có lỗi cú pháp.");
             System.exit(1);
         }
@@ -67,10 +67,10 @@ export class Compiler {
         let tokens = lexer.tokenize();
         let parser = new Parser(tokens);
         let ast = parser.parseProgram();
-        for (diag in parser.diagnostics) {
-            print(diag);
-        }
         if (parser.diagnostics.length > 0) {
+            for (diagnostic in parser.diagnostics) {
+                print(diagnostic);
+            }
             print("[ERROR] getImportsOnly: Dừng lại do có lỗi cú pháp.");
             return [];
         }

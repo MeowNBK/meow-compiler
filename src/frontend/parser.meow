@@ -786,6 +786,7 @@ export class Parser {
         }
         return program;
     }
+    
     // fn parseProgram() {
     //     let program = Ast.Program([], this.peek());
     //     while (!this.isAtEnd()) {

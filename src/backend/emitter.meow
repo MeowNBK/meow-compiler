@@ -112,7 +112,7 @@ let __REG_ARGS = {
     [OpCodes.INHERIT]: [0, 1],
     [OpCodes.GET_SUPER]: [0],
     [OpCodes.THROW]: [0],
-    [OpCodes.SETUP_TRY]: [],
+    [OpCodes.SETUP_TRY]: [1],
     [OpCodes.POP_TRY]: []
 };
 
