@@ -6,7 +6,7 @@ import { CacheManager } from "backend/cacheManager.meow";
 
 let argv = System.argv();
 if (argv.size() <= 2) {
-    print("Usage: meow-alpha.exe <launcher-script> <entry.meow> [flags] [-- runtime-args]");
+    print("Usage: meow-alpha <launcher-script> <entry.meow> [flags] [-- runtime-args]");
     print("Flags: --nocache --out <path> --force --run --vm <vm-path>");
     System.exit(42);
 }
@@ -52,7 +52,7 @@ let entryCachePath = cacheManager.compileProject(entrypoint);
 if (shouldRun) {
     let vmPath = options.vm || "./bin/meow-vm";
     let cmd = vmPath + " " + entryCachePath;
-    if (runtimeArgs.length > 0) {
+    if (runtimeArgs.size() > 0) {
         cmd = cmd + " " + String.join(" ", runtimeArgs);
     }
     print("Chạy: " + cmd);

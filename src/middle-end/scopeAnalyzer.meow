@@ -12,7 +12,7 @@ class AnalyzerState {
         // scope_stack là một stack các Bảng Ký hiệu (SymbolTable) 
         // cho các block lồng nhau bên trong *một* hàm.
         this.scope_stack = [];
-        this.current_scope = null; // Trỏ đến scope_stack[scope_stack.length - 1]
+        this.current_scope = null; // Trỏ đến scope_stack[scope_stack.size() - 1]
 
         // Dùng để gán một ID (slot) duy nhất cho mỗi biến local TRONG HÀM NÀY.
         // Tương đương với 'localCount' trong CodeGenerator cũ.
@@ -63,8 +63,8 @@ export class ScopeAnalyzer {
 
     fn exitState() {
         let finishedState = this.states.pop();
-        if (this.states.length > 0) {
-            this.currentState = this.states[this.states.length - 1];
+        if (this.states.size() > 0) {
+            this.currentState = this.states[this.states.size() - 1];
         } else {
             this.currentState = null;
         }
@@ -72,8 +72,8 @@ export class ScopeAnalyzer {
     }
     fn enterScope() {
         let parentScope = null;
-        if (this.currentState.scope_stack.length > 0) {
-            parentScope = this.currentState.scope_stack[this.currentState.scope_stack.length - 1];
+        if (this.currentState.scope_stack.size() > 0) {
+            parentScope = this.currentState.scope_stack[this.currentState.scope_stack.size() - 1];
         }
         let newScope = new ScopedSymbolTable(
             "block", // Tên scope (chỉ để debug)
@@ -87,15 +87,15 @@ export class ScopeAnalyzer {
 
     fn exitScope() {
         this.currentState.scope_stack.pop();
-        if (this.currentState.scope_stack.length > 0) {
-            this.currentState.current_scope = this.currentState.scope_stack[this.currentState.scope_stack.length - 1];
+        if (this.currentState.scope_stack.size() > 0) {
+            this.currentState.current_scope = this.currentState.scope_stack[this.currentState.scope_stack.size() - 1];
         } else {
             this.currentState.current_scope = null;
         }
     }
 
     fn _findLocalInCurrentState(name) {
-        for (let i = this.currentState.scope_stack.length - 1; i >= 0; --i) {
+        for (let i = this.currentState.scope_stack.size() - 1; i >= 0; --i) {
             let scope = this.currentState.scope_stack[i];
             let symbol = scope.lookup(name, true);
             if (symbol) {
@@ -115,7 +115,7 @@ export class ScopeAnalyzer {
 
         let parentState = this.states[parentStateIndex];
         let childState = this.states[parentStateIndex + 1];
-        for (let i = parentState.scope_stack.length - 1; i >= 0; --i) {
+        for (let i = parentState.scope_stack.size() - 1; i >= 0; --i) {
             let scope = parentState.scope_stack[i];
             let symbol = scope.lookup(name, true);
             if (symbol) {
@@ -141,14 +141,14 @@ export class ScopeAnalyzer {
     }
 
     fn _addUpvalueToState(desc, state) {
-        for (let i = 0; i < state.upvalues.length; ++i) {
+        for (let i = 0; i < state.upvalues.size(); ++i) {
             let d = state.upvalues[i];
             if (d.index == desc.index && d.isLocal == desc.isLocal) {
                 return { "type": "upvalue", "index": i, "name": desc.name };
             }
         }
         
-        let newIndex = state.upvalues.length;
+        let newIndex = state.upvalues.size();
         state.upvalues.push(desc); 
         return { "type": "upvalue", "index": newIndex, "name": desc.name };
     }
@@ -159,8 +159,8 @@ export class ScopeAnalyzer {
             return localResult;
         }
 
-        if (this.states.length > 1) {
-            let upvalueResult = this._findUpvalueRecursive(name, this.states.length - 2);
+        if (this.states.size() > 1) {
+            let upvalueResult = this._findUpvalueRecursive(name, this.states.size() - 2);
             if (upvalueResult) {
                 return upvalueResult;
             }
@@ -395,7 +395,7 @@ export class ScopeAnalyzer {
         
         if (node.namespaceImport != null) {
             this._defineAndAnnotate(node.namespaceImport, true, "module");
-        } else if (node.namedImports.length > 0) {
+        } else if (node.namedImports.size() > 0) {
             for (importId in node.namedImports) {
                 this._defineAndAnnotate(importId, true, "import");
             }

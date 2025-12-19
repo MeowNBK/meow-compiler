@@ -10,7 +10,7 @@ export class ConstantPool {
              if (this.lookup[key] != null) {
                  return this.lookup[key];
              }
-             let index = this.pool.length;
+             let index = this.pool.size();
              this.pool.push(value);
              this.lookup[key] = index;
              return index;
@@ -24,7 +24,7 @@ export class ConstantPool {
             return this.lookup[key];
         }
 
-        let index = this.pool.length;
+        let index = this.pool.size();
         this.pool.push(value);
         this.lookup[key] = index;
         
@@ -32,7 +32,7 @@ export class ConstantPool {
     }
 
     fn get(index) {
-        if (index >= 0 && index < this.pool.length) {
+        if (index >= 0 && index < this.pool.size()) {
             return this.pool[index];
         }
         assert(false, "Lỗi: Index hằng số nằm ngoài giới hạn!");

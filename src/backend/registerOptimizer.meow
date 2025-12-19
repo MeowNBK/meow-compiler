@@ -8,7 +8,7 @@ fn getRegArgIndices(opcode) {
 // Hàm này sẽ tối ưu hóa một proto và trả về bảng ánh xạ vReg -> pReg
 fn optimizeProtoAndGetMapping(proto) {
     let code = proto.code;
-    if (code.length == 0) {
+    if (code.size() == 0) {
         proto.numRegisters = 0;
         return {}; // Trả về map rỗng
     }
@@ -17,15 +17,15 @@ fn optimizeProtoAndGetMapping(proto) {
     let vRegLastUse = {};
     let allVRegs = {};
     
-    for (let ip = 0; ip < code.length; ++ip) {
+    for (let ip = 0; ip < code.size(); ++ip) {
         let inst = code[ip];
         let regIdxs = getRegArgIndices(inst.op);
         if (regIdxs == null) continue;
 
         let args = inst.args;
-        for (let i = 0; i < regIdxs.length; ++i) {
+        for (let i = 0; i < regIdxs.size(); ++i) {
             let argIndex = regIdxs[i];
-            if (argIndex >= args.length) continue;
+            if (argIndex >= args.size()) continue;
             let vReg = args[argIndex];
 
             if (typeof(vReg) != "int") continue;
@@ -45,7 +45,7 @@ fn optimizeProtoAndGetMapping(proto) {
     let vRegs = allVRegs.keys();
     vRegs.sort(fn(a, b) { return int(a) - int(b); });
     
-    for (let i = 0; i < vRegs.length; ++i) {
+    for (let i = 0; i < vRegs.size(); ++i) {
         let sReg = vRegs[i];
         intervals.push({ 
             vReg: int(sReg), 
@@ -61,10 +61,10 @@ fn optimizeProtoAndGetMapping(proto) {
     let freeRegs = [];
     let nextNewReg = 0;
 
-    for (let i = 0; i < intervals.length; ++i) {
+    for (let i = 0; i < intervals.size(); ++i) {
         let interval = intervals[i];
         let newActive = [];
-        for (let j = 0; j < active.length; ++j) {
+        for (let j = 0; j < active.size(); ++j) {
             let activeInterval = active[j];
             if (activeInterval.end < interval.start) { 
                 freeRegs.push(vToNewReg[activeInterval.sReg]);
@@ -75,11 +75,11 @@ fn optimizeProtoAndGetMapping(proto) {
         active = newActive;
         
         let newReg;
-        if (freeRegs.length > 0) {
+        if (freeRegs.size() > 0) {
             freeRegs.sort(fn(a, b) { return a - b; });
             newReg = freeRegs[0];
             let newFreeRegs = [];
-            for (let k = 1; k < freeRegs.length; ++k) newFreeRegs.push(freeRegs[k]);
+            for (let k = 1; k < freeRegs.size(); ++k) newFreeRegs.push(freeRegs[k]);
             freeRegs = newFreeRegs;
         } else {
             newReg = nextNewReg++;
@@ -96,7 +96,7 @@ fn optimizeProtoAndGetMapping(proto) {
         if (regIdxs == null) continue;
 
         for (argIndex in regIdxs) {
-            if (argIndex >= inst.args.length) continue;
+            if (argIndex >= inst.args.size()) continue;
             let vReg = inst.args[argIndex];
 
             if (typeof(vReg) == "int") {

@@ -16,7 +16,7 @@ export class Preprocessor {
     }
 
     fn isSkipping() {
-        return this.conditionalStackActive[this.conditionalStackActive.length - 1] == false;
+        return this.conditionalStackActive[this.conditionalStackActive.size() - 1] == false;
     }
 
     fn process(sourceText, sourcePath) {
@@ -53,15 +53,15 @@ export class Preprocessor {
         let directive = parts[0];
 
         if (directive == "#define") {
-            if (!this.isSkipping() && parts.length >= 2) {
+            if (!this.isSkipping() && parts.size() >= 2) {
                 let name = parts[1];
                 // Tìm vị trí của name trong chuỗi gốc, bắt đầu tìm từ sau dấu cách đầu tiên.
                 let nameStartIndex = String.indexOf(line, name, String.indexOf(line, " ") + 1);
 
                 if (nameStartIndex != -1) {
                     // Replacement là tất cả mọi thứ sau 'name'
-                    let replacementStartIndex = nameStartIndex + name.length;
-                    if (replacementStartIndex < line.length) {
+                    let replacementStartIndex = nameStartIndex + name.size();
+                    if (replacementStartIndex < line.size()) {
                         // Lấy phần còn lại và trim đi dấu cách thừa ở đầu
                         let replacement = String.trim(line.slice(replacementStartIndex));
                         this.macros[name] = replacement;
@@ -73,39 +73,39 @@ export class Preprocessor {
             }
             return null;
         } else if (directive == "#undef") {
-            if (!this.isSkipping() && parts.length >= 2) {
+            if (!this.isSkipping() && parts.size() >= 2) {
                 let name = parts[1];
                 this.macros[name] = null;
             }
             return null;
         } else if (directive == "#ifdef") {
-            let name = parts.length >= 2 ? parts[1] : "";
+            let name = parts.size() >= 2 ? parts[1] : "";
             let conditionResult = (this.macros[name] != null && typeof(this.macros[name]) == "string");
-            let parentActive = this.conditionalStackActive[this.conditionalStackActive.length - 1];
+            let parentActive = this.conditionalStackActive[this.conditionalStackActive.size() - 1];
             let active = parentActive && conditionResult;
             this.conditionalCondStack.push(conditionResult);
             this.conditionalStackActive.push(active);
             return null;
         } else if (directive == "#ifndef") {
-            let name = parts.length >= 2 ? parts[1] : "";
+            let name = parts.size() >= 2 ? parts[1] : "";
             let conditionResult = !(this.macros[name] != null && typeof(this.macros[name]) == "string");
-            let parentActive = this.conditionalStackActive[this.conditionalStackActive.length - 1];
+            let parentActive = this.conditionalStackActive[this.conditionalStackActive.size() - 1];
             let active = parentActive && conditionResult;
             this.conditionalCondStack.push(conditionResult);
             this.conditionalStackActive.push(active);
             return null;
         } else if (directive == "#else") {
-            if (this.conditionalCondStack.length == 0) return null;
+            if (this.conditionalCondStack.size() == 0) return null;
             let prevCond = this.conditionalCondStack.pop();
             this.conditionalStackActive.pop();
-            let parentActive = this.conditionalStackActive[this.conditionalStackActive.length - 1];
+            let parentActive = this.conditionalStackActive[this.conditionalStackActive.size() - 1];
             let newCond = !prevCond;
             let newActive = parentActive && newCond;
             this.conditionalCondStack.push(newCond);
             this.conditionalStackActive.push(newActive);
             return null;
         } else if (directive == "#endif") {
-            if (this.conditionalCondStack.length > 0) {
+            if (this.conditionalCondStack.size() > 0) {
                 this.conditionalCondStack.pop();
                 this.conditionalStackActive.pop();
             }
@@ -159,7 +159,7 @@ export class Preprocessor {
         let result = "";
         let currentWord = "";
         let i = 0;
-        let len = line.length;
+        let len = line.size();
 
         while (i < len) {
             let ch = line[i];
@@ -178,12 +178,12 @@ export class Preprocessor {
 
             if (!this.inString) {
                 if (ch == "/" && i + 1 < len && line[i + 1] == "/") {
-                    if (currentWord.length > 0) { result = result + this._expandMacroIfAny(currentWord); currentWord = ""; }
+                    if (currentWord.size() > 0) { result = result + this._expandMacroIfAny(currentWord); currentWord = ""; }
                     result = result + line.slice(i);
                     break;
                 }
                 if (ch == "/" && i + 1 < len && line[i + 1] == "*") {
-                    if (currentWord.length > 0) { result = result + this._expandMacroIfAny(currentWord); currentWord = ""; }
+                    if (currentWord.size() > 0) { result = result + this._expandMacroIfAny(currentWord); currentWord = ""; }
                     result = result + "/*";
                     i = i + 1;
                     this.inBlockComment = true;
@@ -191,7 +191,7 @@ export class Preprocessor {
                     continue;
                 }
                 if (ch == "\"" || ch == "'") {
-                    if (currentWord.length > 0) { result = result + this._expandMacroIfAny(currentWord); currentWord = ""; }
+                    if (currentWord.size() > 0) { result = result + this._expandMacroIfAny(currentWord); currentWord = ""; }
                     this.inString = true;
                     this.stringDelim = ch;
                     result = result + ch;
@@ -201,7 +201,7 @@ export class Preprocessor {
                 if (this._isIdentifierChar(ch)) {
                     currentWord = currentWord + ch;
                 } else {
-                    if (currentWord.length > 0) { result = result + this._expandMacroIfAny(currentWord); currentWord = ""; }
+                    if (currentWord.size() > 0) { result = result + this._expandMacroIfAny(currentWord); currentWord = ""; }
                     result = result + ch;
                 }
             } else {
@@ -217,7 +217,7 @@ export class Preprocessor {
             i = i + 1;
         }
 
-        if (currentWord.length > 0) {
+        if (currentWord.size() > 0) {
             result = result + this._expandMacroIfAny(currentWord);
         }
         return result;

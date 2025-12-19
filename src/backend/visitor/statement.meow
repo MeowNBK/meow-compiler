@@ -4,7 +4,7 @@ import * as Emitter from "backend/emitter.meow";
 import { OpCodes } from "backend/opCodes.meow";
 
 fn _endScopeAndCloseUpvalues(cg) {
-    let scopeToEnd = cg.currentState.scope[cg.currentState.scope.length - 1];
+    let scopeToEnd = cg.currentState.scope[cg.currentState.scope.size() - 1];
     let lowestRegisterToClose = -1;
 
     for (varName in scopeToEnd.keys()) {
@@ -40,7 +40,7 @@ export let visitLetStatement = fn(cg, node) {
     assert(node.name.resolution && node.name.resolution.type == "local", "Lỗi: LetStatement " + name + " không được resolve là local");
     let localSlot = node.name.resolution.symbol.index;
     
-    let scopeLevel = cg.currentState.scope.length - 1;
+    let scopeLevel = cg.currentState.scope.size() - 1;
     let currentScope = cg.currentState.scope[scopeLevel];
 
     let destReg = cg.currentState.allocator.ralloc();
@@ -56,7 +56,7 @@ export let visitLetStatement = fn(cg, node) {
         Emitter.emit(cg.currentState.proto, OpCodes.LOAD_NULL, [destReg]);
     }
 
-    if (scopeLevel == 0 && cg.states.length == 1) {
+    if (scopeLevel == 0 && cg.states.size() == 1) {
         let constIdx = cg.currentState.pool.add(name);
         Emitter.emit(cg.currentState.proto, OpCodes.SET_GLOBAL, [constIdx, destReg]);
     }
@@ -69,7 +69,7 @@ export let visitFunctionStatement = fn(cg, node) {
     assert(node.name.resolution && node.name.resolution.type == "local", "Lỗi: FunctionStatement " + name + " không được resolve là local");
     let localSlot = node.name.resolution.symbol.index; //
 
-    let scopeLevel = cg.currentState.scope.length - 1;
+    let scopeLevel = cg.currentState.scope.size() - 1;
     let currentScope = cg.currentState.scope[scopeLevel];
 
     let destReg = cg.currentState.allocator.ralloc();
@@ -82,7 +82,7 @@ export let visitFunctionStatement = fn(cg, node) {
     
     Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [destReg, valueReg]);
     
-    if (scopeLevel == 0 && cg.states.length == 1) {
+    if (scopeLevel == 0 && cg.states.size() == 1) {
         let constIdx = cg.currentState.pool.add(name);
         Emitter.emit(cg.currentState.proto, OpCodes.SET_GLOBAL, [constIdx, destReg]);
     }
@@ -99,7 +99,7 @@ export fn visitClassStatement(cg, node) {
     
     cg.currentState.regToLocalIndex[str(classReg)] = localSlot;
     cg.currentState.localIndexToReg[localSlot] = classReg;
-    let currentScope = cg.currentState.scope[cg.currentState.scope.length - 1];
+    let currentScope = cg.currentState.scope[cg.currentState.scope.size() - 1];
     currentScope[className] = localSlot;
     
     Emitter.emit(cg.currentState.proto, OpCodes.NEW_CLASS, [classReg, classNameIdx]);
@@ -119,7 +119,7 @@ export fn visitClassStatement(cg, node) {
     }
     cg.isInsideClass = false;
 
-    if (cg.currentState.scope.length == 1) {
+    if (cg.currentState.scope.size() == 1) {
         Emitter.emit(cg.currentState.proto, OpCodes.SET_GLOBAL, [classNameIdx, classReg]);
     }
 }
@@ -173,16 +173,16 @@ export fn visitWhileStatement(cg, node) {
 }
 
 export fn visitBreakStatement(cg, node) {
-    assert(cg.currentState.loopLabels.length > 0, "Lỗi: 'break' chỉ có thể được dùng trong vòng lặp!");
-    let labels = cg.currentState.loopLabels[cg.currentState.loopLabels.length - 1];
+    assert(cg.currentState.loopLabels.size() > 0, "Lỗi: 'break' chỉ có thể được dùng trong vòng lặp!");
+    let labels = cg.currentState.loopLabels[cg.currentState.loopLabels.size() - 1];
     
     assert(labels.breakTarget, "Lỗi logic: Vòng lặp không có nhãn 'break'.");
     Emitter.emit(cg.currentState.proto, OpCodes.JUMP, [{"label": labels.breakTarget}]);
 }
 
 export fn visitContinueStatement(cg, node) {
-    assert(cg.currentState.loopLabels.length > 0, "Lỗi: 'continue' chỉ có thể được dùng trong vòng lặp!");
-    let labels = cg.currentState.loopLabels[cg.currentState.loopLabels.length - 1];
+    assert(cg.currentState.loopLabels.size() > 0, "Lỗi: 'continue' chỉ có thể được dùng trong vòng lặp!");
+    let labels = cg.currentState.loopLabels[cg.currentState.loopLabels.size() - 1];
 
     assert(labels.continueTarget, "Lỗi logic: Vòng lặp không hỗ trợ 'continue'.");
     Emitter.emit(cg.currentState.proto, OpCodes.JUMP, [{"label": labels.continueTarget}]);
@@ -273,7 +273,7 @@ export fn visitForInStatement(cg, node) {
     
     cg.currentState.regToLocalIndex[str(keyReg)] = localSlot;
     cg.currentState.localIndexToReg[localSlot] = keyReg;
-    cg.currentState.scope[cg.currentState.scope.length - 1][varName] = localSlot;
+    cg.currentState.scope[cg.currentState.scope.size() - 1][varName] = localSlot;
     
     cg.visitStatement(node.body);
     
@@ -312,7 +312,7 @@ export fn visitTryStatement(cg, node) {
         
         cg.currentState.regToLocalIndex[str(errorReg)] = localSlot;
         cg.currentState.localIndexToReg[localSlot] = errorReg;
-        cg.currentState.scope[cg.currentState.scope.length - 1][errorVarName] = localSlot;
+        cg.currentState.scope[cg.currentState.scope.size() - 1][errorVarName] = localSlot;
     }
 
     Emitter.emit(cg.currentState.proto, OpCodes.SETUP_TRY, [{"label": catchLabel}, errorReg]);
@@ -332,7 +332,7 @@ export fn visitTryStatement(cg, node) {
 export fn visitExportStatement(cg, node) {
     cg.visitStatement(node.declaration);
     let name = node.declaration.name.name;
-    let currentScope = cg.currentState.scope[cg.currentState.scope.length - 1];
+    let currentScope = cg.currentState.scope[cg.currentState.scope.size() - 1];
     assert(currentScope[name] != null, "Lỗi logic: Biến '" + name + "' không có trong scope sau khi khai báo.");
     let localIndex = currentScope[name];
     let regIndex = cg.currentState.localIndexToReg[localIndex];
@@ -344,8 +344,8 @@ export fn visitExportStatement(cg, node) {
 export let stdlib = { "io": true, "array": true, "json": true, "object": true, "string": true, "system": true };
 fn _getDirectoryPath(fullPath) {
     let filename = Io.getFileName(fullPath);
-    if (filename.length >= fullPath.length) return "";
-    return fullPath.slice(0, fullPath.length - filename.length);
+    if (filename.size() >= fullPath.size()) return "";
+    return fullPath.slice(0, fullPath.size() - filename.size());
 }
 
 export fn visitImportStatement(cg, node) {
@@ -355,13 +355,15 @@ export fn visitImportStatement(cg, node) {
         pathIdx = cg.currentState.pool.add(sourcePath);
     } else if (sourcePath.endsWith(".meow")) {
         let currentFileDir = _getDirectoryPath(cg.currentState.proto.sourceName);
-        
         let importAbsolutePath = cg.compiler._resolvePath(sourcePath, currentFileDir);
 
         let cachePath = cg.cacheManager.compiledModules[importAbsolutePath];
         
         assert(cachePath, "Lỗi logic: Module " + importAbsolutePath + " lẽ ra phải được biên dịch rồi!");
-        pathIdx = cg.currentState.pool.add(cachePath);
+        
+        let fileNameOnly = Io.getFileName(cachePath); 
+        pathIdx = cg.currentState.pool.add(fileNameOnly);
+
     } else {
         pathIdx = cg.currentState.pool.add(sourcePath);
     }
@@ -376,15 +378,15 @@ export fn visitImportStatement(cg, node) {
 
         cg.currentState.regToLocalIndex[str(moduleReg)] = localSlot;
         cg.currentState.localIndexToReg[localSlot] = moduleReg;
-        cg.currentState.scope[cg.currentState.scope.length - 1][moduleName] = localSlot;
+        cg.currentState.scope[cg.currentState.scope.size() - 1][moduleName] = localSlot;
 
-        if (cg.currentState.scope.length == 1 && cg.states.length == 1) {
+        if (cg.currentState.scope.size() == 1 && cg.states.size() == 1) {
             let nameIdx = cg.currentState.pool.add(moduleName);
             Emitter.emit(cg.currentState.proto, OpCodes.SET_GLOBAL, [nameIdx, moduleReg]);
         }
 
         cg.currentState.moduleVariables[moduleName] = true;
-    } else if (node.namedImports.length > 0) {
+    } else if (node.namedImports.size() > 0) {
         cg.currentState.allocator.withTemp(fn(tempModuleReg) {
             Emitter.emit(cg.currentState.proto, OpCodes.IMPORT_MODULE, [tempModuleReg, pathIdx]);
             
@@ -401,8 +403,8 @@ export fn visitImportStatement(cg, node) {
          
                 cg.currentState.regToLocalIndex[str(localReg)] = localSlot;
                 cg.currentState.localIndexToReg[localSlot] = localReg;
-                cg.currentState.scope[cg.currentState.scope.length - 1][importName] = localSlot;
-                if (cg.currentState.scope.length == 1 && cg.states.length == 1) {
+                cg.currentState.scope[cg.currentState.scope.size() - 1][importName] = localSlot;
+                if (cg.currentState.scope.size() == 1 && cg.states.size() == 1) {
                     Emitter.emit(cg.currentState.proto, OpCodes.SET_GLOBAL, [nameIdx, localReg]);
                 }
                 
@@ -442,13 +444,13 @@ export fn visitSwitchStatement(cg, node) {
     let defaultBodyLabel = null;
     let endLabel = Emitter.createLabel("L_SWITCH_END");
     
-    for (i in range(0, node.cases.length)) {
+    for (i in range(0, node.cases.size())) {
         bodyLabels.push(Emitter.createLabel("L_CASE_BODY"));
         testChainLabels.push(Emitter.createLabel("L_NEXT_TEST"));
     }
     cg.currentState.loopLabels.push({ "continueTarget": null, "breakTarget": endLabel });
 
-    for (i in range(0, node.cases.length)) {
+    for (i in range(0, node.cases.size())) {
         let cas = node.cases[i];
         if (i > 0) {
             Emitter.defineLabel(cg.currentState.proto, testChainLabels[i-1]);
@@ -466,18 +468,18 @@ export fn visitSwitchStatement(cg, node) {
         }
     }
     
-    Emitter.defineLabel(cg.currentState.proto, testChainLabels[testChainLabels.length - 1]);
+    Emitter.defineLabel(cg.currentState.proto, testChainLabels[testChainLabels.size() - 1]);
     let finalJumpTarget = defaultBodyLabel ? defaultBodyLabel : endLabel;
     Emitter.emit(cg.currentState.proto, OpCodes.JUMP, [{"label": finalJumpTarget}]);
 
-    for (i in range(0, node.cases.length)) {
+    for (i in range(0, node.cases.size())) {
         Emitter.defineLabel(cg.currentState.proto, bodyLabels[i]);
         for (stmt in node.cases[i].statements) {
             cg.visitStatement(stmt);
         }
         
         let bodyStmts = node.cases[i].statements;
-        if (bodyStmts.length == 0 || (bodyStmts[bodyStmts.length-1].type != "ReturnStatement" && bodyStmts[bodyStmts.length-1].type != "BreakStatement" && bodyStmts[bodyStmts.length-1].type != "ContinueStatement" && bodyStmts[bodyStmts.length-1].type != "ThrowStatement")) {
+        if (bodyStmts.size() == 0 || (bodyStmts[bodyStmts.size()-1].type != "ReturnStatement" && bodyStmts[bodyStmts.size()-1].type != "BreakStatement" && bodyStmts[bodyStmts.size()-1].type != "ContinueStatement" && bodyStmts[bodyStmts.size()-1].type != "ThrowStatement")) {
              Emitter.emit(cg.currentState.proto, OpCodes.JUMP, [{"label": endLabel}]);
         }
     }

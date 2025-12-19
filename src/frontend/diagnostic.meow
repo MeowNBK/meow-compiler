@@ -141,7 +141,7 @@ fn _getLineContent(filename, lineNum) {
         let content = Io.read(filename);
         if (content) {
             let lines = String.split(content, "\n");
-            if (lineNum > 0 && lineNum <= lines.length) {
+            if (lineNum > 0 && lineNum <= lines.size()) {
                 return String.trim(lines[lineNum - 1]);
             }
         }

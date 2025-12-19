@@ -18,7 +18,7 @@ export class BytecodeStringifier {
     fn stringify(protos) {
         this._allProtos = {};
         let initialKeys = protos.keys();
-        for (let i = 0; i < initialKeys.length; ++i) {
+        for (let i = 0; i < initialKeys.size(); ++i) {
             let k = initialKeys[i];
             this._allProtos[k] = protos[k];
         }
@@ -28,11 +28,11 @@ export class BytecodeStringifier {
             changed = false;
 
             let names = this._allProtos.keys();
-            for (let i = 0; i < names.length; ++i) {
+            for (let i = 0; i < names.size(); ++i) {
                 let pname = names[i];
                 let p = this._allProtos[pname];
                 if (!p || !p.constantPool) continue;
-                for (let ci = 0; ci < p.constantPool.length; ++ci) {
+                for (let ci = 0; ci < p.constantPool.size(); ++ci) {
                     let c = p.constantPool[ci];
                     if (typeof(c) == "object" && c != null && c.sourceName) {
                         if (this._allProtos[c.sourceName] == null) {
@@ -48,7 +48,7 @@ export class BytecodeStringifier {
         protoNames.sort();
 
         let result = [];
-        for (let i = 0; i < protoNames.length; ++i) {
+        for (let i = 0; i < protoNames.size(); ++i) {
             let protoName = protoNames[i];
             let proto = this._allProtos[protoName];
             result.push(this._stringifyProto(proto, protoName));
@@ -71,15 +71,15 @@ export class BytecodeStringifier {
         }
         output.push("");
 
-        if (proto.constantPool.length > 0) {
+        if (proto.constantPool.size() > 0) {
             for (constant in proto.constantPool) {
                 output.push("    .const " + this._stringifyConst(constant));
             }
             output.push("");
         }
 
-        if (proto.upvalueDescs && proto.upvalueDescs.length > 0) {
-            for (let i = 0; i < proto.upvalueDescs.length; ++i) {
+        if (proto.upvalueDescs && proto.upvalueDescs.size() > 0) {
+            for (let i = 0; i < proto.upvalueDescs.size(); ++i) {
                 let d = proto.upvalueDescs[i];
                 let t = d.isLocal ? "local" : "parent_upvalue";
                 output.push("    .upvalue " + str(i) + " " + t + " " + str(d.index));
@@ -87,14 +87,14 @@ export class BytecodeStringifier {
             output.push("");
         }
         
-        for (let ip = 0; ip < proto.code.length; ++ip) {
+        for (let ip = 0; ip < proto.code.size(); ++ip) {
             if (this.ipToLabel[str(ip)]) {
                 output.push(this.ipToLabel[str(ip)] + ":");
             }
             output.push("    " + this._stringifyInstruction(proto.code[ip]));
         }
 
-        let endIp = proto.code.length;
+        let endIp = proto.code.size();
         if (this.ipToLabel[str(endIp)]) {
             output.push(this.ipToLabel[str(endIp)] + ":");
         }
@@ -122,7 +122,7 @@ export class BytecodeStringifier {
 
     fn _collectLabels(code) {
 
-        for (let ip = 0; ip < code.length; ++ip) {
+        for (let ip = 0; ip < code.size(); ++ip) {
             let inst = code[ip];
             if (inst == null) continue;
             let ji = JUMP_INSTRUCTIONS[inst.op];
@@ -144,7 +144,7 @@ export class BytecodeStringifier {
 
         if (JUMP_INSTRUCTIONS[op] != null) {
             let jumpInfo = JUMP_INSTRUCTIONS[op];
-            for (let i = 0; i < args.length; ++i) {
+            for (let i = 0; i < args.size(); ++i) {
                 if (i == jumpInfo.targetArgIndex) {
 
                     argStrings.push(this.ipToLabel[str(args[i])]);
@@ -153,7 +153,7 @@ export class BytecodeStringifier {
                 }
             }
         } else {
-            for (let i = 0; i < args.length; ++i) {
+            for (let i = 0; i < args.size(); ++i) {
                 argStrings.push(str(args[i]));
             }
         }

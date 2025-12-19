@@ -38,7 +38,7 @@ export fn visitNullLiteral(cg, node) {
 }
 
 export fn visitArrayLiteral(cg, node) {
-    let count = node.elements.length;
+    let count = node.elements.size();
     if (count == 0) {
         let dst = cg.currentState.allocator.ralloc();
         Emitter.emit(cg.currentState.proto, OpCodes.NEW_ARRAY, [dst, 0, 0]);
@@ -62,7 +62,7 @@ export fn visitArrayLiteral(cg, node) {
 }
 
 export let visitObjectLiteral = fn(cg, node) {
-    let count = node.properties.length;
+    let count = node.properties.size();
     if (count == 0) {
         let dst = cg.currentState.allocator.ralloc();
         Emitter.emit(cg.currentState.proto, OpCodes.NEW_HASH, [dst, 0, 0]);
@@ -126,7 +126,7 @@ export let visitFunctionLiteral = fn(cg, node) {
     }
     
     let parentSource = (cg.currentState && cg.currentState.proto && cg.currentState.proto.sourceName) ? cg.currentState.proto.sourceName : "anon_parent";
-    let funcName = '@' + descriptiveName + '_' + parentSource + '_' + str(cg.currentState ? cg.currentState.proto.code.length : 0);
+    let funcName = '@' + descriptiveName + '_' + parentSource + '_' + str(cg.currentState ? cg.currentState.proto.code.size() : 0);
     
     cg.enterState(funcName);
     let paramScope = cg.currentState.scope[0];
@@ -158,9 +158,9 @@ export let visitFunctionLiteral = fn(cg, node) {
     cg.isInsideClass = wasInsideClass;
 
     let upvalues = node.resolved_upvalues;
-    if (upvalues && upvalues.length > 0) {
+    if (upvalues && upvalues.size() > 0) {
         childProto.upvalueDescs = []; 
-        childProto.numUpvalues = upvalues.length;
+        childProto.numUpvalues = upvalues.size();
 
         for (up in upvalues) {
             if (up.isLocal) {
@@ -179,7 +179,7 @@ export let visitFunctionLiteral = fn(cg, node) {
         }
     }
 
-    assert(childProto.sourceName && childProto.sourceName.length > 3, "Bad childProto.sourceName after visitFunctionLiteral");
+    assert(childProto.sourceName && childProto.sourceName.size() > 3, "Bad childProto.sourceName after visitFunctionLiteral");
 
     cg.protos[childProto.sourceName] = childProto;
     let parentPool = cg.currentState.pool;
@@ -192,13 +192,13 @@ export let visitFunctionLiteral = fn(cg, node) {
 };
 
 export fn visitTemplateLiteral(cg, node) {
-    if (node.parts.length == 0) {
+    if (node.parts.size() == 0) {
         return _emitConst(cg, "");
     }
 
     let resultReg = cg.visitExpression(node.parts[0]);
 
-    for (let i = 1; i < node.parts.length; ++i) {
+    for (let i = 1; i < node.parts.size(); ++i) {
         let partReg = cg.visitExpression(node.parts[i]);
         Emitter.emit(cg.currentState.proto, OpCodes.ADD, [resultReg, resultReg, partReg]);
 

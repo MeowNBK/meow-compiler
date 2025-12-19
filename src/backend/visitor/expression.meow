@@ -113,7 +113,7 @@ export fn visitCallExpression(cg, node) {
     let calleeTempReg = cg.visitExpression(node.callee);
     Emitter.emit(cg.currentState.proto, OpCodes.MOVE, [savedCalleeReg, calleeTempReg]);
 
-    let argc = node.args.length;
+    let argc = node.args.size();
     let tempArgRegs = [];
 
     for (let i = 0; i < argc; ++i) {
@@ -126,7 +126,7 @@ export fn visitCallExpression(cg, node) {
     if (argc > 0) {
         let minSrc = tempArgRegs[0];
         let maxSrc = tempArgRegs[0];
-        for (let k = 1; k < tempArgRegs.length; ++k) {
+        for (let k = 1; k < tempArgRegs.size(); ++k) {
             if (tempArgRegs[k] < minSrc) minSrc = tempArgRegs[k];
             if (tempArgRegs[k] > maxSrc) maxSrc = tempArgRegs[k];
         }

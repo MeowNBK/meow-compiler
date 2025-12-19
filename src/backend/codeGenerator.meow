@@ -20,7 +20,7 @@ export class CodeGenerator {
         this.enterState("@main");
         this.currentState.proto.sourceName = this.sourceName;
         
-        for (let i = 0; i < this.ast.body.length; ++i) {
+        for (let i = 0; i < this.ast.body.size(); ++i) {
             this.visitStatement(this.ast.body[i]);
         }
         
@@ -51,7 +51,7 @@ export class CodeGenerator {
         let finishedState = this.states.pop();
         let proto = finishedState.proto;
 
-        let lastIdx = proto.code.length - 1;
+        let lastIdx = proto.code.size() - 1;
         if (lastIdx < 0 || proto.code[lastIdx].op != OpCodes.RETURN) {
 
             finishedState.allocator.withTemp(fn(r) {
@@ -65,12 +65,12 @@ export class CodeGenerator {
         if (recomputed > proto.numRegisters) proto.numRegisters = recomputed;
 
         if (!proto.upvalueDescs) proto.upvalueDescs = [];
-        proto.numUpvalues = proto.upvalueDescs.length;
+        proto.numUpvalues = proto.upvalueDescs.size();
 
         Emitter.patchPendingJumps(proto);
         
-        if (this.states.length > 0) {
-            this.currentState = this.states[this.states.length - 1];
+        if (this.states.size() > 0) {
+            this.currentState = this.states[this.states.size() - 1];
         } else {
             this.currentState = null;
         }

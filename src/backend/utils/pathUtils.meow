@@ -2,14 +2,14 @@ import * as Io from "io";
 
 export fn getDirectoryPath(fullPath) {
     let filename = Io.getFileName(fullPath);
-    if (filename.length >= fullPath.length) return "";
-    return fullPath.slice(0, fullPath.length - filename.length);
+    if (filename.size() >= fullPath.size()) return "";
+    return fullPath.slice(0, fullPath.size() - filename.size());
 }
 
 export fn isAbsolutePath(path) {
-    if (path.length == 0) return false;
+    if (path.size() == 0) return false;
     if (path[0] == "/" || path[0] == "\\") return true;
-    if (path.length >= 3 && path[1] == ":") {
+    if (path.size() >= 3 && path[1] == ":") {
         let driveLetter = path[0];
         if ((driveLetter >= "a" && driveLetter <= "z") || (driveLetter >= "A" && driveLetter <= "Z")) {
             if (path[2] == "/" || path[2] == "\\") return true;

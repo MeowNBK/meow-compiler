@@ -8,10 +8,78 @@ import { ScopeAnalyzer } from "middle-end/scopeAnalyzer.meow";
 import { BytecodeStringifier } from "backend/bytecodeStringifier.meow";
 import { CodeGenerator } from "backend/codeGenerator.meow";
 import { getDirectoryPath, isAbsolutePath } from "backend/utils/pathUtils.meow";
+import { AstLinker } from "backend/astLinker.meow";
 
 export class Compiler {
     fn init(options) {
         this.options = options || {};
+    }
+
+    fn parseOnly(absolutePath) {
+        if (!Io.fileExists(absolutePath)) return null;
+        let source = Io.read(absolutePath);
+        if (source == null) return null;
+
+        // Preprocess & Lex
+        let preprocessor = new Preprocessor();
+        let processedSource = preprocessor.process(source, absolutePath);
+        let lexer = new Lexer(processedSource, absolutePath);
+        let tokens = lexer.tokenize();
+
+        // Parse
+        let parser = new Parser(tokens);
+        let ast = parser.parseProgram();
+
+        if (parser.diagnostics.size() > 0) {
+            for (let i = 0; i < parser.diagnostics.size(); ++i) {
+                print(parser.diagnostics[i]);
+            }
+            return null;
+        }
+        return ast;
+    }
+
+    fn _getDirectoryPath(p) {
+        return getDirectoryPath(p);
+    }
+
+    fn compileBundle(entryPath, options) {
+        // 1. Resolve Entry Path
+        let absEntry = this._resolvePath(entryPath, ".");
+        if (!Io.fileExists(absEntry)) {
+            print("[Error] Entry file not found: " + absEntry);
+            System.exit(1);
+        }
+
+        // 2. Linking: Tạo ra 1 AST duy nhất cho toàn bộ project
+        let linker = new AstLinker();
+        linker.init();
+        
+        // Truyền 'this' (Compiler instance) vào để linker dùng _resolvePath và parseOnly
+        let bundleAst = linker.link(absEntry, this);
+
+        // 3. Analysis: Analyze Scope cho toàn bộ Bundle
+        // ScopeAnalyzer [cite: 218] sẽ chạy trên Program mới này.
+        // Nó sẽ resolve __modules__, __loader__ vào Global hoặc Local của main,
+        // và resolve các biến bên trong FunctionLiteral module chính xác.
+        let analyzer = new ScopeAnalyzer(bundleAst);
+        analyzer.analyze();
+
+        // 4. Code Generation: AST -> Protos
+        // Lúc này AST chỉ toàn là Function, Call, Array... không còn Import/Export
+        // CodeGenerator [cite: 135] xử lý bình thường.
+        let generator = CodeGenerator(bundleAst, this, null, "bundle");
+        let protos = generator.compile();
+
+        // 5. Optimization (Optional but recommended)
+        // import { optimizeRegisters } from "backend/registerOptimizer.meow";
+        // protos = optimizeRegisters(protos);
+
+        // 6. Stringify: Protos -> Bytecode Text
+        let stringifier = BytecodeStringifier();
+        let bytecodeText = stringifier.stringify(protos);
+
+        return bytecodeText;
     }
 
     fn getImportsOnly(absolutePath) {
@@ -31,7 +99,7 @@ export class Compiler {
         let tokens = lexer.tokenize();
         let parser = new Parser(tokens);
         let ast = parser.parseProgram();
-        if (parser.diagnostics.length > 0) {
+        if (parser.diagnostics.size() > 0) {
             for (diagnostic in parser.diagnostics) {
                 print(diagnostic);
             }
@@ -67,7 +135,7 @@ export class Compiler {
         let tokens = lexer.tokenize();
         let parser = new Parser(tokens);
         let ast = parser.parseProgram();
-        if (parser.diagnostics.length > 0) {
+        if (parser.diagnostics.size() > 0) {
             for (diagnostic in parser.diagnostics) {
                 print(diagnostic);
             }
@@ -99,7 +167,7 @@ export class Compiler {
     fn _resolvePath(p, importerDir) {
         if (isAbsolutePath(p)) return Io.getAbsolutePath(p);
         let absImporter = null;
-        if (importerDir && importerDir.length > 0) {
+        if (importerDir && importerDir.size() > 0) {
             absImporter = Io.getAbsolutePath(importerDir);
         }
 

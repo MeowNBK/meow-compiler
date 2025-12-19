@@ -203,8 +203,8 @@ export class Lexer {
     }
 
     fn check(s) {
-            return s != null && (typeof(s) == typeof(this.TokenType._TOTAL_TOKENS));
-        }
+        return s != null && (typeof(s) == typeof(this.TokenType._TOTAL_TOKENS));
+    }
 
     fn punctuator(startLine, startCol) {
         let lex1 = this.currChar;

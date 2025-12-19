@@ -38,11 +38,11 @@ export fn createProto(name, numRegisters) {
 
 export fn emit(proto, opcode, args) {
     let inst = {"op": opcode, "args": [] };
-    let ip = proto.code.length;
+    let ip = proto.code.size();
     for (a in args) {
         if (typeof(a) == "object" && a != null && (a["label"] != null)) {
             inst.args.push(-1);
-            proto.pendingJumps.push({"ip": ip, "argIndex": inst.args.length - 1, "label": a.label});
+            proto.pendingJumps.push({"ip": ip, "argIndex": inst.args.size() - 1, "label": a.label});
         } else {
             inst.args.push(a);
         }
@@ -51,7 +51,7 @@ export fn emit(proto, opcode, args) {
 }
 
 export fn defineLabel(proto, label) {
-    proto.labels[label] = proto.code.length;
+    proto.labels[label] = proto.code.size();
 }
 
 export fn patchPendingJumps(proto) {
@@ -126,7 +126,7 @@ export fn computeMaxRegister(proto) {
         let regIdxs = __REG_ARGS[inst.op];
         if (regIdxs != null) {
             for (idx in regIdxs) {
-                if (idx < inst.args.length) {
+                if (idx < inst.args.size()) {
                     let v = inst.args[idx];
                     if (typeof(v) == "int" && v > maxR) maxR = v;
                 }
