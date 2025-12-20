@@ -1,83 +1,68 @@
 import * as System from "system";
 import * as Io from "io";
 
+let stdlib = { 
+    "io": true, "array": true, "json": true, "object": true, 
+    "string": true, "system": true, "native": true 
+};
+
 export class AstLinker {
     fn init() {
-        this.pathToId = {};        // Map<AbsolutePath, Int>
-        this.idToPath = {};        // Map<Int, AbsolutePath>
-        this.modulesList = [];     // Array<FunctionLiteral> (Đúng thứ tự ID)
+        this.pathToId = {};   
+        this.idToPath = {};   
+        this.modulesList = []; 
         this.nextId = 0;
     }
 
-    // compilerInstance: Instance của Compiler để gọi hàm resolve và parse
     fn link(entryPath, compilerInstance) {
-        // --- PHASE 1: DISCOVERY & PARSING ---
-        // Mục tiêu: Tìm tất cả file cần thiết, gán ID và Parse ra AST thô.
-        
         let absEntry = compilerInstance._resolvePath(entryPath, ".");
-        let rawAsts = {}; // Map<AbsolutePath, AST>
+        let rawAsts = {}; 
         
-        // Queue chứa các đường dẫn tuyệt đối cần xử lý
         let queue = [absEntry];
-        let processed = {}; // Set<AbsolutePath> để tránh vòng lặp vô hạn
+        let processed = {}; 
 
-        // Gán ID cho Entry Point luôn là 0
         this._assignId(absEntry);
 
         while (queue.size() > 0) {
-            let currentPath = queue.pop(); // Lấy 1 path ra (đã là absolute)
-            
+            let currentPath = queue.pop();
             if (processed[currentPath]) continue;
             processed[currentPath] = true;
 
-            // 1.1 Parse file (Sử dụng hàm parseOnly của Compiler - xem bên dưới)
             let ast = compilerInstance.parseOnly(currentPath);
             if (ast == null) {
-                print("[Linker Error] Không thể đọc hoặc parse file: " + currentPath);
+                print("[Linker Error] Cannot parse: " + currentPath);
                 System.exit(1);
             }
             rawAsts[currentPath] = ast;
 
-            // 1.2 Quét Import trong AST để tìm dependency con
             let dir = compilerInstance._getDirectoryPath(currentPath);
-            let imports = this._scanImports(ast); // Trả về danh sách đường dẫn raw trong import string
+            let imports = this._scanImports(ast);
 
             for (let i = 0; i < imports.size(); ++i) {
                 let rawImportPath = imports[i];
-                
-                // QUAN TRỌNG: Resolve ngay lập tức để có Absolute Path
+                if (stdlib[rawImportPath]) continue;
+
                 let absImportPath = compilerInstance._resolvePath(rawImportPath, dir);
-                
                 if (!Io.fileExists(absImportPath)) {
-                     print("[Linker Error] File không tồn tại: " + absImportPath + " (được import từ " + currentPath + ")");
+                     print("[Linker Error] File not found: " + absImportPath);
                      System.exit(1);
                 }
 
-                // Gán ID nếu chưa có
                 this._assignId(absImportPath);
-                
-                // Đẩy vào queue để xử lý tiếp
                 if (!processed[absImportPath]) {
                     queue.push(absImportPath);
                 }
             }
         }
 
-        // --- PHASE 2: TRANSFORMATION ---
-        // Biến đổi AST thô thành Module Function dựa trên ID đã cấp
-        
-        // Duyệt theo thứ tự ID từ 0 -> nextId
+        // Sắp xếp theo ID để đảm bảo thứ tự module
         for (let id = 0; id < this.nextId; ++id) {
             let path = this.idToPath[id];
             let rawAst = rawAsts[path];
-            
-            // Transform
             let moduleFunc = this._transformModule(rawAst, path, compilerInstance);
             this.modulesList.push(moduleFunc);
         }
 
-        // --- PHASE 3: BUNDLING ---
-        // Tạo Program chính chứa Loader và Mảng Modules
         return this._createBundleProgram(absEntry);
     }
 
@@ -90,28 +75,36 @@ export class AstLinker {
         }
     }
 
-    // Helper: Chỉ quét lấy string path từ ImportStatement để discovery
     fn _scanImports(ast) {
         let paths = [];
         if (!ast.body) return paths;
         for (let i = 0; i < ast.body.size(); ++i) {
             let stmt = ast.body[i];
-            if (stmt.type == "ImportStatement") {
-                paths.push(stmt.path.value);
-            }
+            if (stmt.type == "ImportStatement") paths.push(stmt.path.value);
         }
         return paths;
     }
 
-    // Biến đổi AST của 1 module
+    fn _makeDummyToken(file) {
+        return {
+            "type": "SYNTHETIC",
+            "lexeme": "<linker_generated>",
+            "line": 0,
+            "col": 0,
+            "file": file
+        };
+    }
+
     fn _transformModule(ast, currentAbsPath, compiler) {
         let newStatements = [];
+        let dummyToken = this._makeDummyToken(currentAbsPath);
 
         // 1. let __exports__ = {};
         newStatements.push({
             "type": "LetStatement",
-            "name": { "type": "Identifier", "name": "__exports__" },
-            "value": { "type": "ObjectLiteral", "properties": [] }
+            "token": dummyToken,
+            "name": { "type": "Identifier", "name": "__exports__", "token": dummyToken },
+            "value": { "type": "ObjectLiteral", "properties": [], "token": dummyToken }
         });
 
         let currentDir = compiler._getDirectoryPath(currentAbsPath);
@@ -120,110 +113,158 @@ export class AstLinker {
             let stmt = ast.body[i];
 
             if (stmt.type == "ImportStatement") {
-                // Xử lý Import: import ... from "path"
-                // Phải resolve lại path để lấy đúng ID đã cấp ở Phase 1
-                let rawPath = stmt.path.value;
-                let absPath = compiler._resolvePath(rawPath, currentDir);
-                let moduleId = this.pathToId[absPath];
-                
-                // Assert chắc chắn có ID (vì Phase 1 đã quét hết rồi)
-                if (moduleId == null) {
-                    print("[Linker Logic Error] Không tìm thấy ID cho path: " + absPath);
-                    System.exit(1);
-                }
-
-                // Tạo biến tạm: let __mod_X_Y = __loader__(ID);
-                let tempVarName = "__mod_" + str(moduleId) + "_" + str(i);
-                
-                newStatements.push({
-                    "type": "LetStatement",
-                    "name": { "type": "Identifier", "name": tempVarName },
-                    "value": {
-                        "type": "CallExpression",
-                        "callee": { "type": "Identifier", "name": "__loader__" },
-                        "args": [{ "type": "IntegerLiteral", "value": moduleId }]
+                if (stdlib[stmt.path.value]) {
+                    newStatements.push(stmt);
+                } else {
+                    let rawPath = stmt.path.value;
+                    let absPath = compiler._resolvePath(rawPath, currentDir);
+                    let moduleId = this.pathToId[absPath];
+                    
+                    if (moduleId == null) {
+                        print("[Linker Logic Error] Missing ID for: " + absPath);
+                        System.exit(1);
                     }
-                });
 
-                // Xử lý Named Imports: import { A, B }
-                if (stmt.namedImports) {
-                    for (let j = 0; j < stmt.namedImports.size(); ++j) {
-                        let importSpecifier = stmt.namedImports[j];
-                        let localName = importSpecifier.resolution ? importSpecifier.resolution.name : importSpecifier.name.name; // Fallback name
-                        let exportName = importSpecifier.name.name; 
+                    let originToken = stmt.token || dummyToken;
+                    let tempVarName = "__mod_" + str(moduleId) + "_" + str(i);
+                    
+                    newStatements.push({
+                        "type": "LetStatement",
+                        "token": originToken, 
+                        "name": { "type": "Identifier", "name": tempVarName, "token": originToken },
+                        "value": {
+                            "type": "CallExpression",
+                            "token": originToken,
+                            "callee": { "type": "Identifier", "name": "__loader__", "token": originToken },
+                            "args": [{ "type": "IntegerLiteral", "value": moduleId, "token": originToken }]
+                        }
+                    });
 
-                        // let localName = __mod_X_Y.exportName;
+                    if (stmt.namedImports) {
+                        for (let j = 0; j < stmt.namedImports.size(); ++j) {
+                            let spec = stmt.namedImports[j]; 
+                            // spec là Identifier node -> spec.name là chuỗi
+                            let localName = spec.name; 
+                            let exportName = spec.name;
+                            let specToken = spec.token || originToken;
+
+                            // Safety check
+                            if (localName == null) {
+                                print("[Linker Error] Import name is null in " + currentAbsPath);
+                                System.exit(1);
+                            }
+
+                            newStatements.push({
+                                "type": "LetStatement",
+                                "token": specToken,
+                                "name": { "type": "Identifier", "name": localName, "token": specToken },
+                                "value": {
+                                    "type": "PropertyAccess",
+                                    "token": specToken,
+                                    "object": { "type": "Identifier", "name": tempVarName, "token": specToken },
+                                    "property": { "type": "Identifier", "name": exportName, "token": specToken }
+                                }
+                            });
+                        }
+                    }
+
+                    if (stmt.namespaceImport) {
+                        let nsToken = stmt.namespaceImport.token || originToken;
                         newStatements.push({
                             "type": "LetStatement",
-                            "name": { "type": "Identifier", "name": localName },
-                            "value": {
-                                "type": "PropertyAccess",
-                                "object": { "type": "Identifier", "name": tempVarName },
-                                "property": { "type": "Identifier", "name": exportName }
+                            "token": nsToken,
+                            "name": { "type": "Identifier", "name": stmt.namespaceImport.name, "token": nsToken },
+                            "value": { "type": "Identifier", "name": tempVarName, "token": nsToken }
+                        });
+                    }
+                }
+
+            } else if (stmt.type == "ExportStatement") {
+                let originToken = stmt.token || dummyToken;
+                
+                if (stmt.declaration) {
+                    let decl = stmt.declaration;
+                    newStatements.push(decl);
+
+                    let name = null;
+                    if (decl.type == "LetStatement" || decl.type == "ConstStatement" || 
+                        decl.type == "FunctionDeclaration" || decl.type == "FunctionStatement" ||
+                        decl.type == "ClassDeclaration" || decl.type == "ClassStatement") {
+                        name = decl.name.name;
+                    }
+                    
+                    if (name) {
+                        newStatements.push({
+                            "type": "ExpressionStatement",
+                            "token": originToken,
+                            "expression": {
+                                "type": "AssignmentExpression",
+                                "token": originToken,
+                                "target": { 
+                                    "type": "PropertyAccess",
+                                    "token": originToken,
+                                    "object": { "type": "Identifier", "name": "__exports__", "token": originToken },
+                                    "property": { "type": "Identifier", "name": name, "token": originToken }
+                                },
+                                "op": "=",
+                                "value": { "type": "Identifier", "name": name, "token": originToken }
+                            }
+                        });
+                    }
+                } else if (stmt.specifiers) {
+                    for (let j = 0; j < stmt.specifiers.size(); ++j) {
+                        let spec = stmt.specifiers[j];
+                        // spec là Identifier node -> spec.name là chuỗi
+                        let localName = spec.name; 
+                        let exportedName = spec.name;
+                        let specToken = spec.token || originToken;
+
+                        if (localName == null) {
+                            print("[Linker Error] Export name is null in " + currentAbsPath);
+                             System.exit(1);
+                        }
+
+                        newStatements.push({
+                            "type": "ExpressionStatement",
+                            "token": specToken,
+                            "expression": {
+                                "type": "AssignmentExpression",
+                                "token": specToken,
+                                "target": {
+                                    "type": "PropertyAccess",
+                                    "token": specToken,
+                                    "object": { "type": "Identifier", "name": "__exports__", "token": specToken },
+                                    "property": { "type": "Identifier", "name": exportedName, "token": specToken }
+                                },
+                                "op": "=",
+                                "value": { "type": "Identifier", "name": localName, "token": specToken }
                             }
                         });
                     }
                 }
 
-                // Xử lý Namespace Import: import * as M
-                if (stmt.namespaceImport) {
-                    // let M = __mod_X_Y;
-                    newStatements.push({
-                        "type": "LetStatement",
-                        "name": { "type": "Identifier", "name": stmt.namespaceImport.name },
-                        "value": { "type": "Identifier", "name": tempVarName }
-                    });
-                }
-                
-                // ImportAll (nếu có logic riêng) hoặc Import side-effect (chỉ chạy loader) -> Đã xong.
-
-            } else if (stmt.type == "ExportStatement") {
-                // Xử lý Export: export let x = ...
-                // Unwraps declaration
-                let decl = stmt.declaration;
-                newStatements.push(decl); // Đẩy declaration gốc vào body
-
-                // Tìm tên biến được export
-                let name = null;
-                if (decl.type == "LetStatement") name = decl.name.name;
-                else if (decl.type == "FunctionStatement") name = decl.name.name;
-                else if (decl.type == "ClassStatement") name = decl.name.name;
-                
-                if (name != null) {
-                    // __exports__.name = name;
-                    newStatements.push({
-                        "type": "ExpressionStatement",
-                        "expression": {
-                            "type": "AssignmentExpression",
-                            "target": {
-                                "type": "PropertyAccess",
-                                "object": { "type": "Identifier", "name": "__exports__" },
-                                "property": { "type": "Identifier", "name": name }
-                            },
-                            "value": { "type": "Identifier", "name": name }
-                        }
-                    });
-                }
-
             } else {
-                // Giữ nguyên các statement khác
                 newStatements.push(stmt);
             }
         }
 
-        // return __exports__;
         newStatements.push({
             "type": "ReturnStatement",
-            "value": { "type": "Identifier", "name": "__exports__" }
+            "token": dummyToken,
+            "argument": { "type": "Identifier", "name": "__exports__", "token": dummyToken }
         });
 
-        // Bọc code vào FunctionLiteral
         return {
             "type": "FunctionLiteral",
+            "token": dummyToken,
+            "name": null, 
+            "params": [],
             "parameters": [], 
             "body": {
                 "type": "BlockStatement",
-                "statements": newStatements
+                "token": dummyToken,
+                "statements": newStatements, 
+                "body": newStatements        
             }
         };
     }
@@ -231,82 +272,73 @@ export class AstLinker {
     fn _createBundleProgram(entryAbsPath) {
         let entryId = this.pathToId[entryAbsPath];
         let body = [];
+        let dummyToken = this._makeDummyToken("BUNDLE_INTERNAL");
 
-        // 1. let __modules__ = [ func_0, func_1, ... ];
+        // 1. let __modules__ = [ ... ];
         body.push({
             "type": "LetStatement",
-            "name": { "type": "Identifier", "name": "__modules__" },
-            "value": {
-                "type": "ArrayLiteral",
-                "elements": this.modulesList
-            }
+            "token": dummyToken,
+            "name": { "type": "Identifier", "name": "__modules__", "token": dummyToken },
+            "value": { "type": "ArrayLiteral", "elements": this.modulesList, "token": dummyToken }
         });
 
-        // 2. let __cache__ = []; (Cache kết quả exports)
+        // 2. let __cache__ = [];
         body.push({
             "type": "LetStatement",
-            "name": { "type": "Identifier", "name": "__cache__" },
-            "value": { "type": "ArrayLiteral", "elements": [] } // Empty array, sẽ auto grow hoặc dùng NEW_ARRAY nếu cần size
+            "token": dummyToken,
+            "name": { "type": "Identifier", "name": "__cache__", "token": dummyToken },
+            "value": { "type": "ArrayLiteral", "elements": [], "token": dummyToken } 
         });
 
         // 3. fn __loader__(id) { ... }
-        body.push(this._createLoaderFunction());
+        body.push(this._createLoaderFunction(dummyToken));
 
-        // 4. __loader__(entryId); (Entry point execution)
+        // 4. __loader__(entryId);
         body.push({
             "type": "ExpressionStatement",
+            "token": dummyToken,
             "expression": {
                 "type": "CallExpression",
-                "callee": { "type": "Identifier", "name": "__loader__" },
-                "args": [{ "type": "IntegerLiteral", "value": entryId }]
+                "token": dummyToken,
+                "callee": { "type": "Identifier", "name": "__loader__", "token": dummyToken },
+                "args": [{ "type": "IntegerLiteral", "value": entryId, "token": dummyToken }]
             }
         });
 
         return {
             "type": "Program",
+            "token": dummyToken,
             "body": body
         };
     }
 
-    // Tạo node FunctionStatement cho Loader
-    fn _createLoaderFunction() {
-        /*
-        fn __loader__(id) {
-            // Check cache
-            if (__cache__[id] != null) {
-                return __cache__[id];
-            }
-            // Execute module
-            let modFunc = __modules__[id];
-            let exported = modFunc();
-            
-            // Save cache
-            __cache__[id] = exported;
-            return exported;
-        }
-        */
-        
+    fn _createLoaderFunction(token) {
         let statements = [];
-
+        
         // if (__cache__[id] != null) return __cache__[id];
         statements.push({
             "type": "IfStatement",
+            "token": token,
             "condition": {
                 "type": "BinaryExpression",
-                "op": "NEQ", // CodeGen map string "NEQ" -> OpCodes.NEQ [cite: 467]
+                "token": token,
+                "op": "OP_NEQ", 
                 "left": {
                     "type": "IndexExpression",
-                    "object": { "type": "Identifier", "name": "__cache__" },
-                    "index": { "type": "Identifier", "name": "id" }
+                    "token": token,
+                    "object": { "type": "Identifier", "name": "__cache__", "token": token },
+                    "index": { "type": "Identifier", "name": "id", "token": token }
                 },
-                "right": { "type": "NullLiteral" }
+                "right": { "type": "NullLiteral", "token": token }
             },
             "thenBranch": {
                 "type": "ReturnStatement",
+                "token": token,
                 "value": {
                     "type": "IndexExpression",
-                    "object": { "type": "Identifier", "name": "__cache__" },
-                    "index": { "type": "Identifier", "name": "id" }
+                    "token": token,
+                    "object": { "type": "Identifier", "name": "__cache__", "token": token },
+                    "index": { "type": "Identifier", "name": "id", "token": token }
                 }
             },
             "elseBranch": null
@@ -315,21 +347,25 @@ export class AstLinker {
         // let modFunc = __modules__[id];
         statements.push({
             "type": "LetStatement",
-            "name": { "type": "Identifier", "name": "modFunc" },
+            "token": token,
+            "name": { "type": "Identifier", "name": "modFunc", "token": token },
             "value": {
                 "type": "IndexExpression",
-                "object": { "type": "Identifier", "name": "__modules__" },
-                "index": { "type": "Identifier", "name": "id" }
+                "token": token,
+                "object": { "type": "Identifier", "name": "__modules__", "token": token },
+                "index": { "type": "Identifier", "name": "id", "token": token }
             }
         });
 
         // let exported = modFunc();
         statements.push({
             "type": "LetStatement",
-            "name": { "type": "Identifier", "name": "exported" },
+            "token": token,
+            "name": { "type": "Identifier", "name": "exported", "token": token },
             "value": {
                 "type": "CallExpression",
-                "callee": { "type": "Identifier", "name": "modFunc" },
+                "token": token,
+                "callee": { "type": "Identifier", "name": "modFunc", "token": token },
                 "args": []
             }
         });
@@ -337,32 +373,42 @@ export class AstLinker {
         // __cache__[id] = exported;
         statements.push({
             "type": "ExpressionStatement",
+            "token": token,
             "expression": {
                 "type": "AssignmentExpression",
-                "target": {
+                "token": token,
+                "target": { 
                     "type": "IndexExpression",
-                    "object": { "type": "Identifier", "name": "__cache__" },
-                    "index": { "type": "Identifier", "name": "id" }
+                    "token": token,
+                    "object": { "type": "Identifier", "name": "__cache__", "token": token },
+                    "index": { "type": "Identifier", "name": "id", "token": token }
                 },
-                "value": { "type": "Identifier", "name": "exported" }
+                "op": "=",
+                "value": { "type": "Identifier", "name": "exported", "token": token }
             }
         });
 
         // return exported;
         statements.push({
             "type": "ReturnStatement",
-            "value": { "type": "Identifier", "name": "exported" }
+            "token": token,
+            "value": { "type": "Identifier", "name": "exported", "token": token }
         });
 
         return {
             "type": "FunctionStatement",
-            "name": { "type": "Identifier", "name": "__loader__" },
+            "token": token,
+            "name": { "type": "Identifier", "name": "__loader__", "token": token },
             "func": {
                 "type": "FunctionLiteral",
-                "parameters": [{ "type": "Identifier", "name": "id" }], // Parameter node
+                "token": token,
+                "params": [{ "type": "Identifier", "name": "id", "token": token }],
+                "parameters": [{ "type": "Identifier", "name": "id", "token": token }],
                 "body": {
                     "type": "BlockStatement",
-                    "statements": statements
+                    "token": token,
+                    "statements": statements, 
+                    "body": statements
                 }
             }
         };

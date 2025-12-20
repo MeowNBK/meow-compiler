@@ -45,18 +45,42 @@ if (entrypoint == null) {
 }
 
 let compiler = Compiler(options); 
-let cacheManager = CacheManager(compiler, isNoCache, options);
+// Không cần cacheManager nếu muốn build 1 file sạch sẽ
+// let cacheManager = CacheManager(compiler, isNoCache, options); 
 
-let entryCachePath = cacheManager.compileProject(entrypoint);
+// --- BẮT ĐẦU SỬA TỪ ĐÂY ---
 
+print("Dang build bundle tu: " + entrypoint);
+
+// 1. Gọi hàm compileBundle để Linker chạy và trả về toàn bộ Bytecode của cả project
+let bytecodeText = compiler.compileBundle(entrypoint);
+
+if (bytecodeText == null) {
+    print("Build that bai!");
+    System.exit(1);
+}
+
+// 2. Xác định tên file đầu ra (nếu user không truyền --out thì mặc định là bundle.meowb)
+let outPath = options.out;
+if (outPath == null) {
+    outPath = "bundle.meowb";
+}
+
+// 3. Ghi toàn bộ bytecode ra một file duy nhất
+Io.write(outPath, bytecodeText);
+print("✅ Da build bundle thanh cong: " + outPath);
+
+// 4. Nếu có cờ --run, chạy file bundle vừa tạo
 if (shouldRun) {
     let vmPath = options.vm || "./bin/meow-vm";
-    let cmd = vmPath + " " + entryCachePath;
+    let cmd = vmPath + " " + outPath;
+    
+    // Nối thêm tham số runtime nếu có
     if (runtimeArgs.size() > 0) {
         cmd = cmd + " " + String.join(" ", runtimeArgs);
     }
-    print("Chạy: " + cmd);
+    
+    print("Chay: " + cmd);
     let code = System.exec(cmd);
-    print("\n✅ Hoàn thành chạy (exit code: " + code + ")");
-} else {
+    print("\n✅ Hoan thanh chay (exit code: " + code + ")");
 }
