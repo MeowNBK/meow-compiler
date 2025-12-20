@@ -2,7 +2,7 @@ import * as System from "system";
 import * as Io from "io";
 import * as String from "string";
 import { Compiler } from "backend/compiler.meow";
-import { CacheManager } from "backend/cacheManager.meow";
+// import { CacheManager } from "backend/cacheManager.meow";
 
 let argv = System.argv();
 if (argv.size() <= 2) {

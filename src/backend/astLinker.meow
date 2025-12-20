@@ -8,7 +8,7 @@ let stdlib = {
 
 export class AstLinker {
     fn init() {
-        this.pathToId = {};   
+        this.pathToId = {};
         this.idToPath = {};   
         this.modulesList = []; 
         this.nextId = 0;
@@ -22,7 +22,6 @@ export class AstLinker {
         let processed = {}; 
 
         this._assignId(absEntry);
-
         while (queue.size() > 0) {
             let currentPath = queue.pop();
             if (processed[currentPath]) continue;
@@ -55,7 +54,7 @@ export class AstLinker {
             }
         }
 
-        // Sắp xếp theo ID để đảm bảo thứ tự module
+        // Sắp xếp theo ID để đảm bảo thứ tự module trong mảng __modules__
         for (let id = 0; id < this.nextId; ++id) {
             let path = this.idToPath[id];
             let rawAst = rawAsts[path];
@@ -99,19 +98,13 @@ export class AstLinker {
         let newStatements = [];
         let dummyToken = this._makeDummyToken(currentAbsPath);
 
-        // 1. let __exports__ = {};
-        newStatements.push({
-            "type": "LetStatement",
-            "token": dummyToken,
-            "name": { "type": "Identifier", "name": "__exports__", "token": dummyToken },
-            "value": { "type": "ObjectLiteral", "properties": [], "token": dummyToken }
-        });
-
+        // [FIX 1] KHÔNG tạo let __exports__ = {} ở đây nữa.
+        // Nó sẽ được truyền vào từ tham số hàm.
+        
         let currentDir = compiler._getDirectoryPath(currentAbsPath);
 
         for (let i = 0; i < ast.body.size(); ++i) {
             let stmt = ast.body[i];
-
             if (stmt.type == "ImportStatement") {
                 if (stdlib[stmt.path.value]) {
                     newStatements.push(stmt);
@@ -128,6 +121,7 @@ export class AstLinker {
                     let originToken = stmt.token || dummyToken;
                     let tempVarName = "__mod_" + str(moduleId) + "_" + str(i);
                     
+                    // let __mod_X_Y = __loader__(moduleId);
                     newStatements.push({
                         "type": "LetStatement",
                         "token": originToken, 
@@ -142,13 +136,11 @@ export class AstLinker {
 
                     if (stmt.namedImports) {
                         for (let j = 0; j < stmt.namedImports.size(); ++j) {
-                            let spec = stmt.namedImports[j]; 
-                            // spec là Identifier node -> spec.name là chuỗi
-                            let localName = spec.name; 
-                            let exportName = spec.name;
+                            let spec = stmt.namedImports[j];
+                            let localName = spec.name;
+                            let exportName = spec.name; // Tạm thời giả sử local = export
                             let specToken = spec.token || originToken;
 
-                            // Safety check
                             if (localName == null) {
                                 print("[Linker Error] Import name is null in " + currentAbsPath);
                                 System.exit(1);
@@ -194,6 +186,7 @@ export class AstLinker {
                     }
                     
                     if (name) {
+                        // __exports__.name = name;
                         newStatements.push({
                             "type": "ExpressionStatement",
                             "token": originToken,
@@ -214,16 +207,16 @@ export class AstLinker {
                 } else if (stmt.specifiers) {
                     for (let j = 0; j < stmt.specifiers.size(); ++j) {
                         let spec = stmt.specifiers[j];
-                        // spec là Identifier node -> spec.name là chuỗi
-                        let localName = spec.name; 
+                        let localName = spec.name;
                         let exportedName = spec.name;
                         let specToken = spec.token || originToken;
-
+                        
                         if (localName == null) {
                             print("[Linker Error] Export name is null in " + currentAbsPath);
-                             System.exit(1);
+                            System.exit(1);
                         }
 
+                        // __exports__.exportedName = localName;
                         newStatements.push({
                             "type": "ExpressionStatement",
                             "token": specToken,
@@ -248,18 +241,20 @@ export class AstLinker {
             }
         }
 
+        // Return __exports__ (để tương thích logic cũ, dù object đã được pass-by-ref)
         newStatements.push({
             "type": "ReturnStatement",
             "token": dummyToken,
             "argument": { "type": "Identifier", "name": "__exports__", "token": dummyToken }
         });
 
+        // [FIX 2] Thêm tham số __exports__ vào FunctionLiteral wrapper
         return {
             "type": "FunctionLiteral",
             "token": dummyToken,
             "name": null, 
-            "params": [],
-            "parameters": [], 
+            "params": [{ "type": "Identifier", "name": "__exports__", "token": dummyToken }],
+            "parameters": [{ "type": "Identifier", "name": "__exports__", "token": dummyToken }], 
             "body": {
                 "type": "BlockStatement",
                 "token": dummyToken,
@@ -275,6 +270,7 @@ export class AstLinker {
         let dummyToken = this._makeDummyToken("BUNDLE_INTERNAL");
 
         // 1. let __modules__ = [ ... ];
+        // Tạo mảng chứa tất cả các hàm module đã transform
         body.push({
             "type": "LetStatement",
             "token": dummyToken,
@@ -282,18 +278,35 @@ export class AstLinker {
             "value": { "type": "ArrayLiteral", "elements": this.modulesList, "token": dummyToken }
         });
 
-        // 2. let __cache__ = [];
+        // 2. [FIX] let __cache__ = [null, null, ...];
+        // Tạo mảng cache có kích thước cố định bằng số lượng module, điền sẵn giá trị null.
+        // Điều này ngăn lỗi "Index out of bounds" khi VM truy cập __cache__[id] lần đầu.
+        let cacheElements = [];
+        for (let i = 0; i < this.modulesList.size(); ++i) {
+            cacheElements.push({ 
+                "type": "NullLiteral", 
+                "value": null, 
+                "token": dummyToken 
+            });
+        }
+
         body.push({
             "type": "LetStatement",
             "token": dummyToken,
             "name": { "type": "Identifier", "name": "__cache__", "token": dummyToken },
-            "value": { "type": "ArrayLiteral", "elements": [], "token": dummyToken } 
+            "value": { 
+                "type": "ArrayLiteral", 
+                "elements": cacheElements, // <--- Mảng đã được fill null
+                "token": dummyToken 
+            } 
         });
 
         // 3. fn __loader__(id) { ... }
+        // Tạo hàm loader (đã được sửa ở bước trước để hỗ trợ circular dependency)
         body.push(this._createLoaderFunction(dummyToken));
 
         // 4. __loader__(entryId);
+        // Gọi module chính để bắt đầu chạy chương trình
         body.push({
             "type": "ExpressionStatement",
             "token": dummyToken,
@@ -305,6 +318,7 @@ export class AstLinker {
             }
         });
 
+        // Trả về AST của toàn bộ bundle
         return {
             "type": "Program",
             "token": dummyToken,
@@ -315,7 +329,7 @@ export class AstLinker {
     fn _createLoaderFunction(token) {
         let statements = [];
         
-        // if (__cache__[id] != null) return __cache__[id];
+        // 1. Kiểm tra cache: if (__cache__[id] != null) return __cache__[id];
         statements.push({
             "type": "IfStatement",
             "token": token,
@@ -344,33 +358,15 @@ export class AstLinker {
             "elseBranch": null
         });
 
-        // let modFunc = __modules__[id];
+        // 2. [QUAN TRỌNG] Tạo exports rỗng: let exports = {};
         statements.push({
             "type": "LetStatement",
             "token": token,
-            "name": { "type": "Identifier", "name": "modFunc", "token": token },
-            "value": {
-                "type": "IndexExpression",
-                "token": token,
-                "object": { "type": "Identifier", "name": "__modules__", "token": token },
-                "index": { "type": "Identifier", "name": "id", "token": token }
-            }
+            "name": { "type": "Identifier", "name": "exports", "token": token },
+            "value": { "type": "ObjectLiteral", "properties": [], "token": token }
         });
 
-        // let exported = modFunc();
-        statements.push({
-            "type": "LetStatement",
-            "token": token,
-            "name": { "type": "Identifier", "name": "exported", "token": token },
-            "value": {
-                "type": "CallExpression",
-                "token": token,
-                "callee": { "type": "Identifier", "name": "modFunc", "token": token },
-                "args": []
-            }
-        });
-
-        // __cache__[id] = exported;
+        // 3. [QUAN TRỌNG] Lưu cache TRƯỚC khi chạy module: __cache__[id] = exports;
         statements.push({
             "type": "ExpressionStatement",
             "token": token,
@@ -384,15 +380,40 @@ export class AstLinker {
                     "index": { "type": "Identifier", "name": "id", "token": token }
                 },
                 "op": "=",
-                "value": { "type": "Identifier", "name": "exported", "token": token }
+                "value": { "type": "Identifier", "name": "exports", "token": token }
             }
         });
 
-        // return exported;
+        // 4. Lấy hàm module: let modFunc = __modules__[id];
+        statements.push({
+            "type": "LetStatement",
+            "token": token,
+            "name": { "type": "Identifier", "name": "modFunc", "token": token },
+            "value": {
+                "type": "IndexExpression",
+                "token": token,
+                "object": { "type": "Identifier", "name": "__modules__", "token": token },
+                "index": { "type": "Identifier", "name": "id", "token": token }
+            }
+        });
+
+        // 5. Chạy module với tham số exports: modFunc(exports);
+        statements.push({
+            "type": "ExpressionStatement",
+            "token": token,
+            "expression": {
+                "type": "CallExpression",
+                "token": token,
+                "callee": { "type": "Identifier", "name": "modFunc", "token": token },
+                "args": [{ "type": "Identifier", "name": "exports", "token": token }]
+            }
+        });
+
+        // 6. Trả về exports: return exports;
         statements.push({
             "type": "ReturnStatement",
             "token": token,
-            "value": { "type": "Identifier", "name": "exported", "token": token }
+            "value": { "type": "Identifier", "name": "exports", "token": token }
         });
 
         return {

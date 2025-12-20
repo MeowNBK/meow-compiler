@@ -1,4 +1,3 @@
-
 import { OpCodes } from "backend/opCodes.meow";
 
 let __PROTO_ID_COUNTER = 0;
