@@ -28,9 +28,9 @@ for (let i = startIndex; i < argv.size(); ++i) {
         continue;
     }
     if (a == "--nocache") isNoCache = true;
-    else if (a == "--force") options.force = true;
-    else if (a == "--out" && i + 1 < argv.size()) { options.out = argv[i + 1]; ++i; }
-    else if (a == "--include" && i + 1 < argv.size()) { options.includePaths.push(argv[i + 1]); ++i; }
+    else if ((a == "--force" || a == "-f")) options.force = true;
+    else if ((a == "--out" || a == "-o") && i + 1 < argv.size()) { options.out = argv[i + 1]; ++i; }
+    else if ((a == "--include" || a == "-i") && i + 1 < argv.size()) { options.includePaths.push(argv[i + 1]); ++i; }
     else if (a == "--vm" && i + 1 < argv.size()) { options.vm = argv[i + 1]; ++i; }
     else if (a == "--buildDir" && i + 1 < argv.size()) { options.buildDir = argv[i + 1]; ++i; }
     else if (a == "--run") shouldRun = true;
@@ -44,7 +44,7 @@ if (entrypoint == null) {
     System.exit(43);
 }
 
-let compiler = Compiler(options); 
+let compiler = new Compiler(options); 
 // Không cần cacheManager nếu muốn build 1 file sạch sẽ
 // let cacheManager = CacheManager(compiler, isNoCache, options); 
 

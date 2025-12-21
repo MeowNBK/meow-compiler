@@ -5,6 +5,7 @@ import { Lexer } from "frontend/lexer.meow";
 import { Parser } from "frontend/parser.meow";
 import { Preprocessor } from "frontend/preprocessor.meow";
 import { ScopeAnalyzer } from "middle-end/scopeAnalyzer.meow";
+import { TypeInferrer } from "middle-end/typeInferrer.meow";
 import { BytecodeStringifier } from "backend/bytecodeStringifier.meow";
 import { CodeGenerator } from "backend/codeGenerator.meow";
 import { getDirectoryPath, isAbsolutePath } from "backend/utils/pathUtils.meow";
@@ -65,10 +66,14 @@ export class Compiler {
         let analyzer = new ScopeAnalyzer(bundleAst);
         analyzer.analyze();
 
+        print("\n[INFO] Chạy Type Inference...");
+        let inferrer = new TypeInferrer(bundleAst);
+        inferrer.analyze();
+
         // 4. Code Generation: AST -> Protos
         // Lúc này AST chỉ toàn là Function, Call, Array... không còn Import/Export
         // CodeGenerator [cite: 135] xử lý bình thường.
-        let generator = CodeGenerator(bundleAst, this, null, "bundle");
+        let generator = new CodeGenerator(bundleAst, this, null, "bundle");
         let protos = generator.compile();
 
         // 5. Optimization (Optional but recommended)
@@ -76,7 +81,7 @@ export class Compiler {
         // protos = optimizeRegisters(protos);
 
         // 6. Stringify: Protos -> Bytecode Text
-        let stringifier = BytecodeStringifier();
+        let stringifier = new BytecodeStringifier();
         let bytecodeText = stringifier.stringify(protos);
 
         return bytecodeText;

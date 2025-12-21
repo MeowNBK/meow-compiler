@@ -270,43 +270,25 @@ export class AstLinker {
         let dummyToken = this._makeDummyToken("BUNDLE_INTERNAL");
 
         // 1. let __modules__ = [ ... ];
-        // Tạo mảng chứa tất cả các hàm module đã transform
         body.push({
             "type": "LetStatement",
             "token": dummyToken,
             "name": { "type": "Identifier", "name": "__modules__", "token": dummyToken },
             "value": { "type": "ArrayLiteral", "elements": this.modulesList, "token": dummyToken }
         });
-
-        // 2. [FIX] let __cache__ = [null, null, ...];
-        // Tạo mảng cache có kích thước cố định bằng số lượng module, điền sẵn giá trị null.
-        // Điều này ngăn lỗi "Index out of bounds" khi VM truy cập __cache__[id] lần đầu.
-        let cacheElements = [];
-        for (let i = 0; i < this.modulesList.size(); ++i) {
-            cacheElements.push({ 
-                "type": "NullLiteral", 
-                "value": null, 
-                "token": dummyToken 
-            });
-        }
-
+        
+        // 2. let __cache__ = [];
         body.push({
             "type": "LetStatement",
             "token": dummyToken,
             "name": { "type": "Identifier", "name": "__cache__", "token": dummyToken },
-            "value": { 
-                "type": "ArrayLiteral", 
-                "elements": cacheElements, // <--- Mảng đã được fill null
-                "token": dummyToken 
-            } 
+            "value": { "type": "ArrayLiteral", "elements": [], "token": dummyToken } 
         });
 
         // 3. fn __loader__(id) { ... }
-        // Tạo hàm loader (đã được sửa ở bước trước để hỗ trợ circular dependency)
         body.push(this._createLoaderFunction(dummyToken));
 
         // 4. __loader__(entryId);
-        // Gọi module chính để bắt đầu chạy chương trình
         body.push({
             "type": "ExpressionStatement",
             "token": dummyToken,
@@ -318,7 +300,6 @@ export class AstLinker {
             }
         });
 
-        // Trả về AST của toàn bộ bundle
         return {
             "type": "Program",
             "token": dummyToken,

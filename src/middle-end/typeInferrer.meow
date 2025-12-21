@@ -1,0 +1,296 @@
+import * as System from "system";
+
+export class TypeInferrer {
+    fn init(ast) {
+        this.ast = ast;
+        this.scopeStack = [{}]; 
+        this.currentFuncSymbol = null;
+        this.totalVariables = 0;
+        this.inferredCount = 0;
+        this.unknownVars = [];
+        this.logs = [];
+    }
+
+    // --- HELPER AN TOÀN TUYỆT ĐỐI ---
+    // Thay vì gọi node.callee.type (dễ crash), ta gọi getSafeType(node.callee)
+    fn getSafeType(node) {
+        if (node == null) return "none";
+        // Kiểm tra xem node có thuộc tính type không
+        if (node.type == null) return "none"; 
+        return node.type;
+    }
+
+    fn analyze() {
+        print("--- 🚀 BẮT ĐẦU PHÂN TÍCH TYPE (SAFE MODE) ---");
+        
+        print("... [Pass 1] Quét định nghĩa...");
+        this.scanDeclarations(this.ast);
+
+        print("... [Pass 2] Phân tích luồng...");
+        this.visit(this.ast);
+
+        this.printStats();
+        print("--- KẾT THÚC ---");
+    }
+
+    // --- SYMBOL TABLE ---
+    fn enterScope() { this.scopeStack.push({}); }
+    fn exitScope() { this.scopeStack.pop(); }
+    fn currentScope() { return this.scopeStack[this.scopeStack.size() - 1]; }
+
+    fn defineSymbol(name, kind, type) {
+        let info = { "kind": kind, "type": type, "returnType": "unknown" };
+        this.currentScope()[name] = info;
+        return info;
+    }
+
+    fn resolveSymbol(name) {
+        for (let i = this.scopeStack.size() - 1; i >= 0; --i) {
+            let scope = this.scopeStack[i];
+            if (scope[name]) return scope[name];
+        }
+        return null;
+    }
+
+    // --- PASS 1 ---
+    fn scanDeclarations(node) {
+        if (node == null) return;
+        let type = this.getSafeType(node);
+
+        if (type == "Program") {
+            for (stmt in node.body) this.scanDeclarations(stmt);
+        }
+        else if (type == "BlockStatement") {
+            if (node.statements) {
+                for (stmt in node.statements) this.scanDeclarations(stmt);
+            }
+        }
+        else if (type == "FunctionStatement") {
+            if (node.name && node.name.name) {
+                this.defineSymbol(node.name.name, "func", "function");
+            }
+        }
+        else if (type == "LetStatement") {
+            if (node.name && node.name.name) {
+                this.defineSymbol(node.name.name, "var", "unknown");
+            }
+        }
+    }
+
+    // --- PASS 2 ---
+    fn visit(node) {
+        if (node == null) return "void";
+        let type = this.getSafeType(node);
+
+        if (type == "Program") return this.visitProgram(node);
+        if (type == "BlockStatement") return this.visitBlockStatement(node);
+        if (type == "FunctionStatement") return this.visitFunctionStatement(node);
+        if (type == "LetStatement") return this.visitLetStatement(node);
+        if (type == "ReturnStatement") return this.visitReturnStatement(node);
+        if (type == "IfStatement") return this.visitIfStatement(node);
+        
+        if (type == "BinaryExpression") return this.visitBinaryExpression(node);
+        if (type == "CallExpression") return this.visitCallExpression(node);
+        if (type == "NewExpression") return this.visitNewExpression(node);
+        if (type == "Identifier") return this.visitIdentifier(node);
+        if (type == "AssignmentExpression") return this.visitAssignment(node);
+        
+        if (type == "IntegerLiteral") return "int";
+        if (type == "RealLiteral") return "float";
+        if (type == "StringLiteral") return "string";
+        if (type == "BooleanLiteral") return "bool";
+        if (type == "NullLiteral") return "null";
+        
+        if (type == "ArrayLiteral") return this.visitArrayLiteral(node);
+        if (type == "ObjectLiteral") return "object";
+        if (type == "FunctionLiteral") return this.visitFunctionLiteral(node);
+
+        // Fallback
+        if (node.keys) {
+            for (key in node.keys()) {
+                let child = node[key];
+                if (typeof(child) == "object" && child != null && child.type) this.visit(child);
+                else if (typeof(child) == "array") for (item in child) this.visit(item);
+            }
+        }
+        return "unknown";
+    }
+
+    fn visitProgram(node) {
+        for (stmt in node.body) this.visit(stmt);
+        return "void";
+    }
+
+    fn visitBlockStatement(node) {
+        this.enterScope();
+        if (node.statements) {
+            for (stmt in node.statements) this.visit(stmt);
+        }
+        this.exitScope();
+        return "void";
+    }
+
+    fn visitFunctionStatement(node) {
+        if (node.name == null) return "void";
+        let funcName = node.name.name;
+        
+        let sym = this.resolveSymbol(funcName);
+        this.totalVariables += 1;
+        this.inferredCount += 1;
+        this.logs.push("✅ [Def] Hàm '" + funcName + "'");
+
+        let prevFunc = this.currentFuncSymbol;
+        this.currentFuncSymbol = sym;
+
+        this.enterScope();
+        if (node.func && node.func.parameters) {
+            for (param in node.func.parameters) {
+                this.totalVariables += 1;
+                this.defineSymbol(param.name, "var", "unknown");
+                this.unknownVars.push(funcName + "::" + param.name);
+            }
+        }
+        if (node.func && node.func.body) this.visit(node.func.body);
+        
+        this.exitScope();
+        this.currentFuncSymbol = prevFunc;
+        return "void";
+    }
+
+    fn visitLetStatement(node) {
+        this.totalVariables += 1;
+        if (node.name == null) return "void";
+        
+        let name = node.name.name;
+        let existing = this.resolveSymbol(name);
+        if (existing == null) existing = this.defineSymbol(name, "var", "unknown");
+
+        let inferred = "unknown";
+        if (node.value) inferred = this.visit(node.value);
+
+        existing.type = inferred;
+        if (inferred != "unknown") {
+            this.inferredCount += 1;
+            this.logs.push("✅ [Var] " + name + " : " + inferred);
+        } else {
+            this.unknownVars.push(name);
+        }
+        return "void";
+    }
+
+    fn visitAssignment(node) {
+        let rightType = this.visit(node.right);
+        
+        // [SAFE FIX] Sử dụng getSafeType thay vì truy cập .type trực tiếp
+        if (this.getSafeType(node.left) == "Identifier") {
+            let name = node.left.name;
+            let sym = this.resolveSymbol(name);
+            if (sym && sym.type == "unknown" && rightType != "unknown") {
+                sym.type = rightType;
+                this.inferredCount += 1;
+                this.logs.push("⚡ [Late Bind] Biến '" + name + "' -> " + rightType);
+            }
+        }
+        return rightType;
+    }
+
+    fn visitIdentifier(node) {
+        if (node.name == null) return "unknown";
+        let sym = this.resolveSymbol(node.name);
+        if (sym) return sym.type;
+        return "unknown";
+    }
+
+    fn visitCallExpression(node) {
+        // [SAFE FIX] Sử dụng getSafeType
+        let calleeType = this.getSafeType(node.callee);
+        
+        if (calleeType == "Identifier") {
+            let funcName = node.callee.name;
+            let sym = this.resolveSymbol(funcName);
+            if (sym && sym.kind == "func" && sym.returnType != "unknown") {
+                return sym.returnType;
+            }
+            if (funcName == "str") return "string";
+            if (funcName == "int") return "int";
+            if (funcName == "len") return "int";
+            if (funcName == "real") return "float";
+        }
+
+        if (node.arguments) {
+            for (arg in node.arguments) this.visit(arg);
+        }
+        return "unknown";
+    }
+
+    fn visitNewExpression(node) {
+        // [SAFE FIX] Sử dụng getSafeType
+        if (this.getSafeType(node.callee) == "Identifier") {
+            if (node.arguments) {
+                for (arg in node.arguments) this.visit(arg);
+            }
+            return node.callee.name; 
+        }
+        return "object";
+    }
+
+    fn visitBinaryExpression(node) {
+        let left = this.visit(node.left);
+        let right = this.visit(node.right);
+        if (left == "int" && right == "int") return "int";
+        if (left == "float" || right == "float") return "float";
+        if (left == "string" || right == "string") return "string";
+        if (left == "bool" && right == "bool") return "bool";
+        return "unknown";
+    }
+
+    fn visitArrayLiteral(node) {
+        if (node.elements) {
+            for (let i = 0; i < node.elements.size(); ++i) this.visit(node.elements[i]);
+        }
+        return "array";
+    }
+
+    fn visitFunctionLiteral(node) {
+        this.enterScope();
+        if (node.parameters) {
+            for (param in node.parameters) this.defineSymbol(param.name, "var", "unknown");
+        }
+        if (node.body) this.visit(node.body);
+        this.exitScope();
+        return "function";
+    }
+
+    fn visitReturnStatement(node) {
+        if (node.value) {
+            let retType = this.visit(node.value);
+            if (this.currentFuncSymbol != null && this.currentFuncSymbol.returnType == "unknown") {
+                 this.currentFuncSymbol.returnType = retType;
+            }
+            return retType;
+        }
+        return "void";
+    }
+
+    fn visitIfStatement(node) {
+        this.visit(node.condition);
+        this.visit(node.thenBranch);
+        if (node.elseBranch) this.visit(node.elseBranch);
+        return "void";
+    }
+
+    fn printStats() {
+        print("\n📊 BÁO CÁO PHÂN TÍCH TĨNH:");
+        let limit = this.logs.size();
+        if (limit > 15) limit = 15;
+        for (let i = 0; i < limit; ++i) print(this.logs[i]);
+        if (this.logs.size() > 15) print("... (" + str(this.logs.size() - 15) + " logs nữa)");
+
+        let percentage = 0;
+        if (this.totalVariables > 0) percentage = (this.inferredCount * 100) / this.totalVariables;
+
+        print("-------------------------------------");
+        print("Độ phủ (Coverage)     : " + str(percentage) + "% (" + str(this.inferredCount) + "/" + str(this.totalVariables) + ")");
+        print("-------------------------------------");
+    }
+}

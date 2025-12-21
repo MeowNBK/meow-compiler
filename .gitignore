@@ -1,5 +1,6 @@
 .vscode/
 .meowconfig
+bootstrap
 builds/
 build/
 build*/
@@ -10,6 +11,7 @@ bin/
 asts/
 protos/
 tokens/
+scripts/
 
 CMakeCache.txt
 CMakeFiles/
