@@ -5,12 +5,12 @@ export class TypeInferrer {
         this.ast = ast;
         this.scopeStack = [{}]; 
         this.currentFuncSymbol = null;
+        this.currentClassSymbol = null;
         this.totalVariables = 0;
         this.inferredCount = 0;
         this.unknownVars = [];
         this.logs = [];
-        
-        // Nạp kiến thức về Standard Library
+        this.paramHints = {}; 
         this.setupBuiltins();
     }
 
@@ -20,17 +20,45 @@ export class TypeInferrer {
         return node.type;
     }
 
+    // [FIX] Thêm null check cho oldType để tránh crash
+    fn isMoreSpecific(oldType, newType) {
+        if (oldType == null) return true; // Null coi như chưa biết gì, nên update
+        if (oldType == newType) return false;
+        if (oldType == "unknown" && newType != "unknown") return true;
+        if (oldType == "array<unknown>" && newType.indexOf("array<") == 0) return true;
+        if (oldType == "array" && newType.indexOf("array<") == 0) return true;
+        return false;
+    }
+
     fn analyze() {
-        print("--- 🚀 BẮT ĐẦU PHÂN TÍCH TYPE (V4 - STDLIB AWARE) ---");
+        print("--- 🚀 BẮT ĐẦU PHÂN TÍCH TYPE (V7.1 - STABILITY FIX) ---");
+        
         print("... [Pass 1] Quét định nghĩa...");
         this.scanDeclarations(this.ast);
-        print("... [Pass 2] Phân tích luồng & StdLib...");
+        
+        print("... [Pass 2A] Thu thập Hints & Cấu trúc Class...");
+        // [FIX] Inline logic resetStats tại đây để tránh lỗi gọi hàm null
+        this.logs = [];
+        this.unknownVars = [];
+        this.inferredCount = 0;
+        this.totalVariables = 0;
+        
         this.visit(this.ast);
+
+        print("... [Pass 2B] Phân tích chi tiết & Tối ưu...");
+        // [FIX] Inline logic resetStats lần 2
+        this.logs = [];
+        this.unknownVars = [];
+        this.inferredCount = 0;
+        this.totalVariables = 0;
+        
+        this.visit(this.ast);
+
         this.printStats();
         print("--- KẾT THÚC ---");
     }
 
-    // --- SYMBOL TABLE & BUILTINS ---
+    // --- SYMBOL TABLE ---
     fn enterScope() { this.scopeStack.push({}); }
     fn exitScope() { this.scopeStack.pop(); }
     fn currentScope() { return this.scopeStack[this.scopeStack.size() - 1]; }
@@ -51,8 +79,7 @@ export class TypeInferrer {
 
     fn setupBuiltins() {
         let g = this.scopeStack[0];
-
-        // 1. GLOBAL FUNCTIONS
+        // GLOBAL FUNCTIONS
         g["print"] = { "kind": "func", "type": "function", "returnType": "void" };
         g["typeof"] = { "kind": "func", "type": "function", "returnType": "string" };
         g["len"] = { "kind": "func", "type": "function", "returnType": "int" };
@@ -64,11 +91,11 @@ export class TypeInferrer {
         g["ord"] = { "kind": "func", "type": "function", "returnType": "int" };
         g["char"] = { "kind": "func", "type": "function", "returnType": "string" };
         g["range"] = { "kind": "func", "type": "function", "returnType": "array<int>" };
-
-        // 2. MODULE "io"
+        
+        // MODULE "io"
         let ioProps = {};
         ioProps["input"] = { "kind": "func", "type": "function", "returnType": "string" };
-        ioProps["read"] = { "kind": "func", "type": "function", "returnType": "string" }; // or null
+        ioProps["read"] = { "kind": "func", "type": "function", "returnType": "string" };
         ioProps["write"] = { "kind": "func", "type": "function", "returnType": "bool" };
         ioProps["fileExists"] = { "kind": "func", "type": "function", "returnType": "bool" };
         ioProps["isDirectory"] = { "kind": "func", "type": "function", "returnType": "bool" };
@@ -84,19 +111,18 @@ export class TypeInferrer {
         ioProps["getFileExtension"] = { "kind": "func", "type": "function", "returnType": "string" };
         ioProps["getAbsolutePath"] = { "kind": "func", "type": "function", "returnType": "string" };
         g["io"] = { "kind": "var", "type": "object", "props": ioProps };
-
-        // 3. MODULE "system"
+        
+        // MODULE "system"
         let sysProps = {};
         sysProps["argv"] = { "kind": "func", "type": "function", "returnType": "array<string>" };
         sysProps["exit"] = { "kind": "func", "type": "function", "returnType": "void" };
         sysProps["exec"] = { "kind": "func", "type": "function", "returnType": "int" };
         g["system"] = { "kind": "var", "type": "object", "props": sysProps };
-        // Alias System -> system (để tương thích ngược nếu code cũ dùng System)
         g["System"] = { "kind": "var", "type": "object", "props": sysProps };
-
-        // 4. MODULE "json"
+        
+        // MODULE "json"
         let jsonProps = {};
-        jsonProps["parse"] = { "kind": "func", "type": "function", "returnType": "object" }; // Assume object/any
+        jsonProps["parse"] = { "kind": "func", "type": "function", "returnType": "object" };
         jsonProps["stringify"] = { "kind": "func", "type": "function", "returnType": "string" };
         g["json"] = { "kind": "var", "type": "object", "props": jsonProps };
     }
@@ -106,19 +132,13 @@ export class TypeInferrer {
         if (node == null) return;
         let type = this.getSafeType(node);
 
-        if (type == "Program") {
-            for (stmt in node.body) this.scanDeclarations(stmt);
-        }
-        else if (type == "BlockStatement") {
-            if (node.statements) for (stmt in node.statements) this.scanDeclarations(stmt);
-        }
+        if (type == "Program") { for (stmt in node.body) this.scanDeclarations(stmt); }
+        else if (type == "BlockStatement") { if (node.statements) for (stmt in node.statements) this.scanDeclarations(stmt); }
         else if (type == "IfStatement") {
             this.scanDeclarations(node.thenBranch);
             if (node.elseBranch) this.scanDeclarations(node.elseBranch);
         }
-        else if (type == "WhileStatement" || type == "DoWhileStatement") {
-            this.scanDeclarations(node.body);
-        }
+        else if (type == "WhileStatement" || type == "DoWhileStatement") { this.scanDeclarations(node.body); }
         else if (type == "ForStatement") {
             this.scanDeclarations(node.init);
             this.scanDeclarations(node.body);
@@ -128,13 +148,18 @@ export class TypeInferrer {
             if (node.handler) this.scanDeclarations(node.handler.body);
         }
         else if (type == "FunctionStatement") {
-            if (node.name && node.name.name) {
-                this.defineSymbol(node.name.name, "func", "function");
-            }
+            if (node.name && node.name.name) this.defineSymbol(node.name.name, "func", "function");
+        }
+        else if (type == "ClassStatement") {
+            if (node.name && node.name.name) this.defineSymbol(node.name.name, "class", node.name.name);
         }
         else if (type == "LetStatement") {
             if (node.name && node.name.name) {
-                this.defineSymbol(node.name.name, "var", "unknown");
+                let t = "unknown";
+                // Safe check string
+                let n = node.name.name;
+                if (n.indexOf("__mod_") == 0) t = "module";
+                this.defineSymbol(n, "var", t);
             }
         }
     }
@@ -148,13 +173,14 @@ export class TypeInferrer {
         if (type == "Program") return this.visitProgram(node);
         if (type == "BlockStatement") return this.visitBlockStatement(node);
         if (type == "FunctionStatement") return this.visitFunctionStatement(node);
+        if (type == "ClassStatement") return this.visitClassStatement(node);
         if (type == "LetStatement") return this.visitLetStatement(node);
         if (type == "ReturnStatement") return this.visitReturnStatement(node);
         if (type == "IfStatement") return this.visitIfStatement(node);
         if (type == "WhileStatement") return this.visitWhileStatement(node);
         if (type == "ForStatement") return this.visitForStatement(node);
         if (type == "TryStatement") return this.visitTryStatement(node);
-
+        
         // Expressions
         if (type == "BinaryExpression") return this.visitBinaryExpression(node);
         if (type == "UnaryExpression") return this.visitUnaryExpression(node);
@@ -196,12 +222,37 @@ export class TypeInferrer {
         this.exitScope();
         return "void";
     }
-    
+
+    fn visitClassStatement(node) {
+        if (node.name == null) return "void";
+        let className = node.name.name;
+        
+        let classSym = this.resolveSymbol(className);
+        if (classSym == null) classSym = this.defineSymbol(className, "class", className);
+
+        let prevClass = this.currentClassSymbol;
+        this.currentClassSymbol = classSym;
+
+        this.enterScope();
+        // Định nghĩa 'this'
+        let thisSym = this.defineSymbol("this", "var", className);
+        thisSym.props = classSym.props; 
+
+        if (node.methods) {
+            for (method in node.methods) this.visit(method);
+        }
+        this.exitScope();
+        
+        this.currentClassSymbol = prevClass;
+        this.logs.push("✅ [Class] " + className + " (Prop count: " + str(classSym.props.size()) + ")");
+        return "void";
+    }
+
     fn visitTryStatement(node) {
         this.visit(node.block);
         if (node.handler) {
             this.enterScope();
-            if (node.handler.param) this.defineSymbol(node.handler.param.name, "var", "object"); 
+            if (node.handler.param) this.defineSymbol(node.handler.param.name, "var", "object");
             this.visit(node.handler.body);
             this.exitScope();
         }
@@ -212,7 +263,7 @@ export class TypeInferrer {
         if (node.name == null) return "void";
         let funcName = node.name.name;
         let sym = this.resolveSymbol(funcName);
-        if (sym == null) sym = this.defineSymbol(funcName, "func", "function"); // Safety
+        if (sym == null) sym = this.defineSymbol(funcName, "func", "function");
 
         this.totalVariables += 1;
         this.inferredCount += 1;
@@ -221,17 +272,28 @@ export class TypeInferrer {
         this.currentFuncSymbol = sym;
 
         this.enterScope();
+
         if (node.func && node.func.parameters) {
-            for (param in node.func.parameters) {
+            for (let i = 0; i < node.func.parameters.size(); ++i) {
+                let param = node.func.parameters[i];
                 this.totalVariables += 1;
-                this.defineSymbol(param.name, "var", "unknown");
-                this.unknownVars.push(funcName + "::" + param.name);
+                
+                let hintKey = funcName + "::" + str(i);
+                let paramType = "unknown";
+                // Safe lookup
+                if (this.paramHints[hintKey]) paramType = this.paramHints[hintKey];
+                
+                this.defineSymbol(param.name, "var", paramType);
+                
+                if (paramType == "unknown") this.unknownVars.push(funcName + "::" + param.name);
+                else this.inferredCount += 1;
             }
         }
+        
         if (node.func && node.func.body) this.visit(node.func.body);
         
         if (sym.returnType != "unknown") {
-            this.logs.push("✅ [Def] Hàm '" + funcName + "' -> " + sym.returnType);
+            this.logs.push("✅ [Def] " + funcName + " -> " + sym.returnType);
         }
         this.exitScope();
         this.currentFuncSymbol = prevFunc;
@@ -241,16 +303,27 @@ export class TypeInferrer {
     fn visitLetStatement(node) {
         this.totalVariables += 1;
         if (node.name == null) return "void";
-        
         let name = node.name.name;
         let existing = this.resolveSymbol(name);
+        
+        if (name.indexOf("__mod_") == 0) {
+            this.totalVariables -= 1; 
+            return "void"; 
+        }
+
         if (existing == null) existing = this.defineSymbol(name, "var", "unknown");
 
         let inferred = "unknown";
         if (node.value) inferred = this.visit(node.value);
-
         existing.type = inferred;
+        
         if (node.value && node.value.type == "ObjectLiteral") existing.props = node.value.inferredProps;
+        if (node.value && node.value.type == "NewExpression") {
+            let classSym = this.resolveSymbol(inferred);
+            if (classSym && classSym.props) {
+                existing.props = classSym.props; 
+            }
+        }
 
         if (inferred != "unknown") {
             this.inferredCount += 1;
@@ -263,25 +336,43 @@ export class TypeInferrer {
 
     fn visitAssignment(node) {
         let rightType = this.visit(node.value);
-        if (this.getSafeType(node.target) == "Identifier") {
+        let targetType = this.getSafeType(node.target);
+
+        if (targetType == "Identifier") {
             let name = node.target.name;
             let sym = this.resolveSymbol(name);
             if (sym) {
-                if (sym.type == "unknown" && rightType != "unknown") {
+                if (this.isMoreSpecific(sym.type, rightType)) {
                     sym.type = rightType;
                     this.inferredCount += 1;
-                    this.logs.push("⚡ [Late Bind] '" + name + "' -> " + rightType);
                 }
-                if (node.value.type == "ObjectLiteral" && node.value.inferredProps) sym.props = node.value.inferredProps;
+                if (node.value.type == "ObjectLiteral" && node.value.inferredProps) {
+                    if (sym.props == null) sym.props = {};
+                    for (let i = 0; i < node.value.inferredProps.keys().size(); ++i) {
+                         let k = node.value.inferredProps.keys()[i];
+                         sym.props[k] = node.value.inferredProps[k];
+                    }
+                }
             }
         }
-        else if (this.getSafeType(node.target) == "MemberExpression") {
+        else if (targetType == "MemberExpression") {
             let objName = null;
             if (node.target.object.type == "Identifier") objName = node.target.object.name;
+            
             if (objName) {
                 let sym = this.resolveSymbol(objName);
-                if (sym && sym.props && node.target.property.type == "Identifier") {
-                    sym.props[node.target.property.name] = { "type": rightType };
+                if (sym) {
+                    let propName = node.target.property.name;
+                    if (sym.props == null) sym.props = {};
+                    
+                    let currentProp = sym.props[propName];
+                    let currentType = "unknown";
+                    if (currentProp) currentType = currentProp.type;
+                    
+                    if (this.isMoreSpecific(currentType, rightType) || currentType == "unknown") {
+                         sym.props[propName] = { "type": rightType };
+                         this.logs.push("⚡ [Prop] " + objName + "." + propName + " -> " + rightType);
+                    }
                 }
             }
         }
@@ -301,14 +392,15 @@ export class TypeInferrer {
         if (node.property && node.property.type == "Identifier") {
             let propName = node.property.name;
             
-            // 1. Length/Size property for String/Array
             if (propName == "length" || propName == "size") {
                 if (objType == "string" || objType == "array" || objType.indexOf("array<") == 0) return "int";
             }
-            // 2. Object property from scan
+
             if (node.object.type == "Identifier") {
                 let sym = this.resolveSymbol(node.object.name);
-                if (sym && sym.props && sym.props[propName]) return sym.props[propName].type;
+                if (sym && sym.props && sym.props[propName]) {
+                    return sym.props[propName].type;
+                }
             }
         }
         return "unknown";
@@ -340,7 +432,6 @@ export class TypeInferrer {
         return "array";
     }
 
-    // --- MAIN LOGIC FOR STDLIB CALLS ---
     fn resolveMethodCall(objType, methodName) {
         // STRING methods
         if (objType == "string") {
@@ -356,18 +447,16 @@ export class TypeInferrer {
         }
         
         // ARRAY methods
-        // Check "array" or "array<int>", etc.
         if (objType.indexOf("array") == 0) {
             if (methodName == "push" || methodName == "findIndex" || methodName == "size") return "int";
             if (methodName == "pop" || methodName == "find") {
-                 // Extract generic type: array<int> -> int
                  if (objType.indexOf("<") != -1) {
                      return objType.substring(objType.indexOf("<") + 1, objType.indexOf(">"));
                  }
                  return "unknown";
             }
             if (methodName == "slice" || methodName == "map" || methodName == "filter" || 
-                methodName == "reverse" || methodName == "sort") return objType; // Return same array type
+                methodName == "reverse" || methodName == "sort") return objType;
             if (methodName == "join") return "string";
             if (methodName == "forEach" || methodName == "reserve" || methodName == "resize") return "void";
         }
@@ -380,31 +469,43 @@ export class TypeInferrer {
             if (methodName == "has") return "bool";
             if (methodName == "merge") return "object";
         }
-
         return "unknown";
     }
 
     fn visitCallExpression(node) {
         let calleeType = this.getSafeType(node.callee);
-        
-        // 1. Direct Identifier Call (e.g. print(), len())
+
+        // [HINT GATHERING]
+        if (calleeType == "Identifier") {
+            let funcName = node.callee.name;
+            if (node.arguments) {
+                for (let i = 0; i < node.arguments.size(); ++i) {
+                    let argType = this.visit(node.arguments[i]);
+                    if (argType != "unknown") {
+                        let key = funcName + "::" + str(i);
+                        // [FIX] Extract hint first to avoid 'this.paramHints[key]' inline crash
+                        let hint = this.paramHints[key];
+                        if (hint == null || this.isMoreSpecific(hint, argType)) {
+                             this.paramHints[key] = argType;
+                        }
+                    }
+                }
+            }
+        }
+
+        // 1. Direct Identifier Call
         if (calleeType == "Identifier") {
             let funcName = node.callee.name;
             let sym = this.resolveSymbol(funcName);
-            // Ưu tiên Symbol Table (đã có setupBuiltins)
             if (sym && sym.kind == "func" && sym.returnType != "unknown") return sym.returnType;
         }
-        
-        // 2. Member Expression Call (e.g. str.split(), arr.push())
+        // 2. Member Expression Call
         else if (calleeType == "MemberExpression") {
             let objType = this.visit(node.callee.object);
             let propName = node.callee.property.name;
-            
-            // Check StdLib methods
             let methodRet = this.resolveMethodCall(objType, propName);
             if (methodRet != "unknown") return methodRet;
 
-            // Check defined methods in modules (e.g. io.read)
             if (node.callee.object.type == "Identifier") {
                 let objName = node.callee.object.name;
                 let sym = this.resolveSymbol(objName);
@@ -413,7 +514,6 @@ export class TypeInferrer {
                 }
             }
         }
-
         if (node.arguments) for (arg in node.arguments) this.visit(arg);
         return "unknown";
     }
@@ -421,7 +521,7 @@ export class TypeInferrer {
     fn visitNewExpression(node) {
         if (this.getSafeType(node.callee) == "Identifier") {
             if (node.arguments) for (arg in node.arguments) this.visit(arg);
-            return node.callee.name;
+            return node.callee.name; 
         }
         return "object";
     }
@@ -430,12 +530,32 @@ export class TypeInferrer {
         let left = this.visit(node.left);
         let right = this.visit(node.right);
         let op = node.operator;
+
+        if (op == "-" || op == "*" || op == "/" || op == "%") {
+             if (left == "unknown" && node.left.type == "Identifier") {
+                 let sym = this.resolveSymbol(node.left.name);
+                 if (sym) { sym.type = "int"; left = "int"; this.inferredCount += 1; }
+             }
+             if (right == "unknown" && node.right.type == "Identifier") {
+                 let sym = this.resolveSymbol(node.right.name);
+                 if (sym) { sym.type = "int"; right = "int"; this.inferredCount += 1; }
+             }
+        }
+        
+        if (op == "+") {
+             if (left == "int" && right == "unknown" && node.right.type == "Identifier") {
+                 let sym = this.resolveSymbol(node.right.name);
+                 if (sym) { sym.type = "int"; right = "int"; this.inferredCount += 1; }
+             }
+        }
+
         if (op == "+") {
             if (left == "string" || right == "string") return "string";
         }
         if (op == "+" || op == "-" || op == "*" || op == "/" || op == "%") {
             if (left == "float" || right == "float") return "float";
-            if (left == "int" && right == "int") return "int";
+            if (left == "int" || right == "int") return "int";
+            if (left == "int" || right == "int") return "int";
             return "unknown";
         }
         if (op == "==" || op == "!=" || op == "<" || op == ">" || op == "<=" || op == ">=") return "bool";
@@ -470,7 +590,7 @@ export class TypeInferrer {
                      this.currentFuncSymbol.returnType = retType;
                 }
                 else if (this.currentFuncSymbol.returnType != "unknown" && retType != "unknown" && this.currentFuncSymbol.returnType != retType) {
-                    this.currentFuncSymbol.returnType = "any"; 
+                    this.currentFuncSymbol.returnType = "any";
                 }
             }
             return retType;
@@ -502,11 +622,28 @@ export class TypeInferrer {
     }
 
     fn printStats() {
-        print("\n📊 BÁO CÁO PHÂN TÍCH TĨNH (V4 - STDLIB AWARE):");
-        let limit = this.logs.size();
-        if (limit > 15) limit = 15;
-        for (let i = 0; i < limit; ++i) print(this.logs[i]);
-        if (this.logs.size() > 15) print("... (" + str(this.logs.size() - 15) + " logs nữa)");
+        print("\n📊 BÁO CÁO PHÂN TÍCH TĨNH (V7.1 - STABLE):");
+        
+        let limit = this.unknownVars.size();
+        let displayLimit = 20; 
+        let printed = 0;
+
+        if (limit == 0) {
+            print("✨ Tuyệt vời! Code sạch bong kin kít.");
+        } else {
+            for (let i = 0; i < limit; ++i) {
+                let varName = this.unknownVars[i];
+                if (varName.indexOf("__mod_") == -1) { 
+                    if (printed < displayLimit) {
+                        print("❌ [Unknown] " + varName);
+                        printed += 1;
+                    }
+                }
+            }
+            if (limit > printed) {
+                print("... và " + str(limit - printed) + " biến khác (đã ẩn __mod).");
+            }
+        }
 
         let percentage = 0;
         if (this.totalVariables > 0) percentage = (this.inferredCount * 100) / this.totalVariables;
