@@ -7,9 +7,7 @@ let __ANONYMOUS_FN_COUNTER = 0;
 
 export fn createLabel(prefix) {
     __LABEL_COUNTER += 1;
-
     let label = prefix + "_" + __LABEL_COUNTER;
-
     return label;
 }
 
@@ -21,7 +19,6 @@ export fn createAnonymousFunctionName() {
 export fn createProto(name, numRegisters) {
     let id = __PROTO_ID_COUNTER;
     __PROTO_ID_COUNTER = __PROTO_ID_COUNTER + 1;
-    
     return {
         "id": id,
         "numRegisters": numRegisters,
@@ -75,6 +72,9 @@ let __REG_ARGS = {
     [OpCodes.SUB]: [0, 1, 2],
     [OpCodes.MUL]: [0, 1, 2],
     [OpCodes.DIV]: [0, 1, 2],
+    [OpCodes.MOD]: [0, 1, 2],
+    [OpCodes.POW]: [0, 1, 2],
+    
     [OpCodes.EQ]: [0, 1, 2],
     [OpCodes.NEQ]: [0, 1, 2],
     [OpCodes.LT]: [0, 1, 2],
@@ -134,4 +134,3 @@ export fn computeMaxRegister(proto) {
     }
     return maxR;
 }
-

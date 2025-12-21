@@ -10,6 +10,7 @@ import { BytecodeStringifier } from "backend/bytecodeStringifier.meow";
 import { CodeGenerator } from "backend/codeGenerator.meow";
 import { getDirectoryPath, isAbsolutePath } from "backend/utils/pathUtils.meow";
 import { AstLinker } from "backend/astLinker.meow";
+import { optimizeRegisters } from "backend/registerOptimizer.meow";
 
 export class Compiler {
     fn init(options) {
@@ -75,6 +76,8 @@ export class Compiler {
         // CodeGenerator [cite: 135] xử lý bình thường.
         let generator = new CodeGenerator(bundleAst, this, null, "bundle");
         let protos = generator.compile();
+
+        // protos = optimizeRegisters(protos);
 
         // 5. Optimization (Optional but recommended)
         // import { optimizeRegisters } from "backend/registerOptimizer.meow";

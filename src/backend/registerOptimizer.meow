@@ -5,6 +5,30 @@ fn getRegArgIndices(opcode) {
     return Emitter.getRegArgIndices(opcode);
 }
 
+// [FIX] Hàm helper để kiểm tra xem Opcode có CHỈ ĐỌC thanh ghi đầu tiên hay không.
+// Nếu trả về true, nghĩa là arg[0] là READ (Use).
+// Nếu trả về false, nghĩa là arg[0] là WRITE (Def).
+fn isReadOnlyFirstArg(op) {
+    // Các lệnh nhảy có điều kiện đọc thanh ghi điều kiện
+    if (op == OpCodes.JUMP_IF_FALSE || op == OpCodes.JUMP_IF_TRUE) return true;
+    
+    // Các lệnh SET vào môi trường bên ngoài, đọc thanh ghi giá trị nguồn
+    if (op == OpCodes.SET_GLOBAL || op == OpCodes.SET_UPVALUE) return true;
+    
+    // Các lệnh gán thuộc tính/index: target[prop] = value.
+    // Reg 0 là target (object), Reg 1/2 là value. Chúng đều là READ (để tìm địa chỉ heap).
+    if (op == OpCodes.SET_PROP || op == OpCodes.SET_INDEX) return true;
+    
+    // Các lệnh return/export/throw đọc giá trị trả về
+    if (op == OpCodes.EXPORT || op == OpCodes.RETURN || op == OpCodes.THROW) return true;
+    
+    // Các lệnh class/object
+    if (op == OpCodes.SET_METHOD || op == OpCodes.INHERIT) return true;
+    if (op == OpCodes.IMPORT_MODULE) return true;
+    
+    return false;
+}
+
 // Hàm này sẽ tối ưu hóa một proto và trả về bảng ánh xạ vReg -> pReg
 fn optimizeProtoAndGetMapping(proto) {
     let code = proto.code;
@@ -20,6 +44,8 @@ fn optimizeProtoAndGetMapping(proto) {
     for (let ip = 0; ip < code.size(); ++ip) {
         let inst = code[ip];
         let regIdxs = getRegArgIndices(inst.op);
+        
+        // Nếu opcode không được định nghĩa trong emitter, bỏ qua an toàn
         if (regIdxs == null) continue;
 
         let args = inst.args;
@@ -32,11 +58,16 @@ fn optimizeProtoAndGetMapping(proto) {
             
             let sReg = str(vReg);
             allVRegs[sReg] = true;
-            let isDestinationReg = (i == 0) && (inst.op != OpCodes.JUMP_IF_FALSE) && (inst.op != OpCodes.JUMP_IF_TRUE) && (inst.op != OpCodes.SETUP_TRY) && (inst.op != OpCodes.SET_GLOBAL) && (inst.op != OpCodes.SET_UPVALUE) && (inst.op != OpCodes.SET_PROP) && (inst.op != OpCodes.SET_INDEX) && (inst.op != OpCodes.EXPORT) && (inst.op != OpCodes.RETURN);
+
+            // [FIX] Xác định xem đây là thanh ghi đích (Write) hay nguồn (Read)
+            // i == 0 là vị trí thường dùng cho đích, TRỪ KHI opcode đó chỉ đọc arg 0.
+            let isDestinationReg = (i == 0) && !isReadOnlyFirstArg(inst.op);
 
             if (!isDestinationReg) {
+                // Nếu là Read (Use), cập nhật lần sử dụng cuối cùng
                 vRegLastUse[sReg] = ip;
             }
+            // Nếu là Write (Def), ta không cập nhật lastUse, vì định nghĩa đè lên giá trị cũ
         }
     }
     
@@ -44,13 +75,14 @@ fn optimizeProtoAndGetMapping(proto) {
     let intervals = [];
     let vRegs = allVRegs.keys();
     vRegs.sort(fn(a, b) { return int(a) - int(b); });
-    
+
     for (let i = 0; i < vRegs.size(); ++i) {
         let sReg = vRegs[i];
         intervals.push({ 
             vReg: int(sReg), 
             sReg: sReg,
-            start: i,
+            start: i, // Giả sử bắt đầu từ index của nó (đơn giản hóa)
+            // Nếu biến được định nghĩa nhưng không bao giờ dùng, nó chết ngay tại chỗ
             end: vRegLastUse[sReg] != null ? vRegLastUse[sReg] : i,
         });
     }
@@ -63,21 +95,28 @@ fn optimizeProtoAndGetMapping(proto) {
 
     for (let i = 0; i < intervals.size(); ++i) {
         let interval = intervals[i];
+        
+        // Loại bỏ các interval đã kết thúc khỏi danh sách active
         let newActive = [];
         for (let j = 0; j < active.size(); ++j) {
             let activeInterval = active[j];
             if (activeInterval.end < interval.start) { 
+                // Khoảng sống này đã kết thúc, trả lại thanh ghi vào pool
                 freeRegs.push(vToNewReg[activeInterval.sReg]);
             } else {
                 newActive.push(activeInterval);
             }
         }
         active = newActive;
-        
+
+        // Cấp phát thanh ghi
         let newReg;
         if (freeRegs.size() > 0) {
+            // Tái sử dụng thanh ghi có số hiệu nhỏ nhất
             freeRegs.sort(fn(a, b) { return a - b; });
             newReg = freeRegs[0];
+            
+            // Xóa phần tử đầu tiên
             let newFreeRegs = [];
             for (let k = 1; k < freeRegs.size(); ++k) newFreeRegs.push(freeRegs[k]);
             freeRegs = newFreeRegs;
@@ -87,6 +126,7 @@ fn optimizeProtoAndGetMapping(proto) {
         
         vToNewReg[interval.sReg] = newReg;
         active.push(interval);
+        // Sắp xếp active theo thời gian kết thúc để dễ kiểm tra ở vòng lặp sau
         active.sort(fn(a, b) { return a.end - b.end; });
     }
     

@@ -264,7 +264,7 @@ fn visit(node) {
     fn printStats() {
         print("\n📊 BÁO CÁO CÁC BIẾN KHÔNG SUY LUẬN ĐƯỢC (MISSING TYPES):");
         let limit = this.unknownVars.size();
-                let displayLimit = 100; 
+                let displayLimit = 10; 
                 if (limit == 0) print("✨ Tuyệt vời! Không còn biến nào là unknown.");
         else {
                     for (let i = 0; i < limit; ++i) {
