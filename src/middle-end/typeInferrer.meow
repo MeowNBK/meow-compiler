@@ -627,15 +627,11 @@ fn visitFunctionStatement(node) {
         if (limit == 0) {
             print("✨ Tuyệt vời! Không còn biến nào là unknown.");
         } else {
-        for (let i = 0; i < limit; ++i) {
-            let varName = this.unknownVars[i];
-            if (varName.indexOf("__mod_") == -1) { 
-                if (printed < displayLimit) {
-                    print("❌ [Unknown] " + varName);
-                    printed += 1;
+            for (let i = 0; i < limit; ++i) {
+                if (i < displayLimit) {
+                    print("❌ [Unknown] " + this.unknownVars[i]);
                 }
             }
-        }
             if (limit > displayLimit) {
                 print("... và " + str(limit - displayLimit) + " biến khác đang 'mù' type.");
             }
