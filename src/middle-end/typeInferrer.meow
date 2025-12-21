@@ -5,11 +5,12 @@ export class TypeInferrer {
         this.ast = ast;
         this.scopeStack = [{}]; 
         this.currentFuncSymbol = null;
+        this.currentClassName = null; 
+        this.classRegistry = {};      
         this.totalVariables = 0;
         this.inferredCount = 0;
         this.unknownVars = [];
         this.logs = [];
-        
         this.paramHints = {}; 
         
         this.setupBuiltins();
@@ -21,35 +22,42 @@ export class TypeInferrer {
         return node.type;
     }
 
-    // [NEW] Kiểm tra xem type mới có cụ thể hơn type cũ không
     fn isMoreSpecific(oldType, newType) {
         if (oldType == newType) return false;
         if (oldType == "unknown" && newType != "unknown") return true;
-        // array<unknown> < array<int>
+        if (oldType == "null" && newType != "null" && newType != "unknown") return true; // [FIX] null < string
+        if (oldType == "void" && newType != "void" && newType != "unknown") return true;
         if (oldType == "array<unknown>" && newType.indexOf("array<") == 0) return true;
-        // array < array<int>
         if (oldType == "array" && newType.indexOf("array<") == 0) return true;
         return false;
     }
 
-    fn analyze() {
-        print("--- 🚀 BẮT ĐẦU PHÂN TÍCH TYPE (V6 - ITERATIVE INFERENCE) ---");
+    fn addUnknown(name, node) {
+        let info = { "name": name, "file": "?", "line": 0, "col": 0 };
+        let token = null;
+        if (node && node.token) token = node.token;
+        else if (node && node.name && node.name.token) token = node.name.token;
         
+        if (token) {
+            info.file = token.file;
+            info.line = token.line;
+            info.col = token.col;
+        }
+        this.unknownVars.push(info);
+    }
+
+    fn analyze() {
+        print("--- 🚀 BẮT ĐẦU PHÂN TÍCH TYPE (V15 - THIS & NULL FIX) ---");
         print("... [Pass 1] Quét định nghĩa...");
         this.scanDeclarations(this.ast);
         
-        // Chạy 2 lần Pass 2 để hint lan truyền
-        // Lần 1: Thu thập hint từ các lệnh gọi hàm
-        print("... [Pass 2A] Phân tích luồng & Thu thập Hints...");
-        this.logs = [];     // Clear log rác lần 1
-        this.unknownVars = [];
-        this.inferredCount = 0;
-        this.totalVariables = 0;
+        print("... [Pass 2A] Phân tích luồng (Lần 1)...");
         this.visit(this.ast);
 
-        // Lần 2: Áp dụng hint vào định nghĩa hàm và tính toán lại
-        print("... [Pass 2B] Tối ưu hóa dựa trên Hints...");
-        // Reset counter để tính chính xác cho lần chốt hạ
+        print("... [Pass 2B] Phân tích luồng (Lần 2)...");
+        this.visit(this.ast);
+
+        print("... [Pass 2C] Tối ưu hóa cuối cùng...");
         this.logs = [];
         this.unknownVars = [];
         this.inferredCount = 0;
@@ -66,8 +74,16 @@ export class TypeInferrer {
     fn currentScope() { return this.scopeStack[this.scopeStack.size() - 1]; }
 
     fn defineSymbol(name, kind, type) {
+        let scope = this.currentScope();
+        if (scope[name]) {
+            if (scope[name].type == "unknown" && type != "unknown") {
+                scope[name].type = type;
+                scope[name].kind = kind;
+            }
+            return scope[name];
+        }
         let info = { "kind": kind, "type": type, "returnType": "unknown", "props": {} };
-        this.currentScope()[name] = info;
+        scope[name] = info;
         return info;
     }
 
@@ -81,7 +97,11 @@ export class TypeInferrer {
 
     fn setupBuiltins() {
         let g = this.scopeStack[0];
-        // 1. GLOBAL FUNCTIONS
+        g["__loader__"] = { "kind": "func", "type": "function", "returnType": "object" };
+        g["__modules__"] = { "kind": "var", "type": "array<function>" };
+        g["__cache__"] = { "kind": "var", "type": "array<object>" };
+
+        // GLOBAL FUNCTIONS
         g["print"] = { "kind": "func", "type": "function", "returnType": "void" };
         g["typeof"] = { "kind": "func", "type": "function", "returnType": "string" };
         g["len"] = { "kind": "func", "type": "function", "returnType": "int" };
@@ -93,7 +113,8 @@ export class TypeInferrer {
         g["ord"] = { "kind": "func", "type": "function", "returnType": "int" };
         g["char"] = { "kind": "func", "type": "function", "returnType": "string" };
         g["range"] = { "kind": "func", "type": "function", "returnType": "array<int>" };
-        // 2. MODULE "io"
+
+        // MODULES
         let ioProps = {};
         ioProps["input"] = { "kind": "func", "type": "function", "returnType": "string" };
         ioProps["read"] = { "kind": "func", "type": "function", "returnType": "string" };
@@ -112,18 +133,24 @@ export class TypeInferrer {
         ioProps["getFileExtension"] = { "kind": "func", "type": "function", "returnType": "string" };
         ioProps["getAbsolutePath"] = { "kind": "func", "type": "function", "returnType": "string" };
         g["io"] = { "kind": "var", "type": "object", "props": ioProps };
-        // 3. MODULE "system"
+
         let sysProps = {};
         sysProps["argv"] = { "kind": "func", "type": "function", "returnType": "array<string>" };
         sysProps["exit"] = { "kind": "func", "type": "function", "returnType": "void" };
         sysProps["exec"] = { "kind": "func", "type": "function", "returnType": "int" };
         g["system"] = { "kind": "var", "type": "object", "props": sysProps };
         g["System"] = { "kind": "var", "type": "object", "props": sysProps };
-        // 4. MODULE "json"
+
         let jsonProps = {};
         jsonProps["parse"] = { "kind": "func", "type": "function", "returnType": "object" };
         jsonProps["stringify"] = { "kind": "func", "type": "function", "returnType": "string" };
         g["json"] = { "kind": "var", "type": "object", "props": jsonProps };
+        
+        let strProps = {};
+        strProps["join"] = { "kind": "func", "type": "function", "returnType": "string" };
+        strProps["format"] = { "kind": "func", "type": "function", "returnType": "string" };
+        g["string"] = { "kind": "var", "type": "object", "props": strProps };
+        g["String"] = { "kind": "var", "type": "object", "props": strProps };
     }
 
     // --- PASS 1: SCAN ---
@@ -137,35 +164,51 @@ export class TypeInferrer {
         else if (type == "BlockStatement") {
             if (node.statements) for (stmt in node.statements) this.scanDeclarations(stmt);
         }
+        else if (type == "FunctionLiteral") {
+            if (node.body) this.scanDeclarations(node.body);
+        }
+        else if (type == "ArrayLiteral") {
+            if (node.elements) for (elem in node.elements) this.scanDeclarations(elem);
+        }
         else if (type == "IfStatement") {
             this.scanDeclarations(node.thenBranch);
             if (node.elseBranch) this.scanDeclarations(node.elseBranch);
-        }
-        else if (type == "WhileStatement" || type == "DoWhileStatement") {
-            this.scanDeclarations(node.body);
-        }
-        else if (type == "ForStatement") {
-            this.scanDeclarations(node.init);
-            this.scanDeclarations(node.body);
-        }
-        else if (type == "TryStatement") {
-            this.scanDeclarations(node.block);
-            if (node.handler) this.scanDeclarations(node.handler.body);
         }
         else if (type == "FunctionStatement") {
             if (node.name && node.name.name) {
                 this.defineSymbol(node.name.name, "func", "function");
             }
+            if (node.func && node.func.body) this.scanDeclarations(node.func.body);
         }
         else if (type == "ClassStatement") {
-            // [NEW] Hỗ trợ khai báo Class
             if (node.name && node.name.name) {
                 this.defineSymbol(node.name.name, "class", "class");
             }
         }
         else if (type == "LetStatement") {
             if (node.name && node.name.name) {
-                this.defineSymbol(node.name.name, "var", "unknown");
+                let varType = "unknown";
+                let kind = "var";
+                if (node.value && node.value.type == "PropertyAccess") {
+                     let propName = node.value.property.name;
+                     if (node.name.name == propName) {
+                         let firstChar = propName.substring(0, 1);
+                         if (firstChar == firstChar.upper() && firstChar != firstChar.lower()) {
+                             varType = "class";
+                             kind = "class";
+                         }
+                     }
+                }
+                this.defineSymbol(node.name.name, kind, varType);
+            }
+            if (node.value) this.scanDeclarations(node.value);
+        }
+        else if (type == "ImportStatement") {
+            if (node.namespaceImport) this.defineSymbol(node.namespaceImport.name, "module", "object");
+            if (node.namedImports) {
+                for (let i = 0; i < node.namedImports.size(); ++i) {
+                    this.defineSymbol(node.namedImports[i].name, "var", "unknown");
+                }
             }
         }
     }
@@ -175,26 +218,30 @@ export class TypeInferrer {
         if (node == null) return "void";
         let type = this.getSafeType(node);
 
-        // Statements
         if (type == "Program") return this.visitProgram(node);
         if (type == "BlockStatement") return this.visitBlockStatement(node);
         if (type == "FunctionStatement") return this.visitFunctionStatement(node);
-        if (type == "ClassStatement") return this.visitClassStatement(node); // [NEW]
+        if (type == "ClassStatement") return this.visitClassStatement(node);
         if (type == "LetStatement") return this.visitLetStatement(node);
         if (type == "ReturnStatement") return this.visitReturnStatement(node);
         if (type == "IfStatement") return this.visitIfStatement(node);
         if (type == "WhileStatement") return this.visitWhileStatement(node);
         if (type == "ForStatement") return this.visitForStatement(node);
+        if (type == "ForInStatement") return this.visitForInStatement(node); 
         if (type == "TryStatement") return this.visitTryStatement(node);
-        // Expressions
+        if (type == "ImportStatement") return this.visitImportStatement(node); 
+
         if (type == "BinaryExpression") return this.visitBinaryExpression(node);
         if (type == "UnaryExpression") return this.visitUnaryExpression(node);
         if (type == "CallExpression") return this.visitCallExpression(node);
         if (type == "NewExpression") return this.visitNewExpression(node);
         if (type == "Identifier") return this.visitIdentifier(node);
         if (type == "AssignmentExpression") return this.visitAssignment(node);
-        if (type == "MemberExpression") return this.visitMemberExpression(node);
-        // Literals
+        if (type == "PropertyAccess") return this.visitPropertyAccess(node); 
+        if (type == "IndexExpression") return this.visitIndexExpression(node);
+        
+        if (type == "PostfixUpdateExpression" || type == "PrefixUpdateExpression") return this.visitUpdateExpression(node);
+
         if (type == "IntegerLiteral") return "int";
         if (type == "RealLiteral") return "float";
         if (type == "StringLiteral") return "string";
@@ -204,7 +251,6 @@ export class TypeInferrer {
         if (type == "ObjectLiteral") return this.visitObjectLiteral(node);
         if (type == "FunctionLiteral") return this.visitFunctionLiteral(node);
 
-        // Fallback traverse
         if (node.keys) {
             for (key in node.keys()) {
                 let child = node[key];
@@ -227,37 +273,86 @@ export class TypeInferrer {
         return "void";
     }
 
-    // [NEW] Xử lý Class Body
     fn visitClassStatement(node) {
         if (node.name == null) return "void";
         let className = node.name.name;
         
-        // Vào scope mới để duyệt method (giả lập class scope)
+        if (!this.classRegistry[className]) {
+            this.classRegistry[className] = { "methods": {} };
+        }
+        
+        let prevClass = this.currentClassName;
+        this.currentClassName = className;
+        
         this.enterScope();
         if (node.methods) {
             for (method in node.methods) {
-                // Xử lý methods (hiện tại coi như function thường)
                 this.visit(method);
             }
         }
         this.exitScope();
-        
-        this.logs.push("✅ [Class] Đã duyệt class '" + className + "'");
+        this.currentClassName = prevClass;
         return "void";
     }
     
     fn visitTryStatement(node) {
-        this.visit(node.block);
-        if (node.handler) {
+        this.visit(node.tryBlock);
+        if (node.catchBlock) {
             this.enterScope();
-            if (node.handler.param) this.defineSymbol(node.handler.param.name, "var", "object");
-            this.visit(node.handler.body);
+            if (node.catchVariable) this.defineSymbol(node.catchVariable.name, "var", "object");
+            this.visit(node.catchBlock);
             this.exitScope();
         }
         return "void";
     }
 
-fn visitFunctionStatement(node) {
+    fn visitImportStatement(node) {
+        let path = node.path.value;
+        let resolvedType = "object";
+        if (path == "system") resolvedType = "System"; 
+        if (path == "io") resolvedType = "io";
+        if (path == "string") resolvedType = "String";
+
+        if (node.namespaceImport) {
+            let sym = this.resolveSymbol(node.namespaceImport.name);
+            if (sym && resolvedType != "object") {
+                 let globalSym = this.resolveSymbol(resolvedType);
+                 if (globalSym) { sym.props = globalSym.props; sym.type = globalSym.type; }
+            }
+        }
+        if (node.namedImports) {
+            for (let i = 0; i < node.namedImports.size(); ++i) {
+                let imp = node.namedImports[i];
+                let sym = this.resolveSymbol(imp.name);
+                if (sym && resolvedType != "object") {
+                    let globalSym = this.resolveSymbol(resolvedType);
+                    if (globalSym && globalSym.props && globalSym.props[imp.name]) {
+                         sym.type = globalSym.props[imp.name].type;
+                    }
+                }
+            }
+        }
+        return "void";
+    }
+
+    fn visitForInStatement(node) {
+        let collectionType = this.visit(node.collection);
+        this.enterScope();
+        let varName = node.variable.name;
+        let varType = "unknown";
+        if (collectionType.indexOf("array<") == 0) varType = collectionType.substring(6, collectionType.size() - 1);
+        else if (collectionType == "string") varType = "char"; 
+
+        let sym = this.defineSymbol(varName, "var", varType);
+        if (varType == "unknown") this.addUnknown(varName, node.variable);
+        else this.inferredCount += 1;
+
+        this.visit(node.body);
+        this.exitScope();
+        return "void";
+    }
+
+    fn visitFunctionStatement(node) {
         if (node.name == null) return "void";
         let funcName = node.name.name;
         let sym = this.resolveSymbol(funcName);
@@ -265,7 +360,6 @@ fn visitFunctionStatement(node) {
 
         this.totalVariables += 1;
         this.inferredCount += 1;
-        
         let prevFunc = this.currentFuncSymbol;
         this.currentFuncSymbol = sym;
 
@@ -275,31 +369,40 @@ fn visitFunctionStatement(node) {
                 let param = node.func.parameters[i];
                 this.totalVariables += 1;
                 
-                // [NEW] Check gợi ý từ kho
                 let hintKey = funcName + "::" + str(i);
+                if (this.currentClassName) {
+                    let classKey = this.currentClassName + "::" + funcName + "::" + str(i);
+                    if (this.paramHints[classKey]) hintKey = classKey;
+                }
+
                 let paramType = "unknown";
                 
                 if (this.paramHints[hintKey]) {
-                    paramType = this.paramHints[hintKey];
-                    this.logs.push("💡 [Hint] Tham số '" + param.name + "' của '" + funcName + "' -> " + paramType);
+                    if (typeof(this.paramHints[hintKey]) == "string") {
+                        paramType = this.paramHints[hintKey];
+                    } else {
+                        paramType = this.paramHints[hintKey].type;
+                    }
                 }
                 
-                this.defineSymbol(param.name, "var", paramType);
+                let pSym = this.defineSymbol(param.name, "var", paramType);
                 
-                // Chỉ báo lỗi nếu vẫn là unknown
-                if (paramType == "unknown") {
-                    this.unknownVars.push(funcName + "::" + param.name);
-                } else {
-                    this.inferredCount += 1; // Tính điểm coverage
+                if (this.paramHints[hintKey] && typeof(this.paramHints[hintKey]) == "object") {
+                    pSym.props = this.paramHints[hintKey].props;
                 }
+
+                if (paramType == "unknown") this.addUnknown(funcName + "::" + param.name, param);
+                else this.inferredCount += 1;
             }
         }
         
         if (node.func && node.func.body) this.visit(node.func.body);
         
-        if (sym.returnType != "unknown") {
-            this.logs.push("✅ [Def] Hàm '" + funcName + "' -> " + sym.returnType);
+        // Register return type
+        if (this.currentClassName) {
+            this.classRegistry[this.currentClassName].methods[funcName] = sym.returnType;
         }
+        
         this.exitScope();
         this.currentFuncSymbol = prevFunc;
         return "void";
@@ -308,25 +411,38 @@ fn visitFunctionStatement(node) {
     fn visitLetStatement(node) {
         this.totalVariables += 1;
         if (node.name == null) return "void";
-        
         let name = node.name.name;
         let existing = this.resolveSymbol(name);
         if (existing == null) existing = this.defineSymbol(name, "var", "unknown");
 
         let inferred = "unknown";
         if (node.value) inferred = this.visit(node.value);
-        existing.type = inferred;
-        if (node.value && node.value.type == "ObjectLiteral") existing.props = node.value.inferredProps;
-        if (inferred != "unknown") {
-            this.inferredCount += 1;
-            this.logs.push("✅ [Var] " + name + " : " + inferred);
-        } else {
-            this.unknownVars.push(name);
+        
+        if ((inferred == "unknown" || inferred == "object") && node.value && node.value.type == "PropertyAccess") {
+            let propName = node.value.property.name;
+            if (name == propName) {
+                 let firstChar = propName.substring(0, 1);
+                 if (firstChar == firstChar.upper() && firstChar != firstChar.lower()) {
+                     inferred = "class"; 
+                 }
+            }
         }
+
+        if (existing.type != "unknown" && inferred == "unknown") {
+             // Keep existing
+        } else {
+             existing.type = inferred;
+             if (inferred == "class") existing.kind = "class";
+        }
+        
+        if (node.value && node.value.type == "ObjectLiteral") existing.props = node.value.inferredProps;
+        
+        if (existing.type == "unknown") this.addUnknown(name, node.name);
+        else this.inferredCount += 1;
+        
         return "void";
     }
 
-    // [UPDATED] Logic gán thông minh hơn
     fn visitAssignment(node) {
         let rightType = this.visit(node.value);
         let targetType = this.getSafeType(node.target);
@@ -335,15 +451,10 @@ fn visitFunctionStatement(node) {
             let name = node.target.name;
             let sym = this.resolveSymbol(name);
             if (sym) {
-                // Check if new type is better (more specific) than old type
                 if (this.isMoreSpecific(sym.type, rightType)) {
-                    let oldType = sym.type;
                     sym.type = rightType;
                     this.inferredCount += 1;
-                    this.logs.push("⚡ [Late Bind] '" + name + "' (" + oldType + ") -> " + rightType);
                 }
-                
-                // Merge properties if assigning a new object literal
                 if (node.value.type == "ObjectLiteral" && node.value.inferredProps) {
                     if (sym.props == null) sym.props = {};
                     for (let i = 0; i < node.value.inferredProps.keys().size(); ++i) {
@@ -353,40 +464,85 @@ fn visitFunctionStatement(node) {
                 }
             }
         }
-        else if (targetType == "MemberExpression") {
-            let objName = null;
-            if (node.target.object.type == "Identifier") objName = node.target.object.name;
-            if (objName) {
-                let sym = this.resolveSymbol(objName);
-                if (sym && sym.props && node.target.property.type == "Identifier") {
-                    sym.props[node.target.property.name] = { "type": rightType };
-                }
+        else if (targetType == "PropertyAccess") {
+            let objType = this.visit(node.target.object); // Resolve object type first
+            
+            // [FIX] Update props if object is known
+            if (node.target.object.type == "Identifier") {
+                 let sym = this.resolveSymbol(node.target.object.name);
+                 if (sym && node.target.property.type == "Identifier") {
+                     if (sym.props == null) sym.props = {};
+                     sym.props[node.target.property.name] = { "type": rightType };
+                 }
             }
         }
         return rightType;
     }
 
+    fn visitUpdateExpression(node) {
+        let op = node.op;
+        let operand = this.visit(node.operand);
+        
+        if (node.operand.type == "Identifier") {
+            let sym = this.resolveSymbol(node.operand.name);
+            if (sym) {
+                sym.type = "int";
+                this.inferredCount += 1;
+            }
+        }
+        return "int";
+    }
+
     fn visitIdentifier(node) {
         if (node.name == null) return "unknown";
+        
+        // [FIX] Handle 'this'
+        if (node.name == "this") {
+            if (this.currentClassName) return this.currentClassName;
+            return "object";
+        }
+
         let sym = this.resolveSymbol(node.name);
         if (sym) return sym.type;
         return "unknown";
     }
 
-    fn visitMemberExpression(node) {
+    fn visitPropertyAccess(node) {
         let objType = this.visit(node.object);
         if (node.property && node.property.type == "Identifier") {
             let propName = node.property.name;
-            // 1. Length/Size property
             if (propName == "length" || propName == "size") {
                 if (objType == "string" || objType == "array" || objType.indexOf("array<") == 0) return "int";
             }
-            // 2. Object property
             if (node.object.type == "Identifier") {
+                // [FIX] Handle 'this.prop'
+                if (node.object.name == "this" && this.currentClassName) {
+                     // Check if prop is defined in class? For now return unknown or inferred props
+                     // Hard to know props of 'this' without full class analysis
+                }
+                
                 let sym = this.resolveSymbol(node.object.name);
                 if (sym && sym.props && sym.props[propName]) return sym.props[propName].type;
             }
         }
+        return "unknown";
+    }
+    
+    fn visitIndexExpression(node) {
+        let target = node.object; 
+        this.visit(node.index); 
+
+        if (target.type == "Identifier") {
+            let sym = this.resolveSymbol(target.name);
+            if (sym && sym.type == "unknown") {
+                sym.type = "array<unknown>";
+                this.inferredCount += 1;
+            }
+        }
+
+        let objType = this.visit(target);
+        if (objType.indexOf("array<") == 0) return objType.substring(6, objType.size() - 1);
+        if (objType == "string") return "char";
         return "unknown";
     }
 
@@ -417,154 +573,183 @@ fn visitFunctionStatement(node) {
     }
 
     fn resolveMethodCall(objType, methodName) {
-        // STRING methods
         if (objType == "string") {
-            if (methodName == "split") return "array<string>";
-            if (methodName == "upper" || methodName == "lower" || methodName == "trim" || 
-                methodName == "replace" || methodName == "substring" || methodName == "slice" || 
-                methodName == "repeat" || methodName == "padLeft" || methodName == "padRight" || 
-                methodName == "join" || methodName == "charAt") return "string";
-            if (methodName == "startsWith" || methodName == "endsWith" || 
-                methodName == "contains" || methodName == "equalsIgnoreCase") return "bool";
-            if (methodName == "indexOf" || methodName == "lastIndexOf" || 
-                methodName == "charCodeAt" || methodName == "size" || methodName == "length") return "int";
+            if (methodName == "size" || methodName == "length" || methodName == "indexOf") return "int";
+            if (methodName == "substring" || methodName == "trim" || methodName == "upper") return "string";
+            return "unknown";
         }
-        
-        // ARRAY methods
         if (objType.indexOf("array") == 0) {
-            if (methodName == "push" || methodName == "findIndex" || methodName == "size") return "int";
-            if (methodName == "pop" || methodName == "find") {
+            if (methodName == "size" || methodName == "findIndex") return "int";
+            if (methodName == "push") return "int";
+            if (methodName == "slice" || methodName == "map") return objType;
+            if (methodName == "join") return "string";
+            
+            if (methodName == "pop" || methodName == "find" || methodName == "shift") {
                  if (objType.indexOf("<") != -1) {
                      return objType.substring(objType.indexOf("<") + 1, objType.indexOf(">"));
                  }
                  return "unknown";
             }
-            if (methodName == "slice" || methodName == "map" || methodName == "filter" || 
-                methodName == "reverse" || methodName == "sort") return objType;
-            if (methodName == "join") return "string";
-            if (methodName == "forEach" || methodName == "reserve" || methodName == "resize") return "void";
+            return "unknown";
         }
-
-        // OBJECT methods
         if (objType == "object") {
-            if (methodName == "keys") return "array<string>";
-            if (methodName == "values") return "array<unknown>";
-            if (methodName == "entries") return "array<array>";
-            if (methodName == "has") return "bool";
-            if (methodName == "merge") return "object";
+             if (methodName == "keys") return "array<string>";
+             return "unknown";
+        }
+        
+        if (this.classRegistry[objType]) {
+            let methods = this.classRegistry[objType].methods;
+            if (methods && methods[methodName]) {
+                return methods[methodName];
+            }
         }
         return "unknown";
     }
 
     fn visitCallExpression(node) {
         let calleeType = this.getSafeType(node.callee);
-        // 1. Direct Identifier Call
+        let hintFuncName = null;
+        let hintClassPrefix = "";
+        let methodName = null;
 
         if (calleeType == "Identifier") {
-            let funcName = node.callee.name;
-            if (node.arguments) {
-                for (let i = 0; i < node.arguments.size(); ++i) {
-                    let argType = this.visit(node.arguments[i]);
-                    if (argType != "unknown") {
-                        // Lưu gợi ý: Hàm A, tham số thứ i nhận kiểu T
-                        // Key: "funcName::i"
-                        let key = funcName + "::" + str(i);
-                        
-                        // Ưu tiên kiểu cụ thể hơn
-                        if (this.paramHints[key]) {
-                             if (this.isMoreSpecific(this.paramHints[key], argType)) {
-                                 this.paramHints[key] = argType;
-                             }
-                        } else {
-                             this.paramHints[key] = argType;
+            hintFuncName = node.callee.name;
+        } else if (calleeType == "PropertyAccess" && node.callee.property.type == "Identifier") {
+            hintFuncName = node.callee.property.name;
+            methodName = hintFuncName;
+            let objType = this.visit(node.callee.object);
+            if (objType != "unknown") {
+                if (this.classRegistry[objType]) hintClassPrefix = objType + "::";
+                
+                if (methodName == "push" && node.callee.object.type == "Identifier" && node.args && node.args.size() > 0) {
+                    let sym = this.resolveSymbol(node.callee.object.name);
+                    if (sym && (sym.type == "array" || sym.type == "array<unknown>")) {
+                        let valType = this.visit(node.args[0]);
+                        if (valType != "unknown") {
+                            sym.type = "array<" + valType + ">";
+                            this.inferredCount += 1;
                         }
                     }
                 }
             }
         }
 
-        if (calleeType == "Identifier") {
-            let funcName = node.callee.name;
-            let sym = this.resolveSymbol(funcName);
-            if (sym && sym.kind == "func" && sym.returnType != "unknown") return sym.returnType;
+        if (hintFuncName && node.args) {
+            for (let i = 0; i < node.args.size(); ++i) {
+                let argType = this.visit(node.args[i]);
+                let argProps = null;
+                if (node.args[i].type == "Identifier") {
+                     let s = this.resolveSymbol(node.args[i].name);
+                     if (s) argProps = s.props;
+                } else if (node.args[i].type == "ObjectLiteral") {
+                     argProps = node.args[i].inferredProps;
+                }
+
+                if (argType != "unknown") {
+                    let key = hintClassPrefix + hintFuncName + "::" + str(i);
+                    let fallbackKey = hintFuncName + "::" + str(i);
+                    let hintData = { "type": argType, "props": argProps };
+                    
+                    if (!this.paramHints[key]) this.paramHints[key] = hintData;
+                    if (!this.paramHints[fallbackKey]) this.paramHints[fallbackKey] = hintData;
+                }
+            }
+        } else {
+             if (node.args) for (arg in node.args) this.visit(arg);
         }
-        // 2. Member Expression Call
-        else if (calleeType == "MemberExpression") {
+
+        if (calleeType == "Identifier") {
+            let sym = this.resolveSymbol(node.callee.name);
+            if (sym && sym.kind == "func" && sym.returnType != "unknown") return sym.returnType;
+            if (sym && sym.kind == "class") return node.callee.name; 
+        }
+        else if (calleeType == "PropertyAccess") {
             let objType = this.visit(node.callee.object);
             let propName = node.callee.property.name;
             let methodRet = this.resolveMethodCall(objType, propName);
             if (methodRet != "unknown") return methodRet;
-
+            
             if (node.callee.object.type == "Identifier") {
-                let objName = node.callee.object.name;
-                let sym = this.resolveSymbol(objName);
+                let sym = this.resolveSymbol(node.callee.object.name);
                 if (sym && sym.props && sym.props[propName]) {
                     return sym.props[propName].returnType;
                 }
             }
         }
-        if (node.arguments) for (arg in node.arguments) this.visit(arg);
         return "unknown";
     }
 
     fn visitNewExpression(node) {
-        if (this.getSafeType(node.callee) == "Identifier") {
-            if (node.arguments) for (arg in node.arguments) this.visit(arg);
-            return node.callee.name;
+        let callExpr = node.expression;
+        if (callExpr && callExpr.type == "CallExpression") {
+            let callee = callExpr.callee;
+            if (this.getSafeType(callee) == "Identifier") {
+                 let className = callee.name;
+                 if (callExpr.args) {
+                     for (let i = 0; i < callExpr.args.size(); ++i) {
+                         let argType = this.visit(callExpr.args[i]);
+                         
+                         let argProps = null;
+                         if (callExpr.args[i].type == "Identifier") {
+                              let s = this.resolveSymbol(callExpr.args[i].name);
+                              if (s) argProps = s.props;
+                         } else if (callExpr.args[i].type == "ObjectLiteral") {
+                              argProps = callExpr.args[i].inferredProps;
+                         }
+
+                         if (argType != "unknown") {
+                             let key = className + "::init::" + str(i);
+                             this.paramHints[key] = { "type": argType, "props": argProps };
+                         }
+                     }
+                 }
+                 return className;
+            }
         }
         return "object";
     }
 
-    // [UPDATED] Reverse Inference (Suy luận ngược từ phép toán)
     fn visitBinaryExpression(node) {
         let left = this.visit(node.left);
         let right = this.visit(node.right);
-        let op = node.operator;
+        let op = node.op;
 
-        // 1. Reverse Inference: Nếu biến đang là unknown mà bị đem ra cộng trừ nhân chia -> ép về int
-        if (op == "-" || op == "*" || op == "/" || op == "%") {
+        if (op == "-" || op == "*" || op == "/" || op == "%" || 
+            op == "OP_SUB" || op == "OP_MUL" || op == "OP_DIV" || op == "OP_MOD") {
              if (left == "unknown" && node.left.type == "Identifier") {
                  let sym = this.resolveSymbol(node.left.name);
-                 if (sym) { sym.type = "int"; left = "int"; this.logs.push("🔍 [Inferred] " + node.left.name + " -> int (do dùng " + op + ")"); this.inferredCount += 1; }
+                 if (sym) { sym.type = "int"; left = "int"; this.inferredCount += 1; }
              }
              if (right == "unknown" && node.right.type == "Identifier") {
                  let sym = this.resolveSymbol(node.right.name);
-                 if (sym) { sym.type = "int"; right = "int"; this.logs.push("🔍 [Inferred] " + node.right.name + " -> int (do dùng " + op + ")"); this.inferredCount += 1; }
+                 if (sym) { sym.type = "int"; right = "int"; this.inferredCount += 1; }
              }
+             return "int"; 
         }
-        // Với phép cộng, cẩn thận vì có thể là string
-        if (op == "+") {
-             // Nếu một bên đã là int/float, bên kia khả năng cao cũng vậy (nếu ko phải string)
-             if (left == "int" && right == "unknown" && node.right.type == "Identifier") {
-                 let sym = this.resolveSymbol(node.right.name);
-                 if (sym) { sym.type = "int"; right = "int"; this.logs.push("🔍 [Inferred] " + node.right.name + " -> int (do + với int)"); this.inferredCount += 1; }
-             }
-             if (right == "int" && left == "unknown" && node.left.type == "Identifier") {
-                 let sym = this.resolveSymbol(node.left.name);
-                 if (sym) { sym.type = "int"; left = "int"; this.logs.push("🔍 [Inferred] " + node.left.name + " -> int (do + với int)"); this.inferredCount += 1; }
-             }
+        
+        if (op == "||" || op == "&&" || op == "OP_OR" || op == "OP_AND") {
+             if (left != "unknown" && left != "bool") return left;
+             if (right != "unknown" && right != "bool") return right;
+             return "unknown";
+        }
+        
+        if (op == "+" || op == "OP_ADD") {
+            if (left == "string" || right == "string") return "string";
+            return "int"; 
         }
 
-        if (op == "+") {
-            if (left == "string" || right == "string") return "string";
-        }
-        if (op == "+" || op == "-" || op == "*" || op == "/" || op == "%") {
-            if (left == "float" || right == "float") return "float";
-            if (left == "int" && right == "int") return "int";
-            // Fallback: nếu có 1 cái là int thì kết quả tạm coi là int
-            if (left == "int" || right == "int") return "int";
-            return "unknown";
-        }
-        if (op == "==" || op == "!=" || op == "<" || op == ">" || op == "<=" || op == ">=") return "bool";
-        if (op == "&&" || op == "||") return "bool";
+        if (op == "==" || op == "!=" || op == "<" || op == ">" || 
+            op == "OP_EQ" || op == "OP_NEQ" || op == "OP_LT" || op == "OP_GT" ||
+            op == "OP_LTE" || op == "OP_GTE") return "bool";
+        
         return "unknown";
     }
 
     fn visitUnaryExpression(node) {
-        let arg = this.visit(node.argument);
-        let op = node.operator;
-        if (op == "!") return "bool";
-        if (op == "-") return arg;
+        let arg = this.visit(node.operand);
+        let op = node.op;
+        if (op == "!" || op == "OP_NOT") return "bool";
+        if (op == "-" || op == "OP_NEG") return arg;
         return "unknown";
     }
 
@@ -583,11 +768,9 @@ fn visitFunctionStatement(node) {
         if (node.value) {
             let retType = this.visit(node.value);
             if (this.currentFuncSymbol != null) {
-                if (this.currentFuncSymbol.returnType == "unknown" && retType != "unknown") {
+                // [FIX] Return Merge Logic
+                if (this.isMoreSpecific(this.currentFuncSymbol.returnType, retType)) {
                      this.currentFuncSymbol.returnType = retType;
-                }
-                else if (this.currentFuncSymbol.returnType != "unknown" && retType != "unknown" && this.currentFuncSymbol.returnType != retType) {
-                    this.currentFuncSymbol.returnType = "any";
                 }
             }
             return retType;
@@ -611,7 +794,7 @@ fn visitFunctionStatement(node) {
     fn visitForStatement(node) {
         this.enterScope();
         if (node.init) this.visit(node.init);
-        if (node.test) this.visit(node.test);
+        if (node.condition) this.visit(node.condition);
         if (node.update) this.visit(node.update);
         if (node.body) this.visit(node.body);
         this.exitScope();
@@ -620,32 +803,22 @@ fn visitFunctionStatement(node) {
 
     fn printStats() {
         print("\n📊 BÁO CÁO CÁC BIẾN KHÔNG SUY LUẬN ĐƯỢC (MISSING TYPES):");
-        
         let limit = this.unknownVars.size();
-        let displayLimit = 30; // Hiển thị tối đa 30 lỗi để đỡ spam
-
-        if (limit == 0) {
-            print("✨ Tuyệt vời! Không còn biến nào là unknown.");
-        } else {
+        let displayLimit = 100; 
+        if (limit == 0) print("✨ Tuyệt vời! Không còn biến nào là unknown.");
+        else {
             for (let i = 0; i < limit; ++i) {
                 if (i < displayLimit) {
-                    print("❌ [Unknown] " + this.unknownVars[i]);
+                    let u = this.unknownVars[i];
+                    print("❌ [Unknown] " + u.name + " (tại " + u.file + ":" + str(u.line) + ":" + str(u.col) + ")");
                 }
             }
-            if (limit > displayLimit) {
-                print("... và " + str(limit - displayLimit) + " biến khác đang 'mù' type.");
-            }
+            if (limit > displayLimit) print("... và " + str(limit - displayLimit) + " biến khác đang 'mù' type.");
         }
-
         let percentage = 0;
         if (this.totalVariables > 0) percentage = (this.inferredCount * 100) / this.totalVariables;
-
         print("-------------------------------------");
         print("Độ phủ (Coverage)     : " + str(percentage) + "% (" + str(this.inferredCount) + "/" + str(this.totalVariables) + ")");
         print("-------------------------------------");
-        
-        // Hint để bạn biết lý do
-        print("💡 GỢI Ý: Đa số [Unknown] thường là 'Tham số hàm' (Function Parameters).");
-        print("   Type Inferrer hiện tại chưa nhìn vào nơi gọi hàm để đoán kiểu tham số.");
     }
 }
