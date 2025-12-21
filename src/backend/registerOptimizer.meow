@@ -5,30 +5,6 @@ fn getRegArgIndices(opcode) {
     return Emitter.getRegArgIndices(opcode);
 }
 
-// [FIX] Hàm helper để kiểm tra xem Opcode có CHỈ ĐỌC thanh ghi đầu tiên hay không.
-// Nếu trả về true, nghĩa là arg[0] là READ (Use).
-// Nếu trả về false, nghĩa là arg[0] là WRITE (Def).
-fn isReadOnlyFirstArg(op) {
-    // Các lệnh nhảy có điều kiện đọc thanh ghi điều kiện
-    if (op == OpCodes.JUMP_IF_FALSE || op == OpCodes.JUMP_IF_TRUE) return true;
-    
-    // Các lệnh SET vào môi trường bên ngoài, đọc thanh ghi giá trị nguồn
-    if (op == OpCodes.SET_GLOBAL || op == OpCodes.SET_UPVALUE) return true;
-    
-    // Các lệnh gán thuộc tính/index: target[prop] = value.
-    // Reg 0 là target (object), Reg 1/2 là value. Chúng đều là READ (để tìm địa chỉ heap).
-    if (op == OpCodes.SET_PROP || op == OpCodes.SET_INDEX) return true;
-    
-    // Các lệnh return/export/throw đọc giá trị trả về
-    if (op == OpCodes.EXPORT || op == OpCodes.RETURN || op == OpCodes.THROW) return true;
-    
-    // Các lệnh class/object
-    if (op == OpCodes.SET_METHOD || op == OpCodes.INHERIT) return true;
-    if (op == OpCodes.IMPORT_MODULE) return true;
-    
-    return false;
-}
-
 // Hàm này sẽ tối ưu hóa một proto và trả về bảng ánh xạ vReg -> pReg
 fn optimizeProtoAndGetMapping(proto) {
     let code = proto.code;
@@ -37,66 +13,129 @@ fn optimizeProtoAndGetMapping(proto) {
         return {};
     }
     
-    // Bước 1: Phân tích Live Range (tìm Start và End)
-    let vRegStart = {}; // [FIX] Theo dõi lần xuất hiện đầu tiên (Instruction Pointer)
-    let vRegEnd = {};   // [FIX] Theo dõi lần xuất hiện cuối cùng
+    // --- BƯỚC 1: Phân tích Live Range & Identify Blocks ---
+    let vRegStart = {};
+    let vRegEnd = {};
     let allVRegs = {};
     
+    // Block tracking
+    let blockInfo = {};    // LeaderVReg -> Size
+    let memberOfBlock = {}; // VReg -> LeaderVReg
+
     for (let ip = 0; ip < code.size(); ++ip) {
         let inst = code[ip];
+
+        // 1.1. Cập nhật Start/End cho các thanh ghi thường
         let regIdxs = getRegArgIndices(inst.op);
-        
-        if (regIdxs == null) continue;
-        
-        let args = inst.args;
-        for (let i = 0; i < regIdxs.size(); ++i) {
-            let argIndex = regIdxs[i];
-            if (argIndex >= args.size()) continue;
-            let vReg = args[argIndex];
+        if (regIdxs != null) {
+            let args = inst.args;
+            for (let i = 0; i < regIdxs.size(); ++i) {
+                let argIndex = regIdxs[i];
+                if (argIndex >= args.size()) continue;
+                let vReg = args[argIndex];
 
-            if (typeof(vReg) != "int") continue;
-            
-            let sReg = str(vReg);
-            allVRegs[sReg] = true;
+                if (typeof(vReg) != "int") continue;
+                
+                let sReg = str(vReg);
+                allVRegs[sReg] = true;
 
-            // [FIX] Cập nhật thời điểm bắt đầu (nếu chưa có)
-            if (vRegStart[sReg] == null) {
-                vRegStart[sReg] = ip;
+                if (vRegStart[sReg] == null) vRegStart[sReg] = ip;
+                vRegEnd[sReg] = ip;
             }
+        }
 
-            // [FIX] Luôn cập nhật thời điểm kết thúc tại lệnh hiện tại
-            // (Đơn giản hóa: biến sống đến lệnh cuối cùng nó được nhắc đến, dù là Read hay Write)
-            vRegEnd[sReg] = ip;
+        // 1.2. [CRITICAL FIX] Xử lý CLOSURE (Keep-alive captured variables)
+        if (inst.op == OpCodes.CLOSURE) {
+            let protoIdx = inst.args[1];
+            if (protoIdx < proto.constantPool.size()) {
+                let childProto = proto.constantPool[protoIdx];
+                if (childProto && childProto.upvalueDescs) {
+                    for (let k = 0; k < childProto.upvalueDescs.size(); ++k) {
+                        let desc = childProto.upvalueDescs[k];
+                        if (desc.isLocal) {
+                            let sReg = str(desc.index);
+                            allVRegs[sReg] = true;
+                            if (vRegStart[sReg] == null) vRegStart[sReg] = ip;
+                            vRegEnd[sReg] = ip; // Kéo dài sự sống đến đây
+                        }
+                    }
+                }
+            }
+        }
+
+        // 1.3. [CRITICAL FIX] Nhận diện Register Blocks (CALL, NEW_ARRAY...)
+        // Những lệnh này yêu cầu 'cnt' thanh ghi liên tiếp bắt đầu từ 'leader'
+        let leader = -1;
+        let cnt = 0;
+
+        if (inst.op == OpCodes.CALL) {
+            // CALL dest, callee, argStart, argc
+            leader = inst.args[2];
+            cnt = inst.args[3];
+        } else if (inst.op == OpCodes.NEW_ARRAY || inst.op == OpCodes.NEW_HASH) {
+            // NEW_ARRAY dest, start, count
+            leader = inst.args[1];
+            cnt = inst.args[2];
+        }
+
+        if (cnt > 0 && leader != -1) {
+            let sLeader = str(leader);
+            blockInfo[sLeader] = cnt;
+            
+            // Đánh dấu các thành viên thuộc block này
+            for (let k = 0; k < cnt; ++k) {
+                let memberReg = leader + k;
+                memberOfBlock[str(memberReg)] = sLeader;
+            }
         }
     }
     
-    // Bước 2: Chuẩn bị cho Linear Scan
+    // --- BƯỚC 2: Tạo Intervals (Gộp block thành 1 interval lớn) ---
     let intervals = [];
     let vRegs = allVRegs.keys();
-    
-    // [FIX] Không cần sort vRegs ở đây nữa, ta sẽ sort intervals bên dưới
     
     for (let i = 0; i < vRegs.size(); ++i) {
         let sReg = vRegs[i];
         
-        // [FIX] start và end phải dựa trên IP thực tế
+        // Nếu là member của block (nhưng không phải leader), bỏ qua, sẽ xử lý theo leader
+        if (memberOfBlock[sReg] != null && memberOfBlock[sReg] != sReg) {
+            continue;
+        }
+
+        // Nếu là Leader của block (hoặc register thường)
+        let blockSize = 1;
+        if (blockInfo[sReg] != null) blockSize = blockInfo[sReg];
+
         let startPos = vRegStart[sReg];
         let endPos = vRegEnd[sReg];
+
+        // Nếu là block, Master Interval phải bao trùm tất cả member
+        if (blockSize > 1) {
+            let vLeader = int(sReg);
+            for (let k = 1; k < blockSize; ++k) {
+                let sMember = str(vLeader + k);
+                if (vRegStart[sMember] != null) {
+                    if (vRegStart[sMember] < startPos) startPos = vRegStart[sMember];
+                }
+                if (vRegEnd[sMember] != null) {
+                    if (vRegEnd[sMember] > endPos) endPos = vRegEnd[sMember];
+                }
+            }
+        }
 
         intervals.push({ 
             vReg: int(sReg), 
             sReg: sReg,
             start: startPos, 
-            end: endPos
+            end: endPos,
+            size: blockSize
         });
     }
 
-    // [FIX] QUAN TRỌNG: Linear Scan yêu cầu intervals phải được sắp xếp theo thời gian BẮT ĐẦU
-    intervals.sort(fn(a, b) { 
-        return a.start - b.start; 
-    });
+    // Sort theo Start Time
+    intervals.sort(fn(a, b) { return a.start - b.start; });
 
-    // Bước 3: Linear Scan (Giữ nguyên logic nhưng giờ input đã đúng)
+    // --- BƯỚC 3: Linear Scan Allocation ---
     let active = [];
     let vToNewReg = {};
     let freeRegs = [];
@@ -105,48 +144,63 @@ fn optimizeProtoAndGetMapping(proto) {
     for (let i = 0; i < intervals.size(); ++i) {
         let interval = intervals[i];
 
-        // Loại bỏ các interval đã kết thúc khỏi danh sách active
+        // Expire Old Intervals
         let newActive = [];
         for (let j = 0; j < active.size(); ++j) {
-            let activeInterval = active[j];
-            // [FIX Logic] Nếu active kết thúc TRƯỚC HOẶC TẠI thời điểm interval mới bắt đầu
-            // Ta có thể tái sử dụng (tùy thuộc vào định nghĩa live range, an toàn nhất là <)
-            if (activeInterval.end < interval.start) { 
-                freeRegs.push(vToNewReg[activeInterval.sReg]);
+            let act = active[j];
+            if (act.end < interval.start) {
+                // Trả lại tất cả thanh ghi đã chiếm
+                for (let k = 0; k < act.size; ++k) {
+                    freeRegs.push(act.assignedReg + k);
+                }
             } else {
-                newActive.push(activeInterval);
+                newActive.push(act);
             }
         }
         active = newActive;
 
-        // Cấp phát thanh ghi
-        let newReg;
-        if (freeRegs.size() > 0) {
-            // Tái sử dụng thanh ghi có số hiệu nhỏ nhất (để tối ưu memory)
-            freeRegs.sort(fn(a, b) { return a - b; });
-            newReg = freeRegs[0];
-            
-            // Xóa phần tử đầu (thủ công vì chưa có shift)
-            let newFreeRegs = [];
-            for (let k = 1; k < freeRegs.size(); ++k) newFreeRegs.push(freeRegs[k]);
-            freeRegs = newFreeRegs;
+        // Allocate
+        let baseReg = -1;
+
+        if (interval.size == 1) {
+            // Single register: Ưu tiên tái sử dụng
+            if (freeRegs.size() > 0) {
+                baseReg = freeRegs.pop();
+            } else {
+                baseReg = nextNewReg;
+                nextNewReg += 1;
+            }
         } else {
-            newReg = nextNewReg++;
+            // Block register: Cấp phát mới hoàn toàn để đảm bảo tính liên tục (Contiguous)
+            // (Việc tìm chuỗi liên tiếp trong freeRegs quá phức tạp, nên ta cứ lấy mới cho an toàn)
+            baseReg = nextNewReg;
+            nextNewReg += interval.size;
         }
         
-        vToNewReg[interval.sReg] = newReg;
-        active.push(interval);
+        // Map Leader
+        vToNewReg[interval.sReg] = baseReg;
         
-        // Sắp xếp active theo thời gian kết thúc (để heuristic loại bỏ tốt hơn)
-        active.sort(fn(a, b) { return a.end - b.end; });
+        // Map Members (nếu là block)
+        if (interval.size > 1) {
+            for (let k = 1; k < interval.size; ++k) {
+                let sMember = str(interval.vReg + k);
+                vToNewReg[sMember] = baseReg + k;
+            }
+        }
+
+        // Add to active (ghi lại assignedReg để giải phóng sau này)
+        interval.assignedReg = baseReg;
+        active.push(interval);
     }
     
-    // Bước 4 & 5: Áp dụng ánh xạ (Giữ nguyên code cũ)
-    for (inst in code) {
+    // --- BƯỚC 4: Apply Mapping ---
+    for (let i = 0; i < code.size(); ++i) {
+        let inst = code[i];
         let regIdxs = getRegArgIndices(inst.op);
         if (regIdxs == null) continue;
 
-        for (argIndex in regIdxs) {
+        for (let k = 0; k < regIdxs.size(); ++k) {
+            let argIndex = regIdxs[k];
             if (argIndex >= inst.args.size()) continue;
             let vReg = inst.args[argIndex];
 
@@ -164,43 +218,43 @@ fn optimizeProtoAndGetMapping(proto) {
     return vToNewReg;
 }
 
-// Hàm chính được export, điều phối 2 giai đoạn
+// Hàm chính được export
 export fn optimizeRegisters(protos) {
     let allMappings = {};
     let protoNames = protos.keys();
-    protoNames.sort(); // Sắp xếp để đảm bảo thứ tự xử lý nhất quán
+    protoNames.sort(); 
 
-    // GIAI ĐOẠN 1: Tối ưu hóa bytecode và thu thập bảng ánh xạ
-    for (pName in protoNames) {
+    // GIAI ĐOẠN 1: Tối ưu
+    for (let i = 0; i < protoNames.size(); ++i) {
+        let pName = protoNames[i];
         let proto = protos[pName];
         allMappings[pName] = optimizeProtoAndGetMapping(proto);
     }
 
-    // GIAI ĐOẠN 2: Dùng các bảng ánh xạ để vá lại upvalueDescs
-    for (pName in protoNames) {
+    // GIAI ĐOẠN 2: Vá Upvalues
+    for (let i = 0; i < protoNames.size(); ++i) {
+        let pName = protoNames[i];
         let parentProto = protos[pName];
         if (!parentProto || !parentProto.constantPool) continue;
 
         let parentMap = allMappings[pName];
         if (!parentMap) continue;
 
-        for (constant in parentProto.constantPool) {
-            // Kiểm tra xem hằng số có phải là một hàm con không
+        for (let j = 0; j < parentProto.constantPool.size(); ++j) {
+            let constant = parentProto.constantPool[j];
             if (typeof(constant) == "object" && constant != null && constant.sourceName) {
                 let childProto = protos[constant.sourceName];
-
                 if (childProto && childProto.upvalueDescs) {
-                    for (desc in childProto.upvalueDescs) {
-                        // Nếu upvalue này là một biến local của hàm cha
+                    for (let k = 0; k < childProto.upvalueDescs.size(); ++k) {
+                        let desc = childProto.upvalueDescs[k];
                         if (desc.isLocal) {
                             let oldVirtualReg = desc.index;
                             let newPhysicalReg = parentMap[str(oldVirtualReg)];
 
                             if (newPhysicalReg != null) {
-                                // Cập nhật lại chỉ số thành số hiệu thanh ghi vật lý mới
                                 desc.index = newPhysicalReg;
                             } else {
-                                print("[WARN] Optimizer: Không tìm thấy ánh xạ cho upvalue vReg " + str(oldVirtualReg) + " từ hàm " + pName);
+                                print("[WARN] Optimizer: Lost mapping for upvalue vReg " + str(oldVirtualReg) + " in " + pName);
                             }
                         }
                     }

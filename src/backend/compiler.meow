@@ -77,7 +77,7 @@ export class Compiler {
         let generator = new CodeGenerator(bundleAst, this, null, "bundle");
         let protos = generator.compile();
 
-        protos = optimizeRegisters(protos);
+        // protos = optimizeRegisters(protos);
 
         // 5. Optimization (Optional but recommended)
         // import { optimizeRegisters } from "backend/registerOptimizer.meow";
