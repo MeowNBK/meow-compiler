@@ -9,37 +9,34 @@ export class TypeInferrer {
         this.inferredCount = 0;
         this.unknownVars = [];
         this.logs = [];
+        
+        // Nạp kiến thức về Standard Library
+        this.setupBuiltins();
     }
 
-    // --- HELPER AN TOÀN TUYỆT ĐỐI ---
-    // Thay vì gọi node.callee.type (dễ crash), ta gọi getSafeType(node.callee)
     fn getSafeType(node) {
         if (node == null) return "none";
-        // Kiểm tra xem node có thuộc tính type không
         if (node.type == null) return "none"; 
         return node.type;
     }
 
     fn analyze() {
-        print("--- 🚀 BẮT ĐẦU PHÂN TÍCH TYPE (SAFE MODE) ---");
-        
+        print("--- 🚀 BẮT ĐẦU PHÂN TÍCH TYPE (V4 - STDLIB AWARE) ---");
         print("... [Pass 1] Quét định nghĩa...");
         this.scanDeclarations(this.ast);
-
-        print("... [Pass 2] Phân tích luồng...");
+        print("... [Pass 2] Phân tích luồng & StdLib...");
         this.visit(this.ast);
-
         this.printStats();
         print("--- KẾT THÚC ---");
     }
 
-    // --- SYMBOL TABLE ---
+    // --- SYMBOL TABLE & BUILTINS ---
     fn enterScope() { this.scopeStack.push({}); }
     fn exitScope() { this.scopeStack.pop(); }
     fn currentScope() { return this.scopeStack[this.scopeStack.size() - 1]; }
 
     fn defineSymbol(name, kind, type) {
-        let info = { "kind": kind, "type": type, "returnType": "unknown" };
+        let info = { "kind": kind, "type": type, "returnType": "unknown", "props": {} };
         this.currentScope()[name] = info;
         return info;
     }
@@ -52,7 +49,59 @@ export class TypeInferrer {
         return null;
     }
 
-    // --- PASS 1 ---
+    fn setupBuiltins() {
+        let g = this.scopeStack[0];
+
+        // 1. GLOBAL FUNCTIONS
+        g["print"] = { "kind": "func", "type": "function", "returnType": "void" };
+        g["typeof"] = { "kind": "func", "type": "function", "returnType": "string" };
+        g["len"] = { "kind": "func", "type": "function", "returnType": "int" };
+        g["int"] = { "kind": "func", "type": "function", "returnType": "int" };
+        g["real"] = { "kind": "func", "type": "function", "returnType": "float" };
+        g["bool"] = { "kind": "func", "type": "function", "returnType": "bool" };
+        g["str"] = { "kind": "func", "type": "function", "returnType": "string" };
+        g["assert"] = { "kind": "func", "type": "function", "returnType": "void" };
+        g["ord"] = { "kind": "func", "type": "function", "returnType": "int" };
+        g["char"] = { "kind": "func", "type": "function", "returnType": "string" };
+        g["range"] = { "kind": "func", "type": "function", "returnType": "array<int>" };
+
+        // 2. MODULE "io"
+        let ioProps = {};
+        ioProps["input"] = { "kind": "func", "type": "function", "returnType": "string" };
+        ioProps["read"] = { "kind": "func", "type": "function", "returnType": "string" }; // or null
+        ioProps["write"] = { "kind": "func", "type": "function", "returnType": "bool" };
+        ioProps["fileExists"] = { "kind": "func", "type": "function", "returnType": "bool" };
+        ioProps["isDirectory"] = { "kind": "func", "type": "function", "returnType": "bool" };
+        ioProps["listDir"] = { "kind": "func", "type": "function", "returnType": "array<string>" };
+        ioProps["createDir"] = { "kind": "func", "type": "function", "returnType": "bool" };
+        ioProps["deleteFile"] = { "kind": "func", "type": "function", "returnType": "bool" };
+        ioProps["getFileTimestamp"] = { "kind": "func", "type": "function", "returnType": "int" };
+        ioProps["getFileSize"] = { "kind": "func", "type": "function", "returnType": "int" };
+        ioProps["renameFile"] = { "kind": "func", "type": "function", "returnType": "bool" };
+        ioProps["copyFile"] = { "kind": "func", "type": "function", "returnType": "bool" };
+        ioProps["getFileName"] = { "kind": "func", "type": "function", "returnType": "string" };
+        ioProps["getFileStem"] = { "kind": "func", "type": "function", "returnType": "string" };
+        ioProps["getFileExtension"] = { "kind": "func", "type": "function", "returnType": "string" };
+        ioProps["getAbsolutePath"] = { "kind": "func", "type": "function", "returnType": "string" };
+        g["io"] = { "kind": "var", "type": "object", "props": ioProps };
+
+        // 3. MODULE "system"
+        let sysProps = {};
+        sysProps["argv"] = { "kind": "func", "type": "function", "returnType": "array<string>" };
+        sysProps["exit"] = { "kind": "func", "type": "function", "returnType": "void" };
+        sysProps["exec"] = { "kind": "func", "type": "function", "returnType": "int" };
+        g["system"] = { "kind": "var", "type": "object", "props": sysProps };
+        // Alias System -> system (để tương thích ngược nếu code cũ dùng System)
+        g["System"] = { "kind": "var", "type": "object", "props": sysProps };
+
+        // 4. MODULE "json"
+        let jsonProps = {};
+        jsonProps["parse"] = { "kind": "func", "type": "function", "returnType": "object" }; // Assume object/any
+        jsonProps["stringify"] = { "kind": "func", "type": "function", "returnType": "string" };
+        g["json"] = { "kind": "var", "type": "object", "props": jsonProps };
+    }
+
+    // --- PASS 1: SCAN ---
     fn scanDeclarations(node) {
         if (node == null) return;
         let type = this.getSafeType(node);
@@ -61,9 +110,22 @@ export class TypeInferrer {
             for (stmt in node.body) this.scanDeclarations(stmt);
         }
         else if (type == "BlockStatement") {
-            if (node.statements) {
-                for (stmt in node.statements) this.scanDeclarations(stmt);
-            }
+            if (node.statements) for (stmt in node.statements) this.scanDeclarations(stmt);
+        }
+        else if (type == "IfStatement") {
+            this.scanDeclarations(node.thenBranch);
+            if (node.elseBranch) this.scanDeclarations(node.elseBranch);
+        }
+        else if (type == "WhileStatement" || type == "DoWhileStatement") {
+            this.scanDeclarations(node.body);
+        }
+        else if (type == "ForStatement") {
+            this.scanDeclarations(node.init);
+            this.scanDeclarations(node.body);
+        }
+        else if (type == "TryStatement") {
+            this.scanDeclarations(node.block);
+            if (node.handler) this.scanDeclarations(node.handler.body);
         }
         else if (type == "FunctionStatement") {
             if (node.name && node.name.name) {
@@ -77,35 +139,42 @@ export class TypeInferrer {
         }
     }
 
-    // --- PASS 2 ---
+    // --- PASS 2: VISIT ---
     fn visit(node) {
         if (node == null) return "void";
         let type = this.getSafeType(node);
 
+        // Statements
         if (type == "Program") return this.visitProgram(node);
         if (type == "BlockStatement") return this.visitBlockStatement(node);
         if (type == "FunctionStatement") return this.visitFunctionStatement(node);
         if (type == "LetStatement") return this.visitLetStatement(node);
         if (type == "ReturnStatement") return this.visitReturnStatement(node);
         if (type == "IfStatement") return this.visitIfStatement(node);
-        
+        if (type == "WhileStatement") return this.visitWhileStatement(node);
+        if (type == "ForStatement") return this.visitForStatement(node);
+        if (type == "TryStatement") return this.visitTryStatement(node);
+
+        // Expressions
         if (type == "BinaryExpression") return this.visitBinaryExpression(node);
+        if (type == "UnaryExpression") return this.visitUnaryExpression(node);
         if (type == "CallExpression") return this.visitCallExpression(node);
         if (type == "NewExpression") return this.visitNewExpression(node);
         if (type == "Identifier") return this.visitIdentifier(node);
         if (type == "AssignmentExpression") return this.visitAssignment(node);
+        if (type == "MemberExpression") return this.visitMemberExpression(node);
         
+        // Literals
         if (type == "IntegerLiteral") return "int";
         if (type == "RealLiteral") return "float";
         if (type == "StringLiteral") return "string";
         if (type == "BooleanLiteral") return "bool";
         if (type == "NullLiteral") return "null";
-        
         if (type == "ArrayLiteral") return this.visitArrayLiteral(node);
-        if (type == "ObjectLiteral") return "object";
+        if (type == "ObjectLiteral") return this.visitObjectLiteral(node);
         if (type == "FunctionLiteral") return this.visitFunctionLiteral(node);
 
-        // Fallback
+        // Fallback traverse
         if (node.keys) {
             for (key in node.keys()) {
                 let child = node[key];
@@ -123,22 +192,31 @@ export class TypeInferrer {
 
     fn visitBlockStatement(node) {
         this.enterScope();
-        if (node.statements) {
-            for (stmt in node.statements) this.visit(stmt);
-        }
+        if (node.statements) for (stmt in node.statements) this.visit(stmt);
         this.exitScope();
+        return "void";
+    }
+    
+    fn visitTryStatement(node) {
+        this.visit(node.block);
+        if (node.handler) {
+            this.enterScope();
+            if (node.handler.param) this.defineSymbol(node.handler.param.name, "var", "object"); 
+            this.visit(node.handler.body);
+            this.exitScope();
+        }
         return "void";
     }
 
     fn visitFunctionStatement(node) {
         if (node.name == null) return "void";
         let funcName = node.name.name;
-        
         let sym = this.resolveSymbol(funcName);
+        if (sym == null) sym = this.defineSymbol(funcName, "func", "function"); // Safety
+
         this.totalVariables += 1;
         this.inferredCount += 1;
-        this.logs.push("✅ [Def] Hàm '" + funcName + "'");
-
+        
         let prevFunc = this.currentFuncSymbol;
         this.currentFuncSymbol = sym;
 
@@ -152,6 +230,9 @@ export class TypeInferrer {
         }
         if (node.func && node.func.body) this.visit(node.func.body);
         
+        if (sym.returnType != "unknown") {
+            this.logs.push("✅ [Def] Hàm '" + funcName + "' -> " + sym.returnType);
+        }
         this.exitScope();
         this.currentFuncSymbol = prevFunc;
         return "void";
@@ -169,6 +250,8 @@ export class TypeInferrer {
         if (node.value) inferred = this.visit(node.value);
 
         existing.type = inferred;
+        if (node.value && node.value.type == "ObjectLiteral") existing.props = node.value.inferredProps;
+
         if (inferred != "unknown") {
             this.inferredCount += 1;
             this.logs.push("✅ [Var] " + name + " : " + inferred);
@@ -179,16 +262,27 @@ export class TypeInferrer {
     }
 
     fn visitAssignment(node) {
-        let rightType = this.visit(node.right);
-        
-        // [SAFE FIX] Sử dụng getSafeType thay vì truy cập .type trực tiếp
-        if (this.getSafeType(node.left) == "Identifier") {
-            let name = node.left.name;
+        let rightType = this.visit(node.value);
+        if (this.getSafeType(node.target) == "Identifier") {
+            let name = node.target.name;
             let sym = this.resolveSymbol(name);
-            if (sym && sym.type == "unknown" && rightType != "unknown") {
-                sym.type = rightType;
-                this.inferredCount += 1;
-                this.logs.push("⚡ [Late Bind] Biến '" + name + "' -> " + rightType);
+            if (sym) {
+                if (sym.type == "unknown" && rightType != "unknown") {
+                    sym.type = rightType;
+                    this.inferredCount += 1;
+                    this.logs.push("⚡ [Late Bind] '" + name + "' -> " + rightType);
+                }
+                if (node.value.type == "ObjectLiteral" && node.value.inferredProps) sym.props = node.value.inferredProps;
+            }
+        }
+        else if (this.getSafeType(node.target) == "MemberExpression") {
+            let objName = null;
+            if (node.target.object.type == "Identifier") objName = node.target.object.name;
+            if (objName) {
+                let sym = this.resolveSymbol(objName);
+                if (sym && sym.props && node.target.property.type == "Identifier") {
+                    sym.props[node.target.property.name] = { "type": rightType };
+                }
             }
         }
         return rightType;
@@ -201,35 +295,133 @@ export class TypeInferrer {
         return "unknown";
     }
 
-    fn visitCallExpression(node) {
-        // [SAFE FIX] Sử dụng getSafeType
-        let calleeType = this.getSafeType(node.callee);
+    fn visitMemberExpression(node) {
+        let objType = this.visit(node.object);
         
-        if (calleeType == "Identifier") {
-            let funcName = node.callee.name;
-            let sym = this.resolveSymbol(funcName);
-            if (sym && sym.kind == "func" && sym.returnType != "unknown") {
-                return sym.returnType;
+        if (node.property && node.property.type == "Identifier") {
+            let propName = node.property.name;
+            
+            // 1. Length/Size property for String/Array
+            if (propName == "length" || propName == "size") {
+                if (objType == "string" || objType == "array" || objType.indexOf("array<") == 0) return "int";
             }
-            if (funcName == "str") return "string";
-            if (funcName == "int") return "int";
-            if (funcName == "len") return "int";
-            if (funcName == "real") return "float";
-        }
-
-        if (node.arguments) {
-            for (arg in node.arguments) this.visit(arg);
+            // 2. Object property from scan
+            if (node.object.type == "Identifier") {
+                let sym = this.resolveSymbol(node.object.name);
+                if (sym && sym.props && sym.props[propName]) return sym.props[propName].type;
+            }
         }
         return "unknown";
     }
 
-    fn visitNewExpression(node) {
-        // [SAFE FIX] Sử dụng getSafeType
-        if (this.getSafeType(node.callee) == "Identifier") {
-            if (node.arguments) {
-                for (arg in node.arguments) this.visit(arg);
+    fn visitObjectLiteral(node) {
+        let props = {};
+        if (node.properties) {
+            for (prop in node.properties) {
+                let key = prop.key;
+                let valType = this.visit(prop.value);
+                props[key] = { "type": valType };
             }
-            return node.callee.name; 
+        }
+        node.inferredProps = props;
+        return "object";
+    }
+
+    fn visitArrayLiteral(node) {
+        if (node.elements == null || node.elements.size() == 0) return "array<unknown>";
+        let firstType = null;
+        let isConsistent = true;
+        for (let i = 0; i < node.elements.size(); ++i) {
+            let t = this.visit(node.elements[i]);
+            if (firstType == null) firstType = t;
+            else if (firstType != t) isConsistent = false;
+        }
+        if (isConsistent && firstType != "unknown") return "array<" + firstType + ">";
+        return "array";
+    }
+
+    // --- MAIN LOGIC FOR STDLIB CALLS ---
+    fn resolveMethodCall(objType, methodName) {
+        // STRING methods
+        if (objType == "string") {
+            if (methodName == "split") return "array<string>";
+            if (methodName == "upper" || methodName == "lower" || methodName == "trim" || 
+                methodName == "replace" || methodName == "substring" || methodName == "slice" || 
+                methodName == "repeat" || methodName == "padLeft" || methodName == "padRight" || 
+                methodName == "join" || methodName == "charAt") return "string";
+            if (methodName == "startsWith" || methodName == "endsWith" || 
+                methodName == "contains" || methodName == "equalsIgnoreCase") return "bool";
+            if (methodName == "indexOf" || methodName == "lastIndexOf" || 
+                methodName == "charCodeAt" || methodName == "size" || methodName == "length") return "int";
+        }
+        
+        // ARRAY methods
+        // Check "array" or "array<int>", etc.
+        if (objType.indexOf("array") == 0) {
+            if (methodName == "push" || methodName == "findIndex" || methodName == "size") return "int";
+            if (methodName == "pop" || methodName == "find") {
+                 // Extract generic type: array<int> -> int
+                 if (objType.indexOf("<") != -1) {
+                     return objType.substring(objType.indexOf("<") + 1, objType.indexOf(">"));
+                 }
+                 return "unknown";
+            }
+            if (methodName == "slice" || methodName == "map" || methodName == "filter" || 
+                methodName == "reverse" || methodName == "sort") return objType; // Return same array type
+            if (methodName == "join") return "string";
+            if (methodName == "forEach" || methodName == "reserve" || methodName == "resize") return "void";
+        }
+
+        // OBJECT methods
+        if (objType == "object") {
+            if (methodName == "keys") return "array<string>";
+            if (methodName == "values") return "array<unknown>";
+            if (methodName == "entries") return "array<array>";
+            if (methodName == "has") return "bool";
+            if (methodName == "merge") return "object";
+        }
+
+        return "unknown";
+    }
+
+    fn visitCallExpression(node) {
+        let calleeType = this.getSafeType(node.callee);
+        
+        // 1. Direct Identifier Call (e.g. print(), len())
+        if (calleeType == "Identifier") {
+            let funcName = node.callee.name;
+            let sym = this.resolveSymbol(funcName);
+            // Ưu tiên Symbol Table (đã có setupBuiltins)
+            if (sym && sym.kind == "func" && sym.returnType != "unknown") return sym.returnType;
+        }
+        
+        // 2. Member Expression Call (e.g. str.split(), arr.push())
+        else if (calleeType == "MemberExpression") {
+            let objType = this.visit(node.callee.object);
+            let propName = node.callee.property.name;
+            
+            // Check StdLib methods
+            let methodRet = this.resolveMethodCall(objType, propName);
+            if (methodRet != "unknown") return methodRet;
+
+            // Check defined methods in modules (e.g. io.read)
+            if (node.callee.object.type == "Identifier") {
+                let objName = node.callee.object.name;
+                let sym = this.resolveSymbol(objName);
+                if (sym && sym.props && sym.props[propName]) {
+                    return sym.props[propName].returnType;
+                }
+            }
+        }
+
+        if (node.arguments) for (arg in node.arguments) this.visit(arg);
+        return "unknown";
+    }
+
+    fn visitNewExpression(node) {
+        if (this.getSafeType(node.callee) == "Identifier") {
+            if (node.arguments) for (arg in node.arguments) this.visit(arg);
+            return node.callee.name;
         }
         return "object";
     }
@@ -237,35 +429,49 @@ export class TypeInferrer {
     fn visitBinaryExpression(node) {
         let left = this.visit(node.left);
         let right = this.visit(node.right);
-        if (left == "int" && right == "int") return "int";
-        if (left == "float" || right == "float") return "float";
-        if (left == "string" || right == "string") return "string";
-        if (left == "bool" && right == "bool") return "bool";
+        let op = node.operator;
+        if (op == "+") {
+            if (left == "string" || right == "string") return "string";
+        }
+        if (op == "+" || op == "-" || op == "*" || op == "/" || op == "%") {
+            if (left == "float" || right == "float") return "float";
+            if (left == "int" && right == "int") return "int";
+            return "unknown";
+        }
+        if (op == "==" || op == "!=" || op == "<" || op == ">" || op == "<=" || op == ">=") return "bool";
+        if (op == "&&" || op == "||") return "bool";
         return "unknown";
     }
 
-    fn visitArrayLiteral(node) {
-        if (node.elements) {
-            for (let i = 0; i < node.elements.size(); ++i) this.visit(node.elements[i]);
-        }
-        return "array";
+    fn visitUnaryExpression(node) {
+        let arg = this.visit(node.argument);
+        let op = node.operator;
+        if (op == "!") return "bool";
+        if (op == "-") return arg;
+        return "unknown";
     }
 
     fn visitFunctionLiteral(node) {
+        let prevFunc = this.currentFuncSymbol;
+        this.currentFuncSymbol = { "kind": "func", "type": "function", "returnType": "unknown" };
         this.enterScope();
-        if (node.parameters) {
-            for (param in node.parameters) this.defineSymbol(param.name, "var", "unknown");
-        }
+        if (node.parameters) for (param in node.parameters) this.defineSymbol(param.name, "var", "unknown");
         if (node.body) this.visit(node.body);
         this.exitScope();
+        this.currentFuncSymbol = prevFunc;
         return "function";
     }
 
     fn visitReturnStatement(node) {
         if (node.value) {
             let retType = this.visit(node.value);
-            if (this.currentFuncSymbol != null && this.currentFuncSymbol.returnType == "unknown") {
-                 this.currentFuncSymbol.returnType = retType;
+            if (this.currentFuncSymbol != null) {
+                if (this.currentFuncSymbol.returnType == "unknown" && retType != "unknown") {
+                     this.currentFuncSymbol.returnType = retType;
+                }
+                else if (this.currentFuncSymbol.returnType != "unknown" && retType != "unknown" && this.currentFuncSymbol.returnType != retType) {
+                    this.currentFuncSymbol.returnType = "any"; 
+                }
             }
             return retType;
         }
@@ -279,8 +485,24 @@ export class TypeInferrer {
         return "void";
     }
 
+    fn visitWhileStatement(node) {
+        this.visit(node.condition);
+        this.visit(node.body);
+        return "void";
+    }
+
+    fn visitForStatement(node) {
+        this.enterScope();
+        if (node.init) this.visit(node.init);
+        if (node.test) this.visit(node.test);
+        if (node.update) this.visit(node.update);
+        if (node.body) this.visit(node.body);
+        this.exitScope();
+        return "void";
+    }
+
     fn printStats() {
-        print("\n📊 BÁO CÁO PHÂN TÍCH TĨNH:");
+        print("\n📊 BÁO CÁO PHÂN TÍCH TĨNH (V4 - STDLIB AWARE):");
         let limit = this.logs.size();
         if (limit > 15) limit = 15;
         for (let i = 0; i < limit; ++i) print(this.logs[i]);
