@@ -1,0 +1,59 @@
+export fn setupBuiltins(scope) {
+    scope["__loader__"] = { "kind": "func", "type": "function", "returnType": "object" };
+    scope["__modules__"] = { "kind": "var", "type": "array<function>" };
+    scope["__cache__"] = { "kind": "var", "type": "array<object>" };
+
+    // GLOBAL FUNCTIONS
+    scope["print"] = { "kind": "func", "type": "function", "returnType": "void" };
+    scope["typeof"] = { "kind": "func", "type": "function", "returnType": "string" };
+    scope["len"] = { "kind": "func", "type": "function", "returnType": "int" };
+    scope["int"] = { "kind": "func", "type": "function", "returnType": "int" };
+    scope["real"] = { "kind": "func", "type": "function", "returnType": "float" };
+    scope["bool"] = { "kind": "func", "type": "function", "returnType": "bool" };
+    scope["str"] = { "kind": "func", "type": "function", "returnType": "string" };
+    scope["assert"] = { "kind": "func", "type": "function", "returnType": "void" };
+    scope["ord"] = { "kind": "func", "type": "function", "returnType": "int" };
+    scope["char"] = { "kind": "func", "type": "function", "returnType": "string" };
+    scope["range"] = { "kind": "func", "type": "function", "returnType": "array<int>" };
+
+    // MODULES: IO
+    let ioProps = {};
+    ioProps["input"] = { "kind": "func", "type": "function", "returnType": "string" };
+    ioProps["read"] = { "kind": "func", "type": "function", "returnType": "string" };
+    ioProps["write"] = { "kind": "func", "type": "function", "returnType": "bool" };
+    ioProps["fileExists"] = { "kind": "func", "type": "function", "returnType": "bool" };
+    ioProps["isDirectory"] = { "kind": "func", "type": "function", "returnType": "bool" };
+    ioProps["listDir"] = { "kind": "func", "type": "function", "returnType": "array<string>" };
+    ioProps["createDir"] = { "kind": "func", "type": "function", "returnType": "bool" };
+    ioProps["deleteFile"] = { "kind": "func", "type": "function", "returnType": "bool" };
+    ioProps["getFileTimestamp"] = { "kind": "func", "type": "function", "returnType": "int" };
+    ioProps["getFileSize"] = { "kind": "func", "type": "function", "returnType": "int" };
+    ioProps["renameFile"] = { "kind": "func", "type": "function", "returnType": "bool" };
+    ioProps["copyFile"] = { "kind": "func", "type": "function", "returnType": "bool" };
+    ioProps["getFileName"] = { "kind": "func", "type": "function", "returnType": "string" };
+    ioProps["getFileStem"] = { "kind": "func", "type": "function", "returnType": "string" };
+    ioProps["getFileExtension"] = { "kind": "func", "type": "function", "returnType": "string" };
+    ioProps["getAbsolutePath"] = { "kind": "func", "type": "function", "returnType": "string" };
+    scope["io"] = { "kind": "var", "type": "object", "props": ioProps };
+
+    // MODULES: SYSTEM
+    let sysProps = {};
+    sysProps["argv"] = { "kind": "func", "type": "function", "returnType": "array<string>" };
+    sysProps["exit"] = { "kind": "func", "type": "function", "returnType": "void" };
+    sysProps["exec"] = { "kind": "func", "type": "function", "returnType": "int" };
+    scope["system"] = { "kind": "var", "type": "object", "props": sysProps };
+    scope["System"] = { "kind": "var", "type": "object", "props": sysProps };
+
+    // MODULES: JSON
+    let jsonProps = {};
+    jsonProps["parse"] = { "kind": "func", "type": "function", "returnType": "object" };
+    jsonProps["stringify"] = { "kind": "func", "type": "function", "returnType": "string" };
+    scope["json"] = { "kind": "var", "type": "object", "props": jsonProps };
+    
+    // MODULES: STRING (Static methods)
+    let strProps = {};
+    strProps["join"] = { "kind": "func", "type": "function", "returnType": "string" };
+    strProps["format"] = { "kind": "func", "type": "function", "returnType": "string" };
+    scope["string"] = { "kind": "var", "type": "object", "props": strProps };
+    scope["String"] = { "kind": "var", "type": "object", "props": strProps };
+}

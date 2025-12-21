@@ -1,0 +1,211 @@
+export fn visitProgram(ctx, node) { for (stmt in node.body) ctx.visit(stmt); return "void"; }
+
+export fn visitBlockStatement(ctx, node) {
+    ctx.enterScope();
+    if (node.statements) for (stmt in node.statements) ctx.visit(stmt);
+    ctx.exitScope();
+    return "void";
+}
+
+export fn visitClassStatement(ctx, node) {
+    if (node.name == null) return "void";
+    let className = node.name.name;
+    
+    if (!ctx.classRegistry[className]) ctx.classRegistry[className] = { "methods": {} };
+    
+    let prevClass = ctx.currentClassName;
+    ctx.currentClassName = className;
+    
+    ctx.enterScope();
+    if (node.methods) for (method in node.methods) ctx.visit(method);
+    ctx.exitScope();
+    ctx.currentClassName = prevClass;
+    return "void";
+}
+
+export fn visitTryStatement(ctx, node) {
+    ctx.visit(node.tryBlock);
+    if (node.catchBlock) {
+        ctx.enterScope();
+        if (node.catchVariable) ctx.defineSymbol(node.catchVariable.name, "var", "object");
+        ctx.visit(node.catchBlock);
+        ctx.exitScope();
+    }
+    return "void";
+}
+
+export fn visitImportStatement(ctx, node) {
+    let path = node.path.value;
+    let resolvedType = "object";
+    if (path == "system") resolvedType = "System"; 
+    if (path == "io") resolvedType = "io";
+    if (path == "string") resolvedType = "String";
+
+    if (node.namespaceImport) {
+        let sym = ctx.resolveSymbol(node.namespaceImport.name);
+        if (sym && resolvedType != "object" && sym.type == "object") {
+             let globalSym = ctx.resolveSymbol(resolvedType);
+             if (globalSym) { sym.props = globalSym.props; sym.type = globalSym.type; ctx.markChange(); }
+        }
+    }
+    if (node.namedImports) {
+        for (let i = 0; i < node.namedImports.size(); ++i) {
+            let imp = node.namedImports[i];
+            let sym = ctx.resolveSymbol(imp.name);
+            if (sym && resolvedType != "object") {
+                let globalSym = ctx.resolveSymbol(resolvedType);
+                if (globalSym && globalSym.props && globalSym.props[imp.name]) {
+                     if (ctx.isMoreSpecific(sym.type, globalSym.props[imp.name].type)) {
+                        sym.type = globalSym.props[imp.name].type;
+                        ctx.markChange();
+                     }
+                }
+            }
+        }
+    }
+    return "void";
+}
+
+export fn visitForInStatement(ctx, node) {
+    let collectionType = ctx.visit(node.collection);
+    ctx.enterScope();
+    let varName = node.variable.name;
+    let varType = "unknown";
+    if (collectionType.indexOf("array<") == 0) varType = collectionType.substring(6, collectionType.size() - 1);
+    else if (collectionType == "string") varType = "char"; 
+
+    let sym = ctx.defineSymbol(varName, "var", varType);
+    if (varType == "unknown") ctx.addUnknown(varName, node.variable);
+    else ctx.inferredCount += 1; 
+
+    ctx.visit(node.body);
+    ctx.exitScope();
+    return "void";
+}
+
+export fn visitFunctionStatement(ctx, node) {
+    if (node.name == null) return "void";
+    let funcName = node.name.name;
+    let sym = ctx.resolveSymbol(funcName);
+    if (sym == null) sym = ctx.defineSymbol(funcName, "func", "function");
+
+    ctx.totalVariables += 1;
+    ctx.inferredCount += 1;
+    let prevFunc = ctx.currentFuncSymbol;
+    ctx.currentFuncSymbol = sym;
+
+    ctx.enterScope();
+    // Parameter hints propagation
+    if (node.func && node.func.parameters) {
+        for (let i = 0; i < node.func.parameters.size(); ++i) {
+            let param = node.func.parameters[i];
+            ctx.totalVariables += 1;
+            
+            let hintKey = funcName + "::" + str(i);
+            if (ctx.currentClassName) {
+                let classKey = ctx.currentClassName + "::" + funcName + "::" + str(i);
+                if (ctx.paramHints[classKey]) hintKey = classKey;
+            }
+
+            let paramType = "unknown";
+            if (ctx.paramHints[hintKey]) {
+                if (typeof(ctx.paramHints[hintKey]) == "string") paramType = ctx.paramHints[hintKey];
+                else paramType = ctx.paramHints[hintKey].type;
+            }
+            
+            let pSym = ctx.defineSymbol(param.name, "var", paramType);
+            if (ctx.paramHints[hintKey] && typeof(ctx.paramHints[hintKey]) == "object") {
+                pSym.props = ctx.paramHints[hintKey].props;
+            }
+
+            if (paramType == "unknown") ctx.addUnknown(funcName + "::" + param.name, param);
+            else ctx.inferredCount += 1;
+        }
+    }
+    
+    if (node.func && node.func.body) ctx.visit(node.func.body);
+    
+    // Register return type to Class Registry
+    if (ctx.currentClassName) {
+        let oldRet = "unknown";
+        if (ctx.classRegistry[ctx.currentClassName].methods[funcName]) oldRet = ctx.classRegistry[ctx.currentClassName].methods[funcName];
+        if (ctx.isMoreSpecific(oldRet, sym.returnType)) {
+             ctx.classRegistry[ctx.currentClassName].methods[funcName] = sym.returnType;
+             ctx.markChange(); 
+        }
+    }
+    
+    ctx.exitScope();
+    ctx.currentFuncSymbol = prevFunc;
+    return "void";
+}
+
+export fn visitLetStatement(ctx, node) {
+    ctx.totalVariables += 1;
+    if (node.name == null) return "void";
+    let name = node.name.name;
+    let existing = ctx.resolveSymbol(name);
+    if (existing == null) existing = ctx.defineSymbol(name, "var", "unknown");
+
+    let inferred = "unknown";
+    if (node.value) inferred = ctx.visit(node.value);
+    
+    // Heuristic: Class instance starts with Uppercase
+    if ((inferred == "unknown" || inferred == "object") && node.value && node.value.type == "PropertyAccess") {
+        let propName = node.value.property.name;
+        if (name == propName) {
+             let firstChar = propName.substring(0, 1);
+             if (firstChar == firstChar.upper() && firstChar != firstChar.lower()) inferred = "class";
+        }
+    }
+
+    if (ctx.isMoreSpecific(existing.type, inferred)) {
+         existing.type = inferred;
+         if (inferred == "class") existing.kind = "class";
+         ctx.markChange(); 
+    }
+    
+    if (node.value && node.value.type == "ObjectLiteral") existing.props = node.value.inferredProps;
+    if (existing.type == "unknown") ctx.addUnknown(name, node.name);
+    else ctx.inferredCount += 1;
+    
+    return "void";
+}
+
+export fn visitReturnStatement(ctx, node) {
+    if (node.value) {
+        let retType = ctx.visit(node.value);
+        if (ctx.currentFuncSymbol != null) {
+            // Update return type of the function if we found a more specific one
+            if (ctx.isMoreSpecific(ctx.currentFuncSymbol.returnType, retType)) {
+                 ctx.currentFuncSymbol.returnType = retType;
+                 ctx.markChange(); 
+            }
+        }
+        return retType;
+    }
+    return "void";
+}
+
+export fn visitIfStatement(ctx, node) {
+    ctx.visit(node.condition);
+    ctx.visit(node.thenBranch);
+    if (node.elseBranch) ctx.visit(node.elseBranch);
+    return "void";
+}
+
+export fn visitWhileStatement(ctx, node) {
+    ctx.visit(node.condition);
+    ctx.visit(node.body);
+    return "void";
+}
+
+export fn visitForStatement(ctx, node) {
+    ctx.enterScope();
+    if (node.init) ctx.visit(node.init);
+    if (node.condition) ctx.visit(node.condition);
+    if (node.update) ctx.visit(node.update);
+    if (node.body) ctx.visit(node.body);
+    ctx.exitScope();
+    return "void";
+}

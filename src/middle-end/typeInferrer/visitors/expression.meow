@@ -1,0 +1,297 @@
+export fn visitIdentifier(ctx, node) {
+    if (node.name == null) return "unknown";
+    if (node.name == "this") {
+        if (ctx.currentClassName) return ctx.currentClassName;
+        return "object";
+    }
+
+    let sym = ctx.resolveSymbol(node.name);
+    if (sym) return sym.type;
+    return "unknown";
+}
+
+export fn visitAssignment(ctx, node) {
+    let rightType = ctx.visit(node.value);
+    let targetType = ctx.getSafeType(node.target);
+
+    if (targetType == "Identifier") {
+        let name = node.target.name;
+        let sym = ctx.resolveSymbol(name);
+        if (sym) {
+            // Cập nhật type nếu type mới cụ thể hơn
+            if (ctx.isMoreSpecific(sym.type, rightType)) {
+                sym.type = rightType;
+                ctx.inferredCount += 1;
+                ctx.markChange(); 
+            }
+            // Propagate props từ object literal
+            if (node.value.type == "ObjectLiteral" && node.value.inferredProps) {
+                if (sym.props == null) sym.props = {};
+                for (let i = 0; i < node.value.inferredProps.keys().size(); ++i) {
+                     let k = node.value.inferredProps.keys()[i];
+                     sym.props[k] = node.value.inferredProps[k];
+                }
+            }
+        }
+    }
+    else if (targetType == "PropertyAccess") {
+        let objType = ctx.visit(node.target.object);
+        if (node.target.object.type == "Identifier") {
+             let sym = ctx.resolveSymbol(node.target.object.name);
+             if (sym && node.target.property.type == "Identifier") {
+                 if (sym.props == null) sym.props = {};
+                 let propName = node.target.property.name;
+                 
+                 let oldPropType = "unknown";
+                 if (sym.props[propName]) oldPropType = sym.props[propName].type;
+                 
+                 if (ctx.isMoreSpecific(oldPropType, rightType)) {
+                     sym.props[propName] = { "type": rightType };
+                     ctx.markChange(); 
+                 }
+             }
+        }
+    }
+    return rightType;
+}
+
+export fn visitUpdateExpression(ctx, node) {
+    let operand = ctx.visit(node.operand);
+    if (node.operand.type == "Identifier") {
+        let sym = ctx.resolveSymbol(node.operand.name);
+        if (sym && sym.type == "unknown") {
+            sym.type = "int";
+            ctx.inferredCount += 1;
+            ctx.markChange();
+        }
+    }
+    return "int";
+}
+
+export fn visitBinaryExpression(ctx, node) {
+    let left = ctx.visit(node.left);
+    let right = ctx.visit(node.right);
+    let op = node.op;
+
+    if (op == "-" || op == "*" || op == "/" || op == "%" || 
+        op == "OP_SUB" || op == "OP_MUL" || op == "OP_DIV" || op == "OP_MOD") {
+         // Back-propagate type int cho operand nếu chưa biết
+         if (left == "unknown" && node.left.type == "Identifier") {
+             let sym = ctx.resolveSymbol(node.left.name);
+             if (sym && sym.type == "unknown") { sym.type = "int"; ctx.inferredCount += 1; ctx.markChange(); }
+         }
+         if (right == "unknown" && node.right.type == "Identifier") {
+             let sym = ctx.resolveSymbol(node.right.name);
+             if (sym && sym.type == "unknown") { sym.type = "int"; ctx.inferredCount += 1; ctx.markChange(); }
+         }
+         
+         // Float Promotion
+         if (left == "float" || right == "float") return "float";
+         return "int";
+    }
+    
+    if (op == "||" || op == "&&" || op == "OP_OR" || op == "OP_AND") return "bool";
+    
+    if (op == "+" || op == "OP_ADD") {
+        if (left == "string" || right == "string") return "string";
+        if (left == "float" || right == "float") return "float";
+        return "int"; 
+    }
+
+    if (op == "==" || op == "!=" || op == "<" || op == ">" || 
+        op == "OP_EQ" || op == "OP_NEQ" || op == "OP_LT" || op == "OP_GT" ||
+        op == "OP_LTE" || op == "OP_GTE") return "bool";
+        
+    return "unknown";
+}
+
+export fn visitUnaryExpression(ctx, node) {
+    let arg = ctx.visit(node.operand);
+    let op = node.op;
+    if (op == "!" || op == "OP_NOT") return "bool";
+    if (op == "-" || op == "OP_NEG") return arg;
+    return "unknown";
+}
+
+export fn visitPropertyAccess(ctx, node) {
+    let objType = ctx.visit(node.object);
+    if (node.property && node.property.type == "Identifier") {
+        let propName = node.property.name;
+        if (propName == "length" || propName == "size") {
+            if (objType == "string" || objType == "array" || objType.indexOf("array<") == 0) return "int";
+        }
+        if (node.object.type == "Identifier") {
+            let sym = ctx.resolveSymbol(node.object.name);
+            if (sym && sym.props && sym.props[propName]) return sym.props[propName].type;
+        }
+    }
+    return "unknown";
+}
+
+export fn visitIndexExpression(ctx, node) {
+    let target = node.object;
+    ctx.visit(node.index); 
+
+    if (target.type == "Identifier") {
+        let sym = ctx.resolveSymbol(target.name);
+        if (sym && sym.type == "unknown") {
+            sym.type = "array<unknown>";
+            ctx.inferredCount += 1;
+            ctx.markChange();
+        }
+    }
+
+    let objType = ctx.visit(target);
+    if (objType.indexOf("array<") == 0) return objType.substring(6, objType.size() - 1);
+    if (objType == "string") return "char";
+    return "unknown";
+}
+
+export fn visitObjectLiteral(ctx, node) {
+    let props = {};
+    if (node.properties) {
+        for (prop in node.properties) {
+            let key = prop.key;
+            let valType = ctx.visit(prop.value);
+            props[key] = { "type": valType };
+        }
+    }
+    node.inferredProps = props;
+    return "object";
+}
+
+export fn visitArrayLiteral(ctx, node) {
+    if (node.elements == null || node.elements.size() == 0) return "array<unknown>";
+    let firstType = null;
+    let isConsistent = true;
+    for (let i = 0; i < node.elements.size(); ++i) {
+        let t = ctx.visit(node.elements[i]);
+        if (firstType == null) firstType = t;
+        else if (firstType != t) {
+             // Mixed int/float -> float array
+             if ((firstType == "int" && t == "float") || (firstType == "float" && t == "int")) {
+                 firstType = "float";
+             } else {
+                 isConsistent = false;
+             }
+        }
+    }
+    if (isConsistent && firstType != "unknown") return "array<" + firstType + ">";
+    return "array";
+}
+
+export fn visitCallExpression(ctx, node) {
+    let calleeType = ctx.getSafeType(node.callee);
+    let hintFuncName = null;
+    let hintClassPrefix = "";
+    
+    // Detect Call Type
+    if (calleeType == "Identifier") {
+        hintFuncName = node.callee.name;
+    } else if (calleeType == "PropertyAccess" && node.callee.property.type == "Identifier") {
+        hintFuncName = node.callee.property.name;
+        let objType = ctx.visit(node.callee.object);
+        if (objType != "unknown") {
+            if (ctx.classRegistry[objType]) hintClassPrefix = objType + "::";
+            
+            // Special handling for array.push() to infer array type
+            if (hintFuncName == "push" && node.callee.object.type == "Identifier" && node.args && node.args.size() > 0) {
+                let sym = ctx.resolveSymbol(node.callee.object.name);
+                if (sym && (sym.type == "array" || sym.type == "array<unknown>")) {
+                    let valType = ctx.visit(node.args[0]);
+                    if (valType != "unknown") {
+                        sym.type = "array<" + valType + ">";
+                        ctx.inferredCount += 1;
+                        ctx.markChange(); 
+                    }
+                }
+            }
+        }
+    }
+
+    // Argument Analysis & Parameter Hinting
+    if (hintFuncName && node.args) {
+        for (let i = 0; i < node.args.size(); ++i) {
+            let argType = ctx.visit(node.args[i]);
+            let argProps = null;
+            if (node.args[i].type == "Identifier") {
+                 let s = ctx.resolveSymbol(node.args[i].name);
+                 if (s) argProps = s.props;
+            } else if (node.args[i].type == "ObjectLiteral") argProps = node.args[i].inferredProps;
+
+            if (argType != "unknown") {
+                let key = hintClassPrefix + hintFuncName + "::" + str(i);
+                let fallbackKey = hintFuncName + "::" + str(i);
+                let hintData = { "type": argType, "props": argProps };
+                
+                // Only mark change if new hint is discovered
+                if (!ctx.paramHints[key]) { ctx.paramHints[key] = hintData; ctx.markChange(); }
+                if (!ctx.paramHints[fallbackKey]) { ctx.paramHints[fallbackKey] = hintData; ctx.markChange(); }
+            }
+        }
+    } else {
+         if (node.args) for (arg in node.args) ctx.visit(arg);
+    }
+
+    // Determine Return Type
+    if (calleeType == "Identifier") {
+        let sym = ctx.resolveSymbol(node.callee.name);
+        if (sym && sym.kind == "func" && sym.returnType != "unknown") return sym.returnType;
+        if (sym && sym.kind == "class") return node.callee.name;
+    }
+    else if (calleeType == "PropertyAccess") {
+        let objType = ctx.visit(node.callee.object);
+        let propName = node.callee.property.name;
+        let methodRet = ctx.resolveMethodCall(objType, propName);
+        if (methodRet != "unknown") return methodRet;
+        
+        if (node.callee.object.type == "Identifier") {
+            let sym = ctx.resolveSymbol(node.callee.object.name);
+            if (sym && sym.props && sym.props[propName]) return sym.props[propName].returnType;
+        }
+    }
+    return "unknown";
+}
+
+export fn visitNewExpression(ctx, node) {
+    let callExpr = node.expression;
+    if (callExpr && callExpr.type == "CallExpression") {
+        let callee = callExpr.callee;
+        if (ctx.getSafeType(callee) == "Identifier") {
+             let className = callee.name;
+             if (callExpr.args) {
+                 for (let i = 0; i < callExpr.args.size(); ++i) {
+                     let argType = ctx.visit(callExpr.args[i]);
+                     let argProps = null;
+                     if (callExpr.args[i].type == "Identifier") {
+                          let s = ctx.resolveSymbol(callExpr.args[i].name);
+                          if (s) argProps = s.props;
+                     } else if (callExpr.args[i].type == "ObjectLiteral") {
+                          argProps = callExpr.args[i].inferredProps;
+                     }
+
+                     if (argType != "unknown") {
+                         let key = className + "::init::" + str(i);
+                         if (!ctx.paramHints[key]) {
+                            ctx.paramHints[key] = { "type": argType, "props": argProps };
+                            ctx.markChange();
+                         }
+                     }
+                 }
+             }
+             return className;
+        }
+    }
+    return "object";
+}
+
+export fn visitFunctionLiteral(ctx, node) {
+    let prevFunc = ctx.currentFuncSymbol;
+    ctx.currentFuncSymbol = { "kind": "func", "type": "function", "returnType": "unknown" };
+    ctx.enterScope();
+    if (node.parameters) for (param in node.parameters) ctx.defineSymbol(param.name, "var", "unknown");
+    if (node.body) ctx.visit(node.body);
+    ctx.exitScope();
+    ctx.currentFuncSymbol = prevFunc;
+    return "function";
+}
