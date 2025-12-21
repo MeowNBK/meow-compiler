@@ -1,14 +1,18 @@
+import { TokenType } from "frontend/token.meow";
+
 export fn visitIdentifier(ctx, node) {
     if (node.name == null) return "unknown";
-    if (node.name == "this") {
-        if (ctx.currentClassName) return ctx.currentClassName;
-        return "object";
-    }
-
     let sym = ctx.resolveSymbol(node.name);
     if (sym) return sym.type;
     return "unknown";
 }
+
+// --- THÊM HÀM NÀY: Xử lý node 'this' ---
+export fn visitThisExpression(ctx, node) {
+    if (ctx.currentClassName) return ctx.currentClassName;
+    return "object";
+}
+// ---------------------------------------
 
 export fn visitAssignment(ctx, node) {
     let rightType = ctx.visit(node.value);
@@ -18,13 +22,11 @@ export fn visitAssignment(ctx, node) {
         let name = node.target.name;
         let sym = ctx.resolveSymbol(name);
         if (sym) {
-            // Cập nhật type nếu type mới cụ thể hơn
             if (ctx.isMoreSpecific(sym.type, rightType)) {
                 sym.type = rightType;
                 ctx.inferredCount += 1;
                 ctx.markChange(); 
             }
-            // Propagate props từ object literal
             if (node.value.type == "ObjectLiteral" && node.value.inferredProps) {
                 if (sym.props == null) sym.props = {};
                 for (let i = 0; i < node.value.inferredProps.keys().size(); ++i) {
@@ -36,21 +38,28 @@ export fn visitAssignment(ctx, node) {
     }
     else if (targetType == "PropertyAccess") {
         let objType = ctx.visit(node.target.object);
-        if (node.target.object.type == "Identifier") {
-             let sym = ctx.resolveSymbol(node.target.object.name);
+        
+        // --- SỬA: Hỗ trợ gán property cho 'this' ---
+        let objNode = node.target.object;
+        let symName = null;
+        if (objNode.type == "Identifier") symName = objNode.name;
+        else if (objNode.type == "ThisExpression") symName = "this";
+
+        if (symName) {
+             let sym = ctx.resolveSymbol(symName);
              if (sym && node.target.property.type == "Identifier") {
                  if (sym.props == null) sym.props = {};
                  let propName = node.target.property.name;
                  
                  let oldPropType = "unknown";
                  if (sym.props[propName]) oldPropType = sym.props[propName].type;
-                 
                  if (ctx.isMoreSpecific(oldPropType, rightType)) {
                      sym.props[propName] = { "type": rightType };
                      ctx.markChange(); 
                  }
              }
         }
+        // ------------------------------------------
     }
     return rightType;
 }
@@ -73,9 +82,11 @@ export fn visitBinaryExpression(ctx, node) {
     let right = ctx.visit(node.right);
     let op = node.op;
 
-    if (op == "-" || op == "*" || op == "/" || op == "%" || 
-        op == "OP_SUB" || op == "OP_MUL" || op == "OP_DIV" || op == "OP_MOD") {
-         // Back-propagate type int cho operand nếu chưa biết
+    // --- SỬA: So sánh với TokenType (Integer) ---
+    if (op == TokenType.OP_MINUS || op == TokenType.OP_MULTIPLY || 
+        op == TokenType.OP_DIVIDE || op == TokenType.OP_MODULO) {
+         
+         // Back-propagate type int
          if (left == "unknown" && node.left.type == "Identifier") {
              let sym = ctx.resolveSymbol(node.left.name);
              if (sym && sym.type == "unknown") { sym.type = "int"; ctx.inferredCount += 1; ctx.markChange(); }
@@ -85,31 +96,35 @@ export fn visitBinaryExpression(ctx, node) {
              if (sym && sym.type == "unknown") { sym.type = "int"; ctx.inferredCount += 1; ctx.markChange(); }
          }
          
-         // Float Promotion
          if (left == "float" || right == "float") return "float";
          return "int";
     }
     
-    if (op == "||" || op == "&&" || op == "OP_OR" || op == "OP_AND") return "bool";
+    if (op == TokenType.OP_LOGICAL_OR || op == TokenType.OP_LOGICAL_AND) return "bool";
     
-    if (op == "+" || op == "OP_ADD") {
+    if (op == TokenType.OP_PLUS) {
         if (left == "string" || right == "string") return "string";
         if (left == "float" || right == "float") return "float";
-        return "int"; 
+        return "int";
     }
 
-    if (op == "==" || op == "!=" || op == "<" || op == ">" || 
-        op == "OP_EQ" || op == "OP_NEQ" || op == "OP_LT" || op == "OP_GT" ||
-        op == "OP_LTE" || op == "OP_GTE") return "bool";
-        
+    if (op == TokenType.OP_EQ || op == TokenType.OP_NEQ || 
+        op == TokenType.OP_LT || op == TokenType.OP_GT ||
+        op == TokenType.OP_LE || op == TokenType.OP_GE) return "bool";
+    // ---------------------------------------------
+
     return "unknown";
 }
 
 export fn visitUnaryExpression(ctx, node) {
     let arg = ctx.visit(node.operand);
     let op = node.op;
-    if (op == "!" || op == "OP_NOT") return "bool";
-    if (op == "-" || op == "OP_NEG") return arg;
+
+    // --- SỬA: So sánh với TokenType ---
+    if (op == TokenType.OP_LOGICAL_NOT) return "bool";
+    if (op == TokenType.OP_MINUS) return arg;
+    // ----------------------------------
+
     return "unknown";
 }
 
@@ -120,8 +135,15 @@ export fn visitPropertyAccess(ctx, node) {
         if (propName == "length" || propName == "size") {
             if (objType == "string" || objType == "array" || objType.indexOf("array<") == 0) return "int";
         }
-        if (node.object.type == "Identifier") {
-            let sym = ctx.resolveSymbol(node.object.name);
+        
+        // Support 'this' and identifiers
+        let objNode = node.object;
+        let symName = null;
+        if (objNode.type == "Identifier") symName = objNode.name;
+        else if (objNode.type == "ThisExpression") symName = "this";
+
+        if (symName) {
+            let sym = ctx.resolveSymbol(symName);
             if (sym && sym.props && sym.props[propName]) return sym.props[propName].type;
         }
     }
@@ -130,8 +152,7 @@ export fn visitPropertyAccess(ctx, node) {
 
 export fn visitIndexExpression(ctx, node) {
     let target = node.object;
-    ctx.visit(node.index); 
-
+    ctx.visit(node.index);
     if (target.type == "Identifier") {
         let sym = ctx.resolveSymbol(target.name);
         if (sym && sym.type == "unknown") {
@@ -168,7 +189,6 @@ export fn visitArrayLiteral(ctx, node) {
         let t = ctx.visit(node.elements[i]);
         if (firstType == null) firstType = t;
         else if (firstType != t) {
-             // Mixed int/float -> float array
              if ((firstType == "int" && t == "float") || (firstType == "float" && t == "int")) {
                  firstType = "float";
              } else {
@@ -193,8 +213,6 @@ export fn visitCallExpression(ctx, node) {
         let objType = ctx.visit(node.callee.object);
         if (objType != "unknown") {
             if (ctx.classRegistry[objType]) hintClassPrefix = objType + "::";
-            
-            // Special handling for array.push() to infer array type
             if (hintFuncName == "push" && node.callee.object.type == "Identifier" && node.args && node.args.size() > 0) {
                 let sym = ctx.resolveSymbol(node.callee.object.name);
                 if (sym && (sym.type == "array" || sym.type == "array<unknown>")) {
@@ -209,7 +227,7 @@ export fn visitCallExpression(ctx, node) {
         }
     }
 
-    // Argument Analysis & Parameter Hinting
+    // Argument Analysis
     if (hintFuncName && node.args) {
         for (let i = 0; i < node.args.size(); ++i) {
             let argType = ctx.visit(node.args[i]);
@@ -218,13 +236,11 @@ export fn visitCallExpression(ctx, node) {
                  let s = ctx.resolveSymbol(node.args[i].name);
                  if (s) argProps = s.props;
             } else if (node.args[i].type == "ObjectLiteral") argProps = node.args[i].inferredProps;
-
+            
             if (argType != "unknown") {
                 let key = hintClassPrefix + hintFuncName + "::" + str(i);
                 let fallbackKey = hintFuncName + "::" + str(i);
                 let hintData = { "type": argType, "props": argProps };
-                
-                // Only mark change if new hint is discovered
                 if (!ctx.paramHints[key]) { ctx.paramHints[key] = hintData; ctx.markChange(); }
                 if (!ctx.paramHints[fallbackKey]) { ctx.paramHints[fallbackKey] = hintData; ctx.markChange(); }
             }
@@ -245,8 +261,13 @@ export fn visitCallExpression(ctx, node) {
         let methodRet = ctx.resolveMethodCall(objType, propName);
         if (methodRet != "unknown") return methodRet;
         
-        if (node.callee.object.type == "Identifier") {
-            let sym = ctx.resolveSymbol(node.callee.object.name);
+        let objNode = node.callee.object;
+        let symName = null;
+        if (objNode.type == "Identifier") symName = objNode.name;
+        else if (objNode.type == "ThisExpression") symName = "this";
+
+        if (symName) {
+            let sym = ctx.resolveSymbol(symName);
             if (sym && sym.props && sym.props[propName]) return sym.props[propName].returnType;
         }
     }

@@ -17,3 +17,12 @@ export fn isAbsolutePath(path) {
     }
     return false;
 }
+
+export fn shorten(path) {
+    let marker = "/src/";
+    let idx = path.indexOf(marker);
+    if (idx != -1) {
+        return path.slice(idx + 1, path.size());
+    }
+    return Io.getFileName(path);
+}

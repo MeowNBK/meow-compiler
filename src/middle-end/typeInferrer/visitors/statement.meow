@@ -10,13 +10,14 @@ export fn visitBlockStatement(ctx, node) {
 export fn visitClassStatement(ctx, node) {
     if (node.name == null) return "void";
     let className = node.name.name;
-    
     if (!ctx.classRegistry[className]) ctx.classRegistry[className] = { "methods": {} };
     
     let prevClass = ctx.currentClassName;
     ctx.currentClassName = className;
     
     ctx.enterScope();
+    ctx.defineSymbol("this", "var", className); 
+    
     if (node.methods) for (method in node.methods) ctx.visit(method);
     ctx.exitScope();
     ctx.currentClassName = prevClass;
@@ -95,7 +96,6 @@ export fn visitFunctionStatement(ctx, node) {
     ctx.currentFuncSymbol = sym;
 
     ctx.enterScope();
-    // Parameter hints propagation
     if (node.func && node.func.parameters) {
         for (let i = 0; i < node.func.parameters.size(); ++i) {
             let param = node.func.parameters[i];
@@ -124,8 +124,6 @@ export fn visitFunctionStatement(ctx, node) {
     }
     
     if (node.func && node.func.body) ctx.visit(node.func.body);
-    
-    // Register return type to Class Registry
     if (ctx.currentClassName) {
         let oldRet = "unknown";
         if (ctx.classRegistry[ctx.currentClassName].methods[funcName]) oldRet = ctx.classRegistry[ctx.currentClassName].methods[funcName];
@@ -146,11 +144,9 @@ export fn visitLetStatement(ctx, node) {
     let name = node.name.name;
     let existing = ctx.resolveSymbol(name);
     if (existing == null) existing = ctx.defineSymbol(name, "var", "unknown");
-
     let inferred = "unknown";
     if (node.value) inferred = ctx.visit(node.value);
     
-    // Heuristic: Class instance starts with Uppercase
     if ((inferred == "unknown" || inferred == "object") && node.value && node.value.type == "PropertyAccess") {
         let propName = node.value.property.name;
         if (name == propName) {
@@ -176,7 +172,6 @@ export fn visitReturnStatement(ctx, node) {
     if (node.value) {
         let retType = ctx.visit(node.value);
         if (ctx.currentFuncSymbol != null) {
-            // Update return type of the function if we found a more specific one
             if (ctx.isMoreSpecific(ctx.currentFuncSymbol.returnType, retType)) {
                  ctx.currentFuncSymbol.returnType = retType;
                  ctx.markChange(); 

@@ -2,6 +2,7 @@ import * as System from "system";
 import { setupBuiltins } from "middle-end/typeInferrer/builtins.meow";
 import * as ExprVisitor from "middle-end/typeInferrer/visitors/expression.meow";
 import * as StmtVisitor from "middle-end/typeInferrer/visitors/statement.meow";
+import * as PathUtils from "backend/utils/pathUtils.meow";
 
 export class TypeInferrer {
     fn init(ast) {
@@ -15,6 +16,19 @@ export class TypeInferrer {
         this.unknownVars = [];
         this.logs = [];
         this.paramHints = {};
+
+        // this.paramHints["Lexer::makeToken::0"] = "int";    // type là int
+        // this.paramHints["Lexer::makeToken::1"] = "string"; // lexeme là string
+        // this.paramHints["Lexer::makeToken::2"] = "int";    // startLine là int
+        // this.paramHints["Lexer::makeToken::3"] = "int";    // startCol là int
+
+        // // 2. Gợi ý cho Parser.consume(type, code)
+        // this.paramHints["Parser::consume::0"] = "int"; // type là int
+        // this.paramHints["Parser::consume::1"] = "string"; // code lỗi (String)
+
+        // // 3. Gợi ý cho Parser.throwParseErr(code, token)
+        // this.paramHints["Parser::throwParseErr::0"] = "string"; 
+        // this.paramHints["Parser::throwParseErr::1"] = "object"; // Token là object
         
         this.hasChanged = false; // Flag for fixed-point iteration
         
@@ -193,7 +207,7 @@ export class TypeInferrer {
         return "unknown";
     }
 
-    fn visit(node) {
+fn visit(node) {
         if (node == null) return "void";
         let type = this.getSafeType(node);
 
@@ -218,12 +232,16 @@ export class TypeInferrer {
         if (type == "NewExpression") return ExprVisitor.visitNewExpression(this, node);
         if (type == "Identifier") return ExprVisitor.visitIdentifier(this, node);
         if (type == "AssignmentExpression") return ExprVisitor.visitAssignment(this, node);
-        if (type == "PropertyAccess") return ExprVisitor.visitPropertyAccess(this, node); 
+        if (type == "PropertyAccess") return ExprVisitor.visitPropertyAccess(this, node);
         if (type == "IndexExpression") return ExprVisitor.visitIndexExpression(this, node);
         if (type == "PostfixUpdateExpression" || type == "PrefixUpdateExpression") return ExprVisitor.visitUpdateExpression(this, node);
         if (type == "ArrayLiteral") return ExprVisitor.visitArrayLiteral(this, node);
         if (type == "ObjectLiteral") return ExprVisitor.visitObjectLiteral(this, node);
         if (type == "FunctionLiteral") return ExprVisitor.visitFunctionLiteral(this, node);
+
+        // --- THÊM: Dispatch cho 'this' ---
+        if (type == "ThisExpression") return ExprVisitor.visitThisExpression(this, node);
+        // --------------------------------
 
         // Primitives
         if (type == "IntegerLiteral") return "int";
@@ -246,20 +264,21 @@ export class TypeInferrer {
     fn printStats() {
         print("\n📊 BÁO CÁO CÁC BIẾN KHÔNG SUY LUẬN ĐƯỢC (MISSING TYPES):");
         let limit = this.unknownVars.size();
-        let displayLimit = 100; 
-        if (limit == 0) print("✨ Tuyệt vời! Không còn biến nào là unknown.");
+                let displayLimit = 100; 
+                if (limit == 0) print("✨ Tuyệt vời! Không còn biến nào là unknown.");
         else {
-            for (let i = 0; i < limit; ++i) {
-                if (i < displayLimit) {
-                    let u = this.unknownVars[i];
-                    print("❌ [Unknown] " + u.name + " (tại " + u.file + ":" + str(u.line) + ":" + str(u.col) + ")");
-                }
-            }
-            if (limit > displayLimit) print("... và " + str(limit - displayLimit) + " biến khác đang 'mù' type.");
+                    for (let i = 0; i < limit; ++i) {
+                        if (i < displayLimit) {
+                            let u = this.unknownVars[i];
+                            let shortFile = PathUtils.shorten(u.file);
+        print("❌ [Unknown] " + u.name + " (tại " + shortFile + ":" + str(u.line) + ":" + str(u.col) + ")");
         }
-        let percentage = 0;
+                    }
+                    if (limit > displayLimit) print("... và " + str(limit - displayLimit) + " biến khác đang 'mù' type.");
+        }
+                let percentage = 0;
         if (this.totalVariables > 0) percentage = (this.inferredCount * 100) / this.totalVariables;
-        print("-------------------------------------");
+                print("-------------------------------------");
         print("Độ phủ (Coverage)     : " + str(percentage) + "% (" + str(this.inferredCount) + "/" + str(this.totalVariables) + ")");
         print("-------------------------------------");
     }
