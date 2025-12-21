@@ -34,20 +34,20 @@ fn optimizeProtoAndGetMapping(proto) {
     let code = proto.code;
     if (code.size() == 0) {
         proto.numRegisters = 0;
-        return {}; // Trả về map rỗng
+        return {};
     }
     
-    // Bước 1: Phân tích Live Range (tìm lần sử dụng cuối cùng)
-    let vRegLastUse = {};
+    // Bước 1: Phân tích Live Range (tìm Start và End)
+    let vRegStart = {}; // [FIX] Theo dõi lần xuất hiện đầu tiên (Instruction Pointer)
+    let vRegEnd = {};   // [FIX] Theo dõi lần xuất hiện cuối cùng
     let allVRegs = {};
     
     for (let ip = 0; ip < code.size(); ++ip) {
         let inst = code[ip];
         let regIdxs = getRegArgIndices(inst.op);
         
-        // Nếu opcode không được định nghĩa trong emitter, bỏ qua an toàn
         if (regIdxs == null) continue;
-
+        
         let args = inst.args;
         for (let i = 0; i < regIdxs.size(); ++i) {
             let argIndex = regIdxs[i];
@@ -59,35 +59,44 @@ fn optimizeProtoAndGetMapping(proto) {
             let sReg = str(vReg);
             allVRegs[sReg] = true;
 
-            // [FIX] Xác định xem đây là thanh ghi đích (Write) hay nguồn (Read)
-            // i == 0 là vị trí thường dùng cho đích, TRỪ KHI opcode đó chỉ đọc arg 0.
-            let isDestinationReg = (i == 0) && !isReadOnlyFirstArg(inst.op);
-
-            if (!isDestinationReg) {
-                // Nếu là Read (Use), cập nhật lần sử dụng cuối cùng
-                vRegLastUse[sReg] = ip;
+            // [FIX] Cập nhật thời điểm bắt đầu (nếu chưa có)
+            if (vRegStart[sReg] == null) {
+                vRegStart[sReg] = ip;
             }
-            // Nếu là Write (Def), ta không cập nhật lastUse, vì định nghĩa đè lên giá trị cũ
+
+            // [FIX] Luôn cập nhật thời điểm kết thúc tại lệnh hiện tại
+            // (Đơn giản hóa: biến sống đến lệnh cuối cùng nó được nhắc đến, dù là Read hay Write)
+            vRegEnd[sReg] = ip;
         }
     }
     
-    // Bước 2: Chuẩn bị cho Linear Scan (Sắp xếp các khoảng sống)
+    // Bước 2: Chuẩn bị cho Linear Scan
     let intervals = [];
     let vRegs = allVRegs.keys();
-    vRegs.sort(fn(a, b) { return int(a) - int(b); });
-
+    
+    // [FIX] Không cần sort vRegs ở đây nữa, ta sẽ sort intervals bên dưới
+    
     for (let i = 0; i < vRegs.size(); ++i) {
         let sReg = vRegs[i];
+        
+        // [FIX] start và end phải dựa trên IP thực tế
+        let startPos = vRegStart[sReg];
+        let endPos = vRegEnd[sReg];
+
         intervals.push({ 
             vReg: int(sReg), 
             sReg: sReg,
-            start: i, // Giả sử bắt đầu từ index của nó (đơn giản hóa)
-            // Nếu biến được định nghĩa nhưng không bao giờ dùng, nó chết ngay tại chỗ
-            end: vRegLastUse[sReg] != null ? vRegLastUse[sReg] : i,
+            start: startPos, 
+            end: endPos
         });
     }
 
-    // Bước 3: Linear Scan
+    // [FIX] QUAN TRỌNG: Linear Scan yêu cầu intervals phải được sắp xếp theo thời gian BẮT ĐẦU
+    intervals.sort(fn(a, b) { 
+        return a.start - b.start; 
+    });
+
+    // Bước 3: Linear Scan (Giữ nguyên logic nhưng giờ input đã đúng)
     let active = [];
     let vToNewReg = {};
     let freeRegs = [];
@@ -95,13 +104,14 @@ fn optimizeProtoAndGetMapping(proto) {
 
     for (let i = 0; i < intervals.size(); ++i) {
         let interval = intervals[i];
-        
+
         // Loại bỏ các interval đã kết thúc khỏi danh sách active
         let newActive = [];
         for (let j = 0; j < active.size(); ++j) {
             let activeInterval = active[j];
+            // [FIX Logic] Nếu active kết thúc TRƯỚC HOẶC TẠI thời điểm interval mới bắt đầu
+            // Ta có thể tái sử dụng (tùy thuộc vào định nghĩa live range, an toàn nhất là <)
             if (activeInterval.end < interval.start) { 
-                // Khoảng sống này đã kết thúc, trả lại thanh ghi vào pool
                 freeRegs.push(vToNewReg[activeInterval.sReg]);
             } else {
                 newActive.push(activeInterval);
@@ -112,11 +122,11 @@ fn optimizeProtoAndGetMapping(proto) {
         // Cấp phát thanh ghi
         let newReg;
         if (freeRegs.size() > 0) {
-            // Tái sử dụng thanh ghi có số hiệu nhỏ nhất
+            // Tái sử dụng thanh ghi có số hiệu nhỏ nhất (để tối ưu memory)
             freeRegs.sort(fn(a, b) { return a - b; });
             newReg = freeRegs[0];
             
-            // Xóa phần tử đầu tiên
+            // Xóa phần tử đầu (thủ công vì chưa có shift)
             let newFreeRegs = [];
             for (let k = 1; k < freeRegs.size(); ++k) newFreeRegs.push(freeRegs[k]);
             freeRegs = newFreeRegs;
@@ -126,11 +136,12 @@ fn optimizeProtoAndGetMapping(proto) {
         
         vToNewReg[interval.sReg] = newReg;
         active.push(interval);
-        // Sắp xếp active theo thời gian kết thúc để dễ kiểm tra ở vòng lặp sau
+        
+        // Sắp xếp active theo thời gian kết thúc (để heuristic loại bỏ tốt hơn)
         active.sort(fn(a, b) { return a.end - b.end; });
     }
     
-    // Bước 4: Áp dụng ánh xạ lên Bytecode
+    // Bước 4 & 5: Áp dụng ánh xạ (Giữ nguyên code cũ)
     for (inst in code) {
         let regIdxs = getRegArgIndices(inst.op);
         if (regIdxs == null) continue;
@@ -149,7 +160,6 @@ fn optimizeProtoAndGetMapping(proto) {
         }
     }
     
-    // Bước 5: Cập nhật thông tin Proto
     proto.numRegisters = Emitter.computeMaxRegister(proto) + 1;
     return vToNewReg;
 }
