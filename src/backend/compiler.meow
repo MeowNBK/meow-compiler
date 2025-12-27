@@ -46,24 +46,17 @@ export class Compiler {
     }
 
     fn compileBundle(entryPath, options) {
-        // 1. Resolve Entry Path
         let absEntry = this._resolvePath(entryPath, ".");
         if (!Io.fileExists(absEntry)) {
             print("[Error] Entry file not found: " + absEntry);
             System.exit(1);
         }
 
-        // 2. Linking: Tạo ra 1 AST duy nhất cho toàn bộ project
         let linker = new AstLinker();
         linker.init();
         
-        // Truyền 'this' (Compiler instance) vào để linker dùng _resolvePath và parseOnly
         let bundleAst = linker.link(absEntry, this);
 
-        // 3. Analysis: Analyze Scope cho toàn bộ Bundle
-        // ScopeAnalyzer [cite: 218] sẽ chạy trên Program mới này.
-        // Nó sẽ resolve __modules__, __loader__ vào Global hoặc Local của main,
-        // và resolve các biến bên trong FunctionLiteral module chính xác.
         let analyzer = new ScopeAnalyzer(bundleAst);
         analyzer.analyze();
 
@@ -71,19 +64,11 @@ export class Compiler {
         let inferrer = new TypeInferrer(bundleAst);
         inferrer.analyze();
 
-        // 4. Code Generation: AST -> Protos
-        // Lúc này AST chỉ toàn là Function, Call, Array... không còn Import/Export
-        // CodeGenerator [cite: 135] xử lý bình thường.
         let generator = new CodeGenerator(bundleAst, this, null, "bundle");
         let protos = generator.compile();
 
         // protos = optimizeRegisters(protos);
 
-        // 5. Optimization (Optional but recommended)
-        // import { optimizeRegisters } from "backend/registerOptimizer.meow";
-        // protos = optimizeRegisters(protos);
-
-        // 6. Stringify: Protos -> Bytecode Text
         let stringifier = new BytecodeStringifier();
         let bytecodeText = stringifier.stringify(protos);
 
